@@ -219,6 +219,21 @@ nav.tabs button[aria-current="page"] .f{fill:var(--haldi)}
 .pad button.nokey{visibility:hidden}
 .pad button svg{width:28px;height:28px}
 :root:lang(te) *,:root:lang(hi) *{letter-spacing:normal!important}
+
+.cell .qa{display:none;gap:6px;margin-top:6px}
+.cell:focus-within .qa{display:flex}
+.qa button{min-height:44px;flex:1;border:1.5px solid var(--rule);border-radius:999px;background:var(--paper);color:var(--ink);font:600 14px var(--sans);cursor:pointer}
+.srcbox{border-bottom:1px solid var(--rule);padding-bottom:12px}
+.srcx{display:flex;flex-wrap:wrap;gap:8px 12px;align-items:center;margin-top:8px}
+.srcx input[type=number]{width:140px;min-height:48px}
+label.chk{display:inline-flex;align-items:center;gap:8px;min-height:48px;margin:0;text-transform:none;letter-spacing:0;font-size:15px}
+label.chk input{width:22px;height:22px;min-height:0;accent-color:var(--khata-red);box-shadow:none}
+.spread{border-top:1px solid var(--rule);padding-top:16px}
+.spread h3{font-size:16px;font-weight:700;margin:0 0 6px}
+.say{position:relative;display:inline-flex;align-items:center;justify-content:center;width:28px;height:28px;margin:-6px 0 -6px 8px;padding:0;border:0;background:none;color:var(--action);cursor:pointer;vertical-align:middle;text-transform:none}
+.say::after{content:'';position:absolute;inset:-10px}
+.say svg{width:18px;height:18px;filter:none}
+#offNote{padding:0 4px}
 @media (prefers-reduced-motion: no-preference){
   .view>*{animation:up .3s var(--ease) backwards}
   @keyframes up{from{opacity:0;transform:translateY(8px)}}
@@ -257,6 +272,7 @@ nav.tabs button[aria-current="page"] .f{fill:var(--haldi)}
     <div class="card" id="breakdown"></div>
     <div class="actions">
       <button type="button" class="btn" id="saveDay" data-i18n="save">Save day</button>
+      <button type="button" class="btn ghost" id="offBtn" data-i18n="offBtn">Didn't work today</button>
       <button type="button" class="btn danger" id="delDay" data-i18n="deleteDay" hidden>Delete this day</button>
     </div>
     <p class="hint" data-i18n="privacy">Your numbers never leave this phone.</p>
@@ -314,11 +330,11 @@ en:{
  copied:'Copied', copyFailed:'Could not copy. Select the text and copy it.', screenshotHint:'Tip: take a screenshot to share this page.', name:'Your name (optional)',
  dayByDay:'Day by day', noMonth:'No days logged in this month.',
  workType:'Type of work', sources:'Where your income comes from', addSource:'Add', srcPlaceholder:'e.g. Urban Company', remove:'Remove', quickAdd:'Quick add',
- vehicle:'Vehicle', pBike:'Bike or scooter (petrol)', pEbike:'Electric bike or scooter', pAuto:'Auto (CNG)', pCab:'Car or cab (petrol or CNG)',
+ vehicle:'Vehicle', pBike:'Bike or scooter (petrol)', pEbike:'Electric bike or scooter', pAuto:'Auto (petrol or LPG)', pCab:'Car or cab (petrol or CNG)',
  mileage:'Mileage (km per litre or kg)', fuelPrice:'Fuel price (₹ per litre or kg)', costPerKm:'Energy cost (₹ per km)',
- wearPerKm:'Wear and servicing (₹ per km)', fixedMonthly:'Rent, EMI, loan and insurance (₹ per month)', workDays:'Days you usually work per month',
+ wearPerKm:'Wear and servicing (₹ per km)', fixedMonthly:'Rent, EMI, vehicle rent or insurance (₹ per month)', workDays:'Days you usually work per month',
  target:'Target (₹ per hour)', priceNote:"Starting values are estimates. Please update them to match your work and today's prices.",
- backup:'Back up your data', backupNote:'Your data stays on this phone only. Copy the code and keep it safe to restore later.',
+ backup:'Back up your data', backupNote:'Your data stays on this phone only. Send a backup to yourself on WhatsApp so you can restore it later.',
  copyBackup:'Copy backup code', restore:'Restore from code', pasteCode:'Paste backup code here', restored:'Restored', badCode:'That code did not work.',
  clearAll:'Delete all my data', sure:'Tap again to delete everything', cleared:'All data deleted',
  feedback:'Help improve this tool', feedbackQ:'What was confusing, missing or useful?', sendFeedback:'Send on WhatsApp',
@@ -345,10 +361,10 @@ en:{
 },
 te:{
  appName:'టేక్-హోమ్ ట్రాకర్', tagline:'ఖర్చులు పోగా మీరు నిజంగా ఎంత సంపాదిస్తున్నారో చూడండి.',
- navToday:'ఈరోజు', navSummary:'సారాంశం', navPricing:'ధర', navLearn:'నేర్చుకోండి', navSettings:'సెట్టింగ్స్',
+ navToday:'ఈరోజు', navSummary:'మొత్తం లెక్క', navPricing:'ధర', navLearn:'నేర్చుకోండి', navSettings:'సెట్టింగ్స్',
  onbTitle:'మీరు ఏ రకమైన పని చేస్తారు?', onbVehicle:'డెలివరీ మరియు డ్రైవింగ్', onbService:'నైపుణ్య సేవలు', onbOnline:'ఆన్‌లైన్ మరియు రిమోట్ పని', onbOther:'అమ్మకాలు మరియు చిన్న వ్యాపారం', onbNote:'ఖచ్చితంగా తెలియదా? దగ్గరగా ఉన్నదాన్ని ఎంచుకోండి. తర్వాత సెట్టింగ్స్‌లో మార్చవచ్చు.',
  date:'తేదీ', earningsToday:'ఈరోజు మూలం వారీగా సంపాదన (₹)', hours:'పని చేసిన గంటలు', km:'దూరం (కి.మీ.)',
- jobs_vehicle:'ఆర్డర్లు లేదా ట్రిప్‌లు (ఐచ్ఛికం)', jobs_service:'సేవ చేసిన కస్టమర్లు (ఐచ్ఛికం)', jobs_online:'పూర్తి చేసిన ప్రాజెక్టులు (ఐచ్ఛికం)', jobs_other:'పూర్తి చేసిన పనులు (ఐచ్ఛికం)',
+ jobs_vehicle:'ఆర్డర్లు లేదా ట్రిప్‌లు (అవసరమైతే)', jobs_service:'సేవ చేసిన కస్టమర్లు (అవసరమైతే)', jobs_online:'పూర్తి చేసిన ప్రాజెక్టులు (అవసరమైతే)', jobs_other:'పూర్తి చేసిన పనులు (అవసరమైతే)',
  fuelActual:'ఖర్చు చేసిన పెట్రోల్ (₹), ఖాళీగా ఉంచితే అంచనా వేస్తుంది', otherExp:'ఇతర ఖర్చులు: పార్కింగ్, టోల్, ఫోన్ డేటా (₹)',
  f_materials:'సామగ్రి లేదా సరుకులు (₹)', f_travel:'ప్రయాణం (₹)', f_platform:'ప్లాట్‌ఫారమ్ ఫీజు లేదా కమీషన్ (₹)', f_other_online:'సాఫ్ట్‌వేర్, ఇంటర్నెట్ లేదా డేటా (₹)', f_other_general:'ఇతర ఖర్చులు (₹)',
  fuelEstimate:'అంచనా ఇంధన ఖర్చు: {x}', trueProfit:'నిజమైన లాభం', perHour:'గంటకు', perKm:'కి.మీ.కు', perJob:'ఒక పనికి',
@@ -362,18 +378,18 @@ te:{
  safeNote:'మీ బలహీన వారాల ఆధారంగా, నెమ్మదిగా ఉన్న నెల కూడా ఇబ్బంది పెట్టదు.',
  needWeeks:'సురక్షిత బడ్జెట్ చూడటానికి కనీసం 3 వారాలు, ప్రతి వారం 4 లేదా అంతకంటే ఎక్కువ రోజులు నమోదు చేయండి.',
  noData:'ఇంకా రోజులు నమోదు కాలేదు.', loadExample:'ఉదాహరణ చూడండి', exampleBanner:'ఇది ఉదాహరణ డేటా, మీది కాదు.', clearExample:'ఉదాహరణ తొలగించండి',
- totalProfit:'నిజమైన లాభం', totalHours:'గంటలు', openStatement:'నెలవారీ ఆదాయ సారాంశం',
+ totalProfit:'నిజమైన లాభం', totalHours:'గంటలు', openStatement:'నెలవారీ ఆదాయ మొత్తం లెక్క',
  back:'వెనుకకు',
- month:'నెల', stmtTitle:'నెలవారీ ఆదాయ సారాంశం', stmtNote:'కార్మికుడు స్వయంగా నమోదు చేసినది. ఏ ప్లాట్‌ఫారమ్ ధృవీకరించలేదు.',
- grossEarnings:'మొత్తం సంపాదన', totalCosts:'మొత్తం ఖర్చులు', netProfit:'నికర లాభం', copyText:'స్టేట్‌మెంట్ కాపీ చేయండి', whatsapp:'WhatsAppలో షేర్ చేయండి',
- copied:'కాపీ అయింది', copyFailed:'కాపీ కాలేదు. టెక్స్ట్ ఎంచుకుని కాపీ చేయండి.', screenshotHint:'సూచన: ఈ పేజీని షేర్ చేయడానికి స్క్రీన్‌షాట్ తీసుకోండి.', name:'మీ పేరు (ఐచ్ఛికం)',
+ month:'నెల', stmtTitle:'నెలవారీ ఆదాయ మొత్తం లెక్క', stmtNote:'కార్మికుడు స్వయంగా నమోదు చేసినది. ఏ ప్లాట్‌ఫారమ్ ఎవరూ చెక్ చేయలేదు.',
+ grossEarnings:'మొత్తం సంపాదన', totalCosts:'మొత్తం ఖర్చులు', netProfit:'చేతికి మిగిలింది', copyText:'స్టేట్‌మెంట్ కాపీ చేయండి', whatsapp:'WhatsAppలో షేర్ చేయండి',
+ copied:'కాపీ అయింది', copyFailed:'కాపీ కాలేదు. టెక్స్ట్ ఎంచుకుని కాపీ చేయండి.', screenshotHint:'సూచన: ఈ పేజీని షేర్ చేయడానికి స్క్రీన్‌షాట్ తీసుకోండి.', name:'మీ పేరు (అవసరమైతే)',
  dayByDay:'రోజు వారీగా', noMonth:'ఈ నెలలో రోజులు నమోదు కాలేదు.',
  workType:'పని రకం', sources:'మీ ఆదాయం ఎక్కడి నుండి వస్తుంది', addSource:'జోడించండి', srcPlaceholder:'ఉదా. Urban Company', remove:'తొలగించండి', quickAdd:'త్వరగా జోడించండి',
- vehicle:'వాహనం', pBike:'బైక్ లేదా స్కూటర్ (పెట్రోల్)', pEbike:'ఎలక్ట్రిక్ బైక్ లేదా స్కూటర్', pAuto:'ఆటో (CNG)', pCab:'కారు లేదా క్యాబ్ (పెట్రోల్ లేదా CNG)',
- mileage:'మైలేజీ (లీటర్ లేదా కిలోకు కి.మీ.)', fuelPrice:'ఇంధన ధర (లీటర్ లేదా కిలోకు ₹)', costPerKm:'శక్తి ఖర్చు (కి.మీ.కు ₹)',
- wearPerKm:'అరుగుదల, సర్వీసింగ్ (కి.మీ.కు ₹)', fixedMonthly:'అద్దె, EMI, లోన్, ఇన్సూరెన్స్ (నెలకు ₹)', workDays:'నెలలో మీరు సాధారణంగా పనిచేసే రోజులు',
+ vehicle:'వాహనం', pBike:'బైక్ లేదా స్కూటర్ (పెట్రోల్)', pEbike:'ఎలక్ట్రిక్ బైక్ లేదా స్కూటర్', pAuto:'ఆటో (పెట్రోల్ లేదా LPG)', pCab:'కారు లేదా క్యాబ్ (పెట్రోల్ లేదా CNG)',
+ mileage:'మైలేజీ (లీటర్ లేదా కిలోకు కి.మీ.)', fuelPrice:'ఇంధన ధర (లీటర్ లేదా కిలోకు ₹)', costPerKm:'పెట్రోల్ / CNG / చార్జింగ్ ఖర్చు (కి.మీ.కు ₹)',
+ wearPerKm:'అరుగుదల, సర్వీసింగ్ (కి.మీ.కు ₹)', fixedMonthly:'అద్దె, EMI, వాహనం అద్దె, ఇన్సూరెన్స్ (నెలకు ₹)', workDays:'నెలలో మీరు సాధారణంగా పనిచేసే రోజులు',
  target:'లక్ష్యం (గంటకు ₹)', priceNote:'ప్రారంభ విలువలు అంచనాలు మాత్రమే. మీ పని, ఈరోజు ధరలకు తగ్గట్టు మార్చండి.',
- backup:'మీ డేటా బ్యాకప్', backupNote:'మీ డేటా ఈ ఫోన్‌లోనే ఉంటుంది. తర్వాత రీస్టోర్ చేయడానికి కోడ్ కాపీ చేసి భద్రపరచండి.',
+ backup:'మీ డేటా బ్యాకప్', backupNote:'మీ డేటా ఈ ఫోన్‌లోనే ఉంటుంది. తర్వాత రీస్టోర్ చేయడానికి బ్యాకప్‌ను WhatsApp లో మీకే పంపుకోండి.',
  copyBackup:'బ్యాకప్ కోడ్ కాపీ చేయండి', restore:'కోడ్ నుండి రీస్టోర్', pasteCode:'బ్యాకప్ కోడ్ ఇక్కడ పేస్ట్ చేయండి', restored:'రీస్టోర్ అయింది', badCode:'ఆ కోడ్ పని చేయలేదు.',
  clearAll:'నా డేటా మొత్తం తొలగించండి', sure:'అన్నీ తొలగించడానికి మళ్లీ నొక్కండి', cleared:'డేటా మొత్తం తొలగించబడింది',
  feedback:'ఈ టూల్ మెరుగుపరచడంలో సహాయం చేయండి', feedbackQ:'ఏది గందరగోళంగా ఉంది, ఏది లేదు, ఏది ఉపయోగపడింది?', sendFeedback:'WhatsAppలో పంపండి',
@@ -402,8 +418,8 @@ hi:{
  appName:'टेक-होम ट्रैकर', tagline:'खर्च के बाद आप असल में कितना कमाते हैं, देखें।',
  navToday:'आज', navSummary:'सारांश', navPricing:'मूल्य', navLearn:'सीखें', navSettings:'सेटिंग्स',
  onbTitle:'आप किस तरह का काम करते हैं?', onbVehicle:'डिलीवरी और ड्राइविंग', onbService:'हुनर वाली सेवाएँ', onbOnline:'ऑनलाइन और रिमोट काम', onbOther:'बिक्री और छोटा व्यवसाय', onbNote:'पक्का नहीं पता? सबसे करीबी चुनें। बाद में सेटिंग्स में बदल सकते हैं।',
- date:'तारीख', earningsToday:'आज की कमाई, स्रोत के अनुसार (₹)', hours:'काम के घंटे', km:'दूरी (कि.मी.)',
- jobs_vehicle:'ऑर्डर या ट्रिप (वैकल्पिक)', jobs_service:'सेवा किए गए ग्राहक (वैकल्पिक)', jobs_online:'पूरे किए प्रोजेक्ट (वैकल्पिक)', jobs_other:'पूरे किए काम (वैकल्पिक)',
+ date:'तारीख', earningsToday:'आज की कमाई, कहाँ से कमाई के अनुसार (₹)', hours:'काम के घंटे', km:'दूरी (कि.मी.)',
+ jobs_vehicle:'ऑर्डर या ट्रिप (ज़रूरी नहीं)', jobs_service:'सेवा किए गए ग्राहक (ज़रूरी नहीं)', jobs_online:'पूरे किए प्रोजेक्ट (ज़रूरी नहीं)', jobs_other:'पूरे किए काम (ज़रूरी नहीं)',
  fuelActual:'ईंधन पर खर्च (₹), खाली छोड़ें तो अंदाज़ा लगेगा', otherExp:'अन्य खर्च: पार्किंग, टोल, फ़ोन डेटा (₹)',
  f_materials:'सामग्री या सप्लाई (₹)', f_travel:'यात्रा (₹)', f_platform:'प्लेटफ़ॉर्म फ़ीस या कमीशन (₹)', f_other_online:'सॉफ़्टवेयर, इंटरनेट या डेटा (₹)', f_other_general:'अन्य खर्च (₹)',
  fuelEstimate:'अनुमानित ईंधन खर्च: {x}', trueProfit:'असली मुनाफ़ा', perHour:'प्रति घंटा', perKm:'प्रति कि.मी.', perJob:'प्रति काम',
@@ -412,23 +428,23 @@ hi:{
  vLoss:'खर्च निकालकर आज नुकसान हुआ।', vEnter:'असली मुनाफ़ा देखने के लिए आज के आँकड़े भरें।',
  save:'दिन सेव करें', deleteDay:'यह दिन हटाएँ', saved:'सेव हो गया', deleted:'हटा दिया', enterSomething:'पहले कुछ कमाई या घंटे भरें।', examplesRemoved:'उदाहरण डेटा हटा दिया गया।',
  last7:'पिछले 7 दिन', last30:'पिछले 30 दिन', allTime:'अब तक', daysWorked:'काम किए दिन', avgDay:'औसत प्रति दिन',
- bestDay:'सबसे अच्छा दिन', worstDay:'सबसे कमज़ोर दिन', bySource:'स्रोत के अनुसार कमाई', last14:'पिछले 14 दिन, असली मुनाफ़ा',
+ bestDay:'सबसे अच्छा दिन', worstDay:'सबसे कमज़ोर दिन', bySource:'कहाँ से कमाई के अनुसार कमाई', last14:'पिछले 14 दिन, असली मुनाफ़ा',
  weeklyRange:'साप्ताहिक मुनाफ़ा {a} से {b} के बीच रहा।', safeBudget:'सुरक्षित मासिक बजट',
  safeNote:'आपके कमज़ोर हफ़्तों के आधार पर, ताकि धीमा महीना परेशान न करे।',
  needWeeks:'सुरक्षित बजट देखने के लिए कम से कम 3 हफ़्ते, हर हफ़्ते 4 या ज़्यादा दिन दर्ज करें।',
  noData:'अभी कोई दिन दर्ज नहीं है।', loadExample:'उदाहरण देखें', exampleBanner:'यह उदाहरण डेटा है, आपका नहीं।', clearExample:'उदाहरण हटाएँ',
  totalProfit:'असली मुनाफ़ा', totalHours:'घंटे', openStatement:'मासिक आय सारांश',
  back:'वापस',
- month:'महीना', stmtTitle:'मासिक आय सारांश', stmtNote:'कामगार द्वारा खुद दर्ज की गई। किसी प्लेटफ़ॉर्म ने सत्यापित नहीं की।',
+ month:'महीना', stmtTitle:'मासिक आय सारांश', stmtNote:'कामगार द्वारा खुद दर्ज की गई। किसी प्लेटफ़ॉर्म ने किसी ने चेक नहीं किया की।',
  grossEarnings:'कुल कमाई', totalCosts:'कुल खर्च', netProfit:'शुद्ध मुनाफ़ा', copyText:'स्टेटमेंट कॉपी करें', whatsapp:'WhatsApp पर शेयर करें',
- copied:'कॉपी हो गया', copyFailed:'कॉपी नहीं हो सका। टेक्स्ट चुनकर कॉपी करें।', screenshotHint:'सुझाव: इस पेज को शेयर करने के लिए स्क्रीनशॉट लें।', name:'आपका नाम (वैकल्पिक)',
+ copied:'कॉपी हो गया', copyFailed:'कॉपी नहीं हो सका। टेक्स्ट चुनकर कॉपी करें।', screenshotHint:'सुझाव: इस पेज को शेयर करने के लिए स्क्रीनशॉट लें।', name:'आपका नाम (ज़रूरी नहीं)',
  dayByDay:'दिन के अनुसार', noMonth:'इस महीने कोई दिन दर्ज नहीं है।',
  workType:'काम का प्रकार', sources:'आपकी आय कहाँ से आती है', addSource:'जोड़ें', srcPlaceholder:'जैसे Urban Company', remove:'हटाएँ', quickAdd:'जल्दी जोड़ें',
- vehicle:'गाड़ी', pBike:'बाइक या स्कूटर (पेट्रोल)', pEbike:'इलेक्ट्रिक बाइक या स्कूटर', pAuto:'ऑटो (CNG)', pCab:'कार या कैब (पेट्रोल या CNG)',
+ vehicle:'गाड़ी', pBike:'बाइक या स्कूटर (पेट्रोल)', pEbike:'इलेक्ट्रिक बाइक या स्कूटर', pAuto:'ऑटो (पेट्रोल या LPG)', pCab:'कार या कैब (पेट्रोल या CNG)',
  mileage:'माइलेज (कि.मी. प्रति लीटर या किलो)', fuelPrice:'ईंधन की कीमत (₹ प्रति लीटर या किलो)', costPerKm:'ऊर्जा खर्च (₹ प्रति कि.मी.)',
- wearPerKm:'घिसाई और सर्विसिंग (₹ प्रति कि.मी.)', fixedMonthly:'किराया, EMI, लोन और बीमा (₹ प्रति माह)', workDays:'महीने में आप आम तौर पर कितने दिन काम करते हैं',
+ wearPerKm:'घिसाई और सर्विसिंग (₹ प्रति कि.मी.)', fixedMonthly:'किराया, EMI, गाड़ी का किराया, बीमा (₹ प्रति माह)', workDays:'महीने में आप आम तौर पर कितने दिन काम करते हैं',
  target:'लक्ष्य (₹ प्रति घंटा)', priceNote:'शुरुआती मान अनुमान हैं। अपने काम और आज की कीमतों के अनुसार बदलें।',
- backup:'अपना डेटा बैकअप करें', backupNote:'आपका डेटा सिर्फ़ इसी फ़ोन में रहता है। बाद में वापस लाने के लिए कोड कॉपी करके सुरक्षित रखें।',
+ backup:'अपना डेटा बैकअप करें', backupNote:'आपका डेटा सिर्फ़ इसी फ़ोन में रहता है। बाद में वापस लाने के लिए बैकअप WhatsApp पर खुद को भेज दें।',
  copyBackup:'बैकअप कोड कॉपी करें', restore:'कोड से वापस लाएँ', pasteCode:'बैकअप कोड यहाँ पेस्ट करें', restored:'वापस आ गया', badCode:'वह कोड काम नहीं आया।',
  clearAll:'मेरा सारा डेटा हटाएँ', sure:'सब हटाने के लिए फिर से दबाएँ', cleared:'सारा डेटा हटा दिया गया',
  feedback:'इस टूल को बेहतर बनाने में मदद करें', feedbackQ:'क्या उलझाने वाला, गायब या उपयोगी था?', sendFeedback:'WhatsApp पर भेजें',
@@ -450,7 +466,7 @@ hi:{
  tip4t:'धीमे हफ़्तों की योजना बनाएँ', tip4:'आमदनी ऊपर-नीचे होती रहती है। अपना मासिक बजट कमज़ोर हफ़्तों के हिसाब से बनाएँ और अच्छे हफ़्तों की अतिरिक्त कमाई अलग रखें।',
  tip5t:'आपातकालीन फ़ंड बनाएँ', tip5:'एक हफ़्ते के खर्च से शुरू करें, फिर एक महीने और बाद में तीन महीने तक बढ़ाएँ। रोज़ ₹100 भी जुड़कर बड़ा हो जाता है। इसे अलग बचत खाते में रखें।',
  tip6t:'सोच-समझकर कर्ज़ लें', tip6:'कर्ज़ लेने से पहले सिर्फ़ मासिक EMI नहीं, कुल लौटाई जाने वाली रकम पूछें। बैंक, सहकारी या माइक्रोफ़ाइनेंस संस्था और लोन ऐप की ब्याज दरों की तुलना करें। PM मुद्रा योजना जैसी छोटे कारोबार की योजनाएँ हैं, अपने बैंक से पूछें।',
- tip7t:'सरकारी सहायता का लाभ लें', tip7:'असंगठित और गिग कामगारों के सरकारी पोर्टल ई-श्रम (eshram.gov.in) पर पंजीकरण करें। स्वास्थ्य और दुर्घटना बीमा के बारे में पूछें, जो काम न कर पाने पर आमदनी की सुरक्षा करता है। नियम बदलते रहते हैं, सरकारी स्रोत देखें।',
+ tip7t:'सरकारी सहायता का लाभ लें', tip7:'असंगठित और गिग कामगारों के सरकारी पोर्टल ई-श्रम (eshram.gov.in) पर पंजीकरण करें। स्वास्थ्य और दुर्घटना बीमा के बारे में पूछें, जो काम न कर पाने पर आमदनी की सुरक्षा करता है। नियम बदलते रहते हैं, सरकारी कहाँ से कमाई देखें।',
  tip8t:'ठगी से बचें', tip8:'अपना UPI PIN या OTP किसी को न बताएँ, भले ही कोई खुद को बैंक या प्लेटफ़ॉर्म का बताए। असली कंपनियाँ ये नहीं माँगतीं।'
 }};
 
@@ -461,56 +477,58 @@ en:{ navDues:'Dues', navMore:'More', back:'Back',
  dues_add:'Add', dues_outstanding:'Still to collect', dues_overdue:'Overdue', dues_due:'Due {d}', dues_markPaid:'Mark paid', dues_remind:'Remind on WhatsApp', dues_undo:'Undo', dues_paid:'Paid',
  dues_empty:'Nothing owed to you right now.', dues_needFields:'Enter a name and an amount.', dues_overdueCount:'{n} overdue',
  dues_msg:'Hello {who}, this is a gentle reminder about the pending payment of {amt}. Please let me know when you can pay. Thank you.',
- perHourTitle:'True take-home per hour', hoursHint:'Count all the time you were working or waiting for jobs, not only time on trips.', copyLast:'Copy last day', copiedLast:'Copied from {d}. Change what is different.', noLast:'No earlier day to copy.', extraCosts:'Costs (optional)', appHoursTitle:'Hours on each app (optional)', appHoursHint:'Fill this to compare apps. Include waiting time.', cmpTitle:'Which app pays best per hour?', cmpNote:'After costs, shared out by hours. An estimate from days when you filled hours for each app.', cmpNeed:'Fill hours for each app on a few days to see this.', evTitle:'Petrol or electric?', evKmDay:'Km per day', evDaysM:'Days per month', evRate:'Electric: charging cost per km (₹)', evPet:'Petrol per month', evEle:'Electric per month', evSave:'Electric would save you about {x} a month in running costs.', evLoss:'Petrol would cost about {x} less a month to run.', evNote:'Running cost only: fuel or charging plus wear. It does not include the price of the vehicle, the battery or any EMI.', backupDue:'It has been a while since your last backup. Copy the code and send it to yourself on WhatsApp.', backupNow:'Back up now', pinTitle:'Lock with a PIN', pinNote:'Useful if you share your phone. It only keeps other people out of the app. It is not bank-level security.', pinSet:'Set PIN (4 digits)', pinRemove:'Remove PIN', pinEnter:'Enter PIN', pinWrong:'Wrong PIN', pinSaved:'PIN set', pinBad:'Use exactly 4 digits.', pinUnlock:'Unlock', pinForgot:'Forgot your PIN? Clear this site data in your browser, then restore from your backup code.', cushionTitle:'Weeks of cushion', cushionSavings:'Savings you can use (₹)', cushionSpend:'Spending you must cover each month (₹)', cushionWeeks:'{w} weeks of cushion', cushionNote:'This is how long you could cover your spending if work stopped. Aim for 4 weeks first, then 12.', checked:'Last checked: October 2026. Amounts and rules change, so confirm on the official site.', official:'Official site', assume:'Using fuel ₹{f} per km and wear ₹{w} per km. Change these in Settings.', assumeBtn:'Change', backupWarn:'This code contains your income details. Do not post it in groups or public chats.', a2hsTitle:'Add to home screen', a2hs:'In Chrome, tap the menu (three dots), then Add to Home screen. It opens like an app and works without internet after your first visit.', unitHrs:'hrs', stampTarget:'Target met', dismiss:'Dismiss', themeTitle:'Theme', themeAuto:'Auto', themeLight:'Light', themeDark:'Dark', goalTitle:'Savings goal', goalName:'What are you saving for?', goalTarget:'Target amount (₹)', goalSet:'Set goal', goalAdd:'Add to savings (₹)', goalSaved:'{a} saved of {b}', goalDone:'Goal reached!', goalRemove:'Remove goal',
+ perHourTitle:'True take-home per hour', hoursHint:'Count all the time you were working or waiting for jobs, not only time on trips. Type 1:30 for 1 hour 30 minutes.', copyLast:'Copy last day', copiedLast:'Copied from {d}. Change what is different.', noLast:'No earlier day to copy.', extraCosts:'Costs (optional)', appHoursTitle:'Hours on each app (optional)', appHoursHint:'Fill this to compare apps. Include waiting time.', cmpTitle:'Which app pays best per hour?', cmpNote:'After costs, shared out by hours. An estimate from days when you filled hours for each app.', cmpNeed:'Fill hours for each app on a few days to see this.', evTitle:'Petrol or electric?', evKmDay:'Km per day', evDaysM:'Days per month', evRate:'Electric: charging cost per km (₹)', evPet:'Petrol per month', evEle:'Electric per month', evSave:'Electric would save you about {x} a month in running costs.', evLoss:'Petrol would cost about {x} less a month to run.', evNote:'Running cost only: fuel or charging plus wear. It does not include the price of the vehicle, the battery or any EMI.', backupDue:'You have saved a few days. Send a backup to yourself on WhatsApp now, so nothing is lost.', backupNow:'Back up now', pinTitle:'Lock with a PIN', pinNote:'Useful if you share your phone. It only keeps other people out of the app. It is not bank-level security.', pinSet:'Set PIN (4 digits)', pinRemove:'Remove PIN', pinEnter:'Enter PIN', pinWrong:'Wrong PIN', pinSaved:'PIN set', pinBad:'Use exactly 4 digits.', pinUnlock:'Unlock', pinForgot:'Forgot your PIN? Clear this site data in your browser, then restore from your backup code.', cushionTitle:'Weeks of cushion', cushionSavings:'Savings you can use (₹)', cushionSpend:'Spending you must cover each month (₹)', cushionWeeks:'{w} weeks of cushion', cushionNote:'This is how long you could cover your spending if work stopped. Aim for 4 weeks first, then 12.', checked:'Last checked: October 2026. Amounts and rules change, so confirm on the official site.', official:'Official site', assume:'Using fuel ₹{f} per km and wear ₹{w} per km. Change these in Settings.', assumeBtn:'Change', backupWarn:'This code contains your income details. Do not post it in groups or public chats.', a2hsTitle:'Add to home screen', a2hs:'In Chrome, tap the menu (three dots), then Add to Home screen. It opens like an app and works without internet after your first visit.', unitHrs:'hrs', stampTarget:'Target met', dismiss:'Dismiss', themeTitle:'Theme', themeAuto:'Auto', themeLight:'Light', themeDark:'Dark', offBtn:'Didn\'t work today', offPick:'Why? Tap one to save the day.', offRain:'Rain', offSick:'Sick', offRepair:'Vehicle repair', offFestival:'Festival or holiday', offNoOrders:'No orders', offSaved:'Saved as a day off.', offNote:'Marked as a day off: {r}', daysOff:'Days off: {n}', setupFixedQ:'Do you pay EMI, rent or vehicle rent?', setupFixedHint:'Without this, your take-home looks higher than it really is.', perWeek:'per week', perMonth:'per month', saveIt:'Save', noneToPay:'I don\'t pay any', fixedLabel:'Rent, EMI, vehicle rent or insurance (₹)', setupPhoneQ:'Do other people use this phone?', setupPhoneHint:'A PIN keeps your numbers private.', yes:'Yes', no:'No', paidMonthly:'Paid monthly', monthlyAmt:'₹ per month', monthlyNote:'Monthly pay is spread over your working days: {x} a day.', dues_earned:'Work done on (optional)', dues_credit:'Add to income for {d}', dues_credited:'Added to {d}', dues_paidOn:'Paid on {d}', dues_creditAs:'Add it as', backupSend:'Send backup on WhatsApp', cleanerWarn:'Phone cleaner apps can wipe your records. Send your backup to yourself on WhatsApp.', f_penalty:'Penalties or deductions (₹)', c_penalty:'Penalties', payoutQ:'Does the app pay you after its cut?', payoutYes:'Yes, already after the cut', payoutNo:'No, full amount', payoutNote:'Platform fees are skipped because your payout already has them taken out.', spreadTitle:'Big purchase or yearly cost', spreadHint:'Gas cylinder, a week of rice, insurance renewal, permit. It is spread over the days it lasts.', spreadName:'What was it?', spreadAmt:'Amount (₹)', spreadDays:'Lasts about (days)', spreadAdd:'Spread it', spreadDaily:'{x} a day until {d}', c_bulk:'Big purchases (spread)', f_returns:'Returns or refunds today (₹)', c_returns:'Returns', c_cogs:'Cost of goods (from your margin)', shopHint:'Stock you buy is not counted as a daily cost. Your margin already covers it.', defMargin:'Usual margin on what you sell (%)', marginPct:'margin %', marginNote:'Add a separate line for each kind of item if margins differ, and set a margin for each.', earlyGuess:'Early guess', earlyNote:'Based on {n} days. It gets firmer after 3 weeks.', hoursEntryHint:'Type 1:30 for 1 hour 30 minutes.', splitHours:'Split my hours by earnings', splitNeed:'Enter total hours and earnings first.', src_cash:'Cash or street rides', pCng:'Auto or car on CNG', pTruck:'Mini-truck or goods vehicle', cngFill:'For CNG, type the rupees you filled today.', f_helper:'Helper wages (₹)', c_helper:'Helper wages', voiceBtn:'Speak your day (beta)', voiceHeard:'Heard: {x}. Check the numbers.', voiceNone:'Could not find numbers. Try: Swiggy 1200, 8 hours, 60 km.', voiceFail:'Voice did not work on this phone.', usdTitle:'Paid in dollars?', usdAmt:'Amount ($)', usdRate:'Rate (₹ per $)', usdAdd:'Add to income', usdNote:'Use the rate your bank gave you. It is added in rupees to the source you pick.', readAloud:'Read aloud', noVoice:'No voice for this language on your phone.', goalTitle:'Savings goal', goalName:'What are you saving for?', goalTarget:'Target amount (₹)', goalSet:'Set goal', goalAdd:'Add to savings (₹)', goalSaved:'{a} saved of {b}', goalDone:'Goal reached!', goalRemove:'Remove goal',
  goalHint:'Saving 10% of your safe monthly budget ({x}) would reach this goal in about {n} months.',
  stmtRange1:'One month', stmtRange3:'3 months', avgMonth:'Average monthly profit',
  loanNote:'This is a summary you can show. Lenders and landlords decide what they accept, and most also ask for bank statements and ID.',
  csvBtn:'Download as CSV', moreIntro:'More tools', grpStart:'Start here for your work',
  onbVehicleS:'Swiggy, Zomato, Blinkit, Uber, Rapido, Ola, your own auto or cab', onbServiceS:'Beauty, tailoring, repairs, cleaning, cooking, home visits', onbOnlineS:'Freelancing, design, writing, tutoring, data entry, content', onbOtherS:'Shop, stall, home kitchen, crafts, resale, or any other work', learnTitle:'Money and support guide', learnIntro:'Plain-language money basics and the government help you may be able to claim.', learnNote:'General information only, based on rules known at the time of writing. Amounts and eligibility change, so confirm on the official website or at a bank or Common Service Centre before you apply. This is not financial advice.', grp1:'Know your numbers', grp2:'Save and borrow', grp3:'A few government schemes', grp4:'Stay safe', n1t:'Set aside money for repairs and renewals', n1:'Put a small amount aside every working day for servicing, tyres, tools, equipment or stock. Costs that arrive in one lump are what turn a good month into a bad one.', n5t:'Take an advance on big orders', n5:'For stitching, events or custom work, ask for 30 to 50 percent upfront. It covers your materials and cuts the risk of non-payment. Track the balance in the Dues tab.', n2t:'Know your credit score', n2:'Pay EMIs and card bills on time. Your credit (CIBIL) score decides whether you get a loan and at what rate. You can get one free full credit report a year from each credit bureau.', n3t:'Borrow only from registered lenders', n3:'Check that a bank or NBFC is on the RBI list before borrowing. Loan apps that ask for your contacts or photos, or that threaten you, are a red flag. Report them at cybercrime.gov.in or call 1930.', n4t:'File an income tax return', n4:'Even if you owe no tax, a return is proof of income that helps with loans, visas and rent. Freelancers and small businesses can use simple presumptive tax schemes (sections 44ADA and 44AD). Ask a tax professional, as rules change.', g1t:'e-Shram card', g1:'Free registration at eshram.gov.in or any Common Service Centre for unorganised and gig workers aged 16 to 59 who are not in EPFO or ESIC. You get a card and number that link you to government benefits, and accident cover has been offered with registration. Check current terms.', g2t:'Accident and life insurance for rupees a year', g2:'PM Suraksha Bima Yojana gives accident cover of ₹2 lakh for about ₹20 a year. PM Jeevan Jyoti Bima Yojana gives ₹2 lakh life cover for about ₹436 a year. Both are paid by auto-debit from a bank account. Age limits apply.', g3t:'Health cover: Ayushman Bharat and Aarogyasri', g3:'PM-JAY gives free hospital treatment up to ₹5 lakh per family per year to eligible families (pmjay.gov.in, helpline 14555). Telangana\'s Aarogyasri covers up to ₹10 lakh per family per year, but private hospitals have paused services over unpaid dues before, so confirm that your hospital accepts it. The government has announced PM-JAY cover for registered gig workers, but I could not confirm that it has started, so ask on e-Shram or at a Common Service Centre.', g4t:'Pension: Atal Pension Yojana', g4:'Join between ages 18 and 40 through your bank to get a fixed pension of ₹1,000 to ₹5,000 a month from age 60. The monthly amount you pay depends on your age and the pension you choose.', g5t:'Business loans: Mudra', g5:'PM Mudra Yojana gives collateral-free loans for small non-farm businesses. Shishu is up to ₹50,000, Kishore up to ₹5 lakh and Tarun up to ₹10 lakh. Tarun Plus, up to ₹20 lakh, is for those who have already repaid a Tarun loan. Apply at a bank, cooperative or microfinance lender (mudra.org.in).', g6t:'Street vendors: PM SVANidhi', g6:'Small collateral-free working-capital loans in stages for street vendors: ₹15,000, then ₹25,000, then ₹50,000 as you repay on time. Digital payments can earn cashback, and a UPI-linked RuPay credit card is offered after the second loan. The scheme runs until March 2030 (pmsvanidhi.mohua.gov.in). Check the current terms.', g7t:'Artisans and tailors: PM Vishwakarma', g7:'For people in listed traditional trades such as tailors and barbers. It offers an ID card, skill training with a daily stipend, a toolkit grant and low-interest loans (pmvishwakarma.gov.in).', g8t:'For women entrepreneurs', g8:'Stand-Up India gives loans of ₹10 lakh to ₹1 crore to women and SC/ST first-time entrepreneurs (standupmitra.in). Self-help groups (SHGs) give women low-interest group loans. WE Hub is a Telangana government incubator in Hyderabad for women-led startups, so it suits growth-minded businesses more than a one-person service.', g9t:'Udyam registration', g9:'Free registration as a micro enterprise at udyamregistration.gov.in. It helps you get bank loans and scheme benefits. Do not pay agents, because the official site is free.', g10t:'Gig worker rights', g10:'India\'s Code on Social Security came into force on 21 November 2025 and recognises gig and platform workers. Platforms must contribute 1 to 2 percent of their turnover to a social security fund. Workers aged 16 and above register on e-Shram, and benefits usually need about 90 days of work with one platform or 120 days across several in a year. Telangana has also drafted its own gig workers law, so ask the state labour department what applies to you.', g11t:'Jan Dhan account', g11:'A zero-balance bank account with a RuPay card that includes accident cover. It is also where government payments reach you directly.', n6t:'Fake schemes and registration-fee calls', n6:'Government schemes never charge you to register or ask for a fee to release a loan. Use only websites ending in gov.in, and visit a bank or Common Service Centre if unsure.', n7t:'Never pay to receive money', n7:'You enter a UPI PIN only to send money, never to receive it. A "collect request" or a message asking for your PIN to get a refund or prize is a scam. Report fraud at cybercrime.gov.in or call 1930.' },
 te:{ navDues:'బాకీలు', navMore:'మరిన్ని', back:'వెనుకకు',
- dues_title:'మీకు రావాల్సిన డబ్బు', dues_who:'ఎవరు ఇవ్వాలి?', dues_amount:'మొత్తం (₹)', dues_date:'చెల్లించాల్సిన తేదీ (ఐచ్ఛికం)', dues_phone:'ఫోన్ నంబర్ (ఐచ్ఛికం, రిమైండర్ కోసం)', dues_note:'గమనిక (ఐచ్ఛికం)',
+ dues_title:'మీకు రావాల్సిన డబ్బు', dues_who:'ఎవరు ఇవ్వాలి?', dues_amount:'మొత్తం (₹)', dues_date:'చెల్లించాల్సిన తేదీ (అవసరమైతే)', dues_phone:'ఫోన్ నంబర్ (అవసరమైతే, రిమైండర్ కోసం)', dues_note:'గమనిక (అవసరమైతే)',
  dues_add:'జోడించండి', dues_outstanding:'ఇంకా వసూలు చేయాల్సింది', dues_overdue:'గడువు దాటింది', dues_due:'గడువు {d}', dues_markPaid:'చెల్లించారు', dues_remind:'WhatsAppలో గుర్తు చేయండి', dues_undo:'రద్దు', dues_paid:'చెల్లించినవి',
  dues_empty:'ప్రస్తుతం మీకు ఏమీ రావాల్సిన బాకీ లేదు.', dues_needFields:'పేరు, మొత్తం నమోదు చేయండి.', dues_overdueCount:'{n} గడువు దాటాయి',
  dues_msg:'నమస్కారం {who}, పెండింగ్‌లో ఉన్న {amt} చెల్లింపు గురించి చిన్న గుర్తు. ఎప్పుడు చెల్లించగలరో చెప్పండి. ధన్యవాదాలు.',
- perHourTitle:'గంటకు నిజమైన చేతికొచ్చే సంపాదన', hoursHint:'ట్రిప్‌లో ఉన్న సమయమే కాదు, పని కోసం ఎదురుచూసిన సమయాన్నీ కలపండి.', copyLast:'గత రోజు కాపీ చేయండి', copiedLast:'{d} నుండి కాపీ అయింది. మారినవి సరిచేయండి.', noLast:'కాపీ చేయడానికి ముందు రోజు లేదు.', extraCosts:'ఖర్చులు (ఐచ్ఛికం)', appHoursTitle:'ప్రతి యాప్‌లో గంటలు (ఐచ్ఛికం)', appHoursHint:'యాప్‌లను పోల్చడానికి నింపండి. ఎదురుచూసే సమయం కలపండి.', cmpTitle:'ఏ యాప్ గంటకు ఎక్కువ ఇస్తుంది?', cmpNote:'ఖర్చుల తర్వాత, గంటల ప్రకారం పంచబడింది. ప్రతి యాప్ గంటలు నింపిన రోజుల ఆధారంగా అంచనా.', cmpNeed:'ఇది చూడటానికి కొన్ని రోజులు ప్రతి యాప్ గంటలు నింపండి.', evTitle:'పెట్రోల్ లేదా ఎలక్ట్రిక్?', evKmDay:'రోజుకు కి.మీ.', evDaysM:'నెలకు రోజులు', evRate:'ఎలక్ట్రిక్: కి.మీ.కు ఛార్జింగ్ ఖర్చు (₹)', evPet:'పెట్రోల్ నెలకు', evEle:'ఎలక్ట్రిక్ నెలకు', evSave:'ఎలక్ట్రిక్‌తో నడిపే ఖర్చులో నెలకు సుమారు {x} ఆదా అవుతుంది.', evLoss:'పెట్రోల్ నడిపే ఖర్చు నెలకు సుమారు {x} తక్కువ.', evNote:'నడిపే ఖర్చు మాత్రమే: ఇంధనం లేదా ఛార్జింగ్, అరుగుదల. వాహనం, బ్యాటరీ ధర లేదా EMI కలపలేదు.', backupDue:'చివరి బ్యాకప్ తర్వాత చాలా రోజులైంది. కోడ్ కాపీ చేసి WhatsApp లో మీకే పంపుకోండి.', backupNow:'ఇప్పుడు బ్యాకప్ చేయండి', pinTitle:'PIN తో లాక్ చేయండి', pinNote:'ఫోన్ ఇతరులతో పంచుకుంటే ఉపయోగపడుతుంది. ఇది ఇతరులు యాప్ చూడకుండా మాత్రమే ఆపుతుంది, బ్యాంక్ స్థాయి భద్రత కాదు.', pinSet:'PIN పెట్టండి (4 అంకెలు)', pinRemove:'PIN తొలగించండి', pinEnter:'PIN నమోదు చేయండి', pinWrong:'తప్పు PIN', pinSaved:'PIN పెట్టబడింది', pinBad:'సరిగ్గా 4 అంకెలు వాడండి.', pinUnlock:'అన్‌లాక్', pinForgot:'PIN మర్చిపోయారా? బ్రౌజర్‌లో ఈ సైట్ డేటా క్లియర్ చేసి, బ్యాకప్ కోడ్ నుండి రీస్టోర్ చేయండి.', cushionTitle:'కుషన్ వారాలు', cushionSavings:'వాడుకోగల పొదుపు (₹)', cushionSpend:'ప్రతి నెల తప్పనిసరి ఖర్చు (₹)', cushionWeeks:'{w} వారాల కుషన్', cushionNote:'పని ఆగిపోతే ఇంతకాలం ఖర్చులు గడుస్తాయి. మొదట 4 వారాలు, తరువాత 12 వారాలు లక్ష్యంగా పెట్టుకోండి.', checked:'చివరిగా తనిఖీ: అక్టోబర్ 2026. మొత్తాలు, నియమాలు మారవచ్చు, అధికారిక సైట్‌లో నిర్ధారించుకోండి.', official:'అధికారిక సైట్', assume:'ఇంధనం కి.మీ.కు ₹{f}, అరుగుదల కి.మీ.కు ₹{w} వాడుతున్నాం. వీటిని సెట్టింగ్స్‌లో మార్చండి.', assumeBtn:'మార్చండి', backupWarn:'ఈ కోడ్‌లో మీ ఆదాయ వివరాలు ఉంటాయి. గ్రూపులలో లేదా బహిరంగ చాట్‌లలో పెట్టకండి.', a2hsTitle:'హోమ్ స్క్రీన్‌కు జోడించండి', a2hs:'Chrome లో మెనూ (మూడు చుక్కలు) నొక్కి, Add to Home screen ఎంచుకోండి. ఇది యాప్‌లా తెరుచుకుంటుంది, మొదటిసారి తెరిచిన తర్వాత ఇంటర్నెట్ లేకుండా పనిచేస్తుంది.', unitHrs:'గం.', stampTarget:'లక్ష్యం చేరారు', dismiss:'మూసివేయండి', themeTitle:'థీమ్', themeAuto:'ఆటో', themeLight:'లైట్', themeDark:'డార్క్', goalTitle:'పొదుపు లక్ష్యం', goalName:'దేని కోసం పొదుపు చేస్తున్నారు?', goalTarget:'లక్ష్య మొత్తం (₹)', goalSet:'లక్ష్యం పెట్టండి', goalAdd:'పొదుపుకు జోడించండి (₹)', goalSaved:'{b} లో {a} పొదుపు అయింది', goalDone:'లక్ష్యం చేరుకున్నారు!', goalRemove:'లక్ష్యం తొలగించండి',
+ perHourTitle:'గంటకు నిజమైన చేతికొచ్చే సంపాదన', hoursHint:'ట్రిప్‌లో ఉన్న సమయమే కాదు, పని కోసం ఎదురుచూసిన సమయాన్నీ కలపండి. 1 గంట 30 నిమిషాలకు 1:30 అని రాయండి.', copyLast:'గత రోజు కాపీ చేయండి', copiedLast:'{d} నుండి కాపీ అయింది. మారినవి సరిచేయండి.', noLast:'కాపీ చేయడానికి ముందు రోజు లేదు.', extraCosts:'ఖర్చులు (అవసరమైతే)', appHoursTitle:'ప్రతి యాప్‌లో గంటలు (అవసరమైతే)', appHoursHint:'యాప్‌లను పోల్చడానికి నింపండి. ఎదురుచూసే సమయం కలపండి.', cmpTitle:'ఏ యాప్ గంటకు ఎక్కువ ఇస్తుంది?', cmpNote:'ఖర్చుల తర్వాత, గంటల ప్రకారం పంచబడింది. ప్రతి యాప్ గంటలు నింపిన రోజుల ఆధారంగా అంచనా.', cmpNeed:'ఇది చూడటానికి కొన్ని రోజులు ప్రతి యాప్ గంటలు నింపండి.', evTitle:'పెట్రోల్ లేదా ఎలక్ట్రిక్?', evKmDay:'రోజుకు కి.మీ.', evDaysM:'నెలకు రోజులు', evRate:'ఎలక్ట్రిక్: కి.మీ.కు ఛార్జింగ్ ఖర్చు (₹)', evPet:'పెట్రోల్ నెలకు', evEle:'ఎలక్ట్రిక్ నెలకు', evSave:'ఎలక్ట్రిక్‌తో నడిపే ఖర్చులో నెలకు సుమారు {x} ఆదా అవుతుంది.', evLoss:'పెట్రోల్ నడిపే ఖర్చు నెలకు సుమారు {x} తక్కువ.', evNote:'నడిపే ఖర్చు మాత్రమే: ఇంధనం లేదా ఛార్జింగ్, అరుగుదల. వాహనం, బ్యాటరీ ధర లేదా EMI కలపలేదు.', backupDue:'మీరు కొన్ని రోజులు సేవ్ చేశారు. ఏదీ పోకుండా ఇప్పుడే బ్యాకప్‌ను WhatsApp లో మీకే పంపుకోండి.', backupNow:'ఇప్పుడు బ్యాకప్ చేయండి', pinTitle:'PIN తో లాక్ చేయండి', pinNote:'ఫోన్ ఇతరులతో పంచుకుంటే ఉపయోగపడుతుంది. ఇది ఇతరులు యాప్ చూడకుండా మాత్రమే ఆపుతుంది, బ్యాంక్ స్థాయి భద్రత కాదు.', pinSet:'PIN పెట్టండి (4 అంకెలు)', pinRemove:'PIN తొలగించండి', pinEnter:'PIN నమోదు చేయండి', pinWrong:'తప్పు PIN', pinSaved:'PIN పెట్టబడింది', pinBad:'సరిగ్గా 4 అంకెలు వాడండి.', pinUnlock:'అన్‌లాక్', pinForgot:'PIN మర్చిపోయారా? బ్రౌజర్‌లో ఈ సైట్ డేటా క్లియర్ చేసి, బ్యాకప్ కోడ్ నుండి రీస్టోర్ చేయండి.', cushionTitle:'కుషన్ వారాలు', cushionSavings:'వాడుకోగల పొదుపు (₹)', cushionSpend:'ప్రతి నెల తప్పనిసరి ఖర్చు (₹)', cushionWeeks:'{w} వారాల కుషన్', cushionNote:'పని ఆగిపోతే ఇంతకాలం ఖర్చులు గడుస్తాయి. మొదట 4 వారాలు, తరువాత 12 వారాలు లక్ష్యంగా పెట్టుకోండి.', checked:'చివరిగా తనిఖీ: అక్టోబర్ 2026. మొత్తాలు, నియమాలు మారవచ్చు, అధికారిక సైట్‌లో నిర్ధారించుకోండి.', official:'అధికారిక సైట్', assume:'ఇంధనం కి.మీ.కు ₹{f}, అరుగుదల కి.మీ.కు ₹{w} వాడుతున్నాం. వీటిని సెట్టింగ్స్‌లో మార్చండి.', assumeBtn:'మార్చండి', backupWarn:'ఈ కోడ్‌లో మీ ఆదాయ వివరాలు ఉంటాయి. గ్రూపులలో లేదా బహిరంగ చాట్‌లలో పెట్టకండి.', a2hsTitle:'హోమ్ స్క్రీన్‌కు జోడించండి', a2hs:'Chrome లో మెనూ (మూడు చుక్కలు) నొక్కి, Add to Home screen ఎంచుకోండి. ఇది యాప్‌లా తెరుచుకుంటుంది, మొదటిసారి తెరిచిన తర్వాత ఇంటర్నెట్ లేకుండా పనిచేస్తుంది.', unitHrs:'గం.', stampTarget:'లక్ష్యం చేరారు', dismiss:'మూసివేయండి', themeTitle:'థీమ్', themeAuto:'ఆటో', themeLight:'లైట్', themeDark:'డార్క్', offBtn:'ఈరోజు పని చేయలేదు', offPick:'ఎందుకు? ఒకటి నొక్కితే రోజు సేవ్ అవుతుంది.', offRain:'వర్షం', offSick:'అనారోగ్యం', offRepair:'వాహనం రిపేరు', offFestival:'పండుగ లేదా సెలవు', offNoOrders:'ఆర్డర్లు లేవు', offSaved:'సెలవు రోజుగా సేవ్ అయింది.', offNote:'సెలవు రోజుగా గుర్తించారు: {r}', daysOff:'సెలవు రోజులు: {n}', setupFixedQ:'మీరు EMI, అద్దె లేదా వాహనం అద్దె కడతారా?', setupFixedHint:'ఇది లేకపోతే, మీ చేతికి వచ్చేది నిజం కంటే ఎక్కువగా కనిపిస్తుంది.', perWeek:'వారానికి', perMonth:'నెలకు', saveIt:'సేవ్ చేయండి', noneToPay:'నేను ఏమీ కట్టను', fixedLabel:'అద్దె, EMI, వాహనం అద్దె లేదా ఇన్సూరెన్స్ (₹)', setupPhoneQ:'ఈ ఫోన్‌ను ఇతరులు వాడతారా?', setupPhoneHint:'PIN మీ లెక్కలను ప్రైవేట్‌గా ఉంచుతుంది.', yes:'అవును', no:'కాదు', paidMonthly:'నెలకు ఒకసారి జీతం', monthlyAmt:'నెలకు ₹', monthlyNote:'నెలవారీ జీతం మీ పని రోజుల మీద పంచబడుతుంది: రోజుకు {x}.', dues_earned:'పని చేసిన తేదీ (అవసరమైతే)', dues_credit:'{d} ఆదాయంలో చేర్చండి', dues_credited:'{d} లో చేర్చారు', dues_paidOn:'{d} న చెల్లించారు', dues_creditAs:'దీనిగా చేర్చండి', backupSend:'బ్యాకప్ WhatsApp లో పంపండి', cleanerWarn:'ఫోన్ క్లీనర్ యాప్‌లు మీ రికార్డులను తుడిచేయవచ్చు. బ్యాకప్‌ను WhatsApp లో మీకే పంపుకోండి.', f_penalty:'జరిమానాలు లేదా కోతలు (₹)', c_penalty:'జరిమానాలు', payoutQ:'యాప్ తన కమీషన్ తీసిన తర్వాత మీకు చెల్లిస్తుందా?', payoutYes:'అవును, కమీషన్ తీసాక', payoutNo:'కాదు, పూర్తి మొత్తం', payoutNote:'మీ చెల్లింపులో ఫీజు ఇప్పటికే తీసేశారు కాబట్టి ప్లాట్‌ఫారమ్ ఫీజు లెక్కించం.', spreadTitle:'పెద్ద కొనుగోలు లేదా వార్షిక ఖర్చు', spreadHint:'గ్యాస్ సిలిండర్, వారం బియ్యం, ఇన్సూరెన్స్ రెన్యువల్, పర్మిట్. ఇది ఎన్ని రోజులు వస్తుందో ఆ రోజుల మీద పంచబడుతుంది.', spreadName:'ఏమిటది?', spreadAmt:'మొత్తం (₹)', spreadDays:'సుమారు ఎన్ని రోజులు', spreadAdd:'పంచండి', spreadDaily:'{d} వరకు రోజుకు {x}', c_bulk:'పెద్ద కొనుగోళ్లు (పంచినవి)', f_returns:'ఈరోజు రిటర్న్‌లు లేదా రీఫండ్‌లు (₹)', c_returns:'రిటర్న్‌లు', c_cogs:'సరుకు ఖర్చు (మీ మార్జిన్ నుండి)', shopHint:'మీరు కొనే సరుకు రోజువారీ ఖర్చుగా లెక్కించం. మీ మార్జిన్ దాన్ని కవర్ చేస్తుంది.', defMargin:'మీరు అమ్మే వాటిపై సాధారణ మార్జిన్ (%)', marginPct:'మార్జిన్ %', marginNote:'మార్జిన్లు వేరైతే ప్రతి రకానికి ఒక లైన్ చేర్చి, ఒక్కోదానికి మార్జిన్ పెట్టండి.', earlyGuess:'ముందస్తు అంచనా', earlyNote:'{n} రోజుల ఆధారంగా. 3 వారాల తర్వాత మరింత నమ్మకమవుతుంది.', hoursEntryHint:'1 గంట 30 నిమిషాలకు 1:30 అని రాయండి.', splitHours:'నా గంటలను సంపాదన ప్రకారం పంచండి', splitNeed:'ముందు మొత్తం గంటలు, సంపాదన నమోదు చేయండి.', src_cash:'నగదు లేదా వీధిలో రైడ్‌లు', pCng:'CNG ఆటో లేదా కారు', pTruck:'మినీ ట్రక్ లేదా సరుకు వాహనం', cngFill:'CNG కి, ఈరోజు నింపిన రూపాయలు రాయండి.', f_helper:'సహాయకుడి జీతం (₹)', c_helper:'సహాయకుడి జీతం', voiceBtn:'మీ రోజు చెప్పండి (బీటా)', voiceHeard:'విన్నది: {x}. అంకెలు సరిచూడండి.', voiceNone:'అంకెలు దొరకలేదు. ఇలా చెప్పండి: Swiggy 1200, 8 గంటలు, 60 కి.మీ.', voiceFail:'ఈ ఫోన్‌లో వాయిస్ పనిచేయలేదు.', usdTitle:'డాలర్లలో చెల్లింపు వచ్చిందా?', usdAmt:'మొత్తం ($)', usdRate:'రేటు ($కి ₹)', usdAdd:'ఆదాయంలో చేర్చండి', usdNote:'మీ బ్యాంక్ ఇచ్చిన రేటు వాడండి. మీరు ఎంచుకున్న మూలానికి రూపాయల్లో చేరుతుంది.', readAloud:'గట్టిగా చదవండి', noVoice:'మీ ఫోన్‌లో ఈ భాషకు వాయిస్ లేదు.', goalTitle:'పొదుపు లక్ష్యం', goalName:'దేని కోసం పొదుపు చేస్తున్నారు?', goalTarget:'లక్ష్య మొత్తం (₹)', goalSet:'లక్ష్యం పెట్టండి', goalAdd:'పొదుపుకు జోడించండి (₹)', goalSaved:'{b} లో {a} పొదుపు అయింది', goalDone:'లక్ష్యం చేరుకున్నారు!', goalRemove:'లక్ష్యం తొలగించండి',
  goalHint:'మీ సురక్షిత నెలవారీ బడ్జెట్ ({x}) లో 10% పొదుపు చేస్తే సుమారు {n} నెలల్లో ఈ లక్ష్యం చేరుతుంది.',
  stmtRange1:'ఒక నెల', stmtRange3:'3 నెలలు', avgMonth:'నెలవారీ సగటు లాభం',
- loanNote:'ఇది మీరు చూపించగల సారాంశం. ఏం అంగీకరించాలో రుణదాతలు, ఇంటి యజమానులే నిర్ణయిస్తారు; చాలామంది బ్యాంక్ స్టేట్‌మెంట్లు, ID కూడా అడుగుతారు.',
+ loanNote:'ఇది మీరు చూపించగల మొత్తం లెక్క. ఏం అంగీకరించాలో రుణదాతలు, ఇంటి యజమానులే నిర్ణయిస్తారు; చాలామంది బ్యాంక్ స్టేట్‌మెంట్లు, ID కూడా అడుగుతారు.',
  csvBtn:'CSVగా డౌన్‌లోడ్ చేయండి', moreIntro:'మరిన్ని సాధనాలు', grpStart:'మీ పనికి ఇక్కడ మొదలుపెట్టండి',
  onbVehicleS:'స్విగ్గీ, జొమాటో, బ్లింకిట్, ఉబర్, రాపిడో, ఓలా, మీ సొంత ఆటో లేదా క్యాబ్', onbServiceS:'బ్యూటీ, టైలరింగ్, రిపేర్లు, క్లీనింగ్, వంట, ఇంటికి వెళ్లి చేసే సేవలు', onbOnlineS:'ఫ్రీలాన్సింగ్, డిజైన్, రచన, ట్యూషన్, డేటా ఎంట్రీ, కంటెంట్', onbOtherS:'దుకాణం, బండి, ఇంట్లో వంట, హస్తకళలు, రీసేల్ లేదా ఏదైనా ఇతర పని', learnTitle:'డబ్బు మరియు సహాయ గైడ్', learnIntro:'సులభమైన భాషలో డబ్బు ప్రాథమికాలు, మీరు పొందగలిగే ప్రభుత్వ సహాయం.', learnNote:'ఇది సాధారణ సమాచారం మాత్రమే, రాసిన సమయంలో తెలిసిన నియమాల ఆధారంగా. మొత్తాలు, అర్హతలు మారవచ్చు. దరఖాస్తు చేసే ముందు అధికారిక వెబ్‌సైట్‌లో లేదా బ్యాంక్ లేదా కామన్ సర్వీస్ సెంటర్‌లో నిర్ధారించుకోండి. ఇది ఆర్థిక సలహా కాదు.', grp1:'మీ లెక్కలు తెలుసుకోండి', grp2:'పొదుపు మరియు అప్పు', grp3:'కొన్ని ప్రభుత్వ పథకాలు', grp4:'సురక్షితంగా ఉండండి', n1t:'రిపేర్లు, రెన్యువల్స్ కోసం డబ్బు పక్కన పెట్టండి', n1:'సర్వీసింగ్, టైర్లు, పనిముట్లు, పరికరాలు లేదా సరుకు కోసం ప్రతి పని రోజూ కొంచెం పక్కన పెట్టండి. ఒకేసారి వచ్చే ఖర్చులే మంచి నెలను చెడ్డ నెలగా మారుస్తాయి.', n5t:'పెద్ద ఆర్డర్లకు అడ్వాన్స్ తీసుకోండి', n5:'కుట్టు పని, ఈవెంట్లు లేదా ప్రత్యేక ఆర్డర్లకు 30 నుండి 50 శాతం ముందే అడగండి. ఇది సామగ్రి ఖర్చును కవర్ చేస్తుంది, డబ్బు రాకపోయే ప్రమాదాన్ని తగ్గిస్తుంది. మిగతా మొత్తాన్ని బాకీలు ట్యాబ్‌లో నమోదు చేయండి.', n2t:'మీ క్రెడిట్ స్కోర్ తెలుసుకోండి', n2:'EMIలు, కార్డ్ బిల్లులు సమయానికి కట్టండి. మీకు అప్పు వస్తుందా, ఏ వడ్డీకి వస్తుందా అన్నది క్రెడిట్ (CIBIL) స్కోర్ నిర్ణయిస్తుంది. ప్రతి క్రెడిట్ బ్యూరో నుండి సంవత్సరానికి ఒకసారి పూర్తి క్రెడిట్ రిపోర్ట్ ఉచితంగా పొందవచ్చు.', n3t:'నమోదిత రుణదాతల నుండే అప్పు తీసుకోండి', n3:'అప్పు తీసుకునే ముందు ఆ బ్యాంక్ లేదా NBFC RBI జాబితాలో ఉందో లేదో చూడండి. మీ కాంటాక్ట్స్ లేదా ఫోటోలు అడిగే, లేదా బెదిరించే లోన్ యాప్‌లు ప్రమాద సంకేతం. cybercrime.gov.inలో లేదా 1930కి ఫిర్యాదు చేయండి.', n4t:'ఆదాయపు పన్ను రిటర్న్ దాఖలు చేయండి', n4:'పన్ను కట్టాల్సిన అవసరం లేకపోయినా, రిటర్న్ ఆదాయానికి రుజువు, అప్పులు, వీసా, అద్దె ఇళ్లకు ఉపయోగపడుతుంది. ఫ్రీలాన్సర్లు, చిన్న వ్యాపారులు సులభమైన ప్రిజంప్టివ్ పన్ను పథకాలు (సెక్షన్ 44ADA, 44AD) వాడవచ్చు. నియమాలు మారుతాయి కాబట్టి పన్ను నిపుణుడిని అడగండి.', g1t:'ఈ-శ్రమ్ కార్డ్', g1:'EPFO లేదా ESICలో లేని, 16 నుండి 59 ఏళ్ల అసంఘటిత, గిగ్ కార్మికులకు eshram.gov.in లేదా ఏదైనా కామన్ సర్వీస్ సెంటర్‌లో ఉచిత నమోదు. ప్రభుత్వ ప్రయోజనాలకు అనుసంధానమయ్యే కార్డ్, నంబర్ వస్తాయి. నమోదుతో పాటు ప్రమాద బీమా అందించారు. ప్రస్తుత నిబంధనలు చూడండి.', g2t:'సంవత్సరానికి కొన్ని రూపాయలకే ప్రమాద, జీవిత బీమా', g2:'ప్రధానమంత్రి సురక్ష బీమా యోజన సుమారు ₹20 సంవత్సరానికి ₹2 లక్షల ప్రమాద బీమా ఇస్తుంది. ప్రధానమంత్రి జీవన్ జ్యోతి బీమా యోజన సుమారు ₹436 సంవత్సరానికి ₹2 లక్షల జీవిత బీమా ఇస్తుంది. రెండూ బ్యాంక్ ఖాతా నుండి ఆటో-డెబిట్ అవుతాయి. వయోపరిమితులు ఉన్నాయి.', g3t:'ఆరోగ్య బీమా: ఆయుష్మాన్ భారత్, ఆరోగ్యశ్రీ', g3:'అర్హత ఉన్న కుటుంబాలకు PM-JAY సంవత్సరానికి ₹5 లక్షల వరకు ఉచిత ఆసుపత్రి చికిత్స ఇస్తుంది (pmjay.gov.in, హెల్ప్‌లైన్ 14555). తెలంగాణ ఆరోగ్యశ్రీ కుటుంబానికి సంవత్సరానికి ₹10 లక్షల వరకు కవర్ చేస్తుంది, కానీ బకాయిల కారణంగా ప్రైవేట్ ఆసుపత్రులు గతంలో సేవలు ఆపాయి, కాబట్టి మీ ఆసుపత్రి దీన్ని అంగీకరిస్తుందో నిర్ధారించుకోండి. నమోదైన గిగ్ కార్మికులకు PM-JAY కవరేజీని ప్రభుత్వం ప్రకటించింది, కానీ అది మొదలైందని నేను నిర్ధారించలేకపోయాను, కాబట్టి ఈ-శ్రమ్‌లో లేదా కామన్ సర్వీస్ సెంటర్‌లో అడగండి.', g4t:'పెన్షన్: అటల్ పెన్షన్ యోజన', g4:'18 నుండి 40 ఏళ్ల మధ్య బ్యాంక్ ద్వారా చేరితే 60 ఏళ్ల నుండి నెలకు ₹1,000 నుండి ₹5,000 స్థిర పెన్షన్ వస్తుంది. మీరు కట్టే నెలవారీ మొత్తం మీ వయసు, ఎంచుకున్న పెన్షన్‌పై ఆధారపడి ఉంటుంది.', g5t:'వ్యాపార రుణాలు: ముద్ర', g5:'PM ముద్ర యోజన చిన్న వ్యవసాయేతర వ్యాపారాలకు పూచీకత్తు లేని రుణాలు ఇస్తుంది. శిశు ₹50,000 వరకు, కిశోర్ ₹5 లక్షల వరకు, తరుణ్ ₹10 లక్షల వరకు. తరుణ్ రుణం ఇప్పటికే తీర్చినవారికి తరుణ్ ప్లస్ (₹20 లక్షల వరకు). బ్యాంక్, సహకార సంస్థ లేదా మైక్రోఫైనాన్స్ సంస్థలో దరఖాస్తు చేయండి (mudra.org.in).', g6t:'వీధి వ్యాపారులు: PM స్వనిధి', g6:'వీధి వ్యాపారులకు దశలవారీగా పూచీకత్తు లేని చిన్న వర్కింగ్ క్యాపిటల్ రుణాలు: సమయానికి చెల్లిస్తే ₹15,000, తర్వాత ₹25,000, ఆపై ₹50,000. డిజిటల్ చెల్లింపులకు క్యాష్‌బ్యాక్ రావచ్చు, రెండో రుణం తర్వాత UPI అనుసంధానమైన రూపే క్రెడిట్ కార్డ్ ఇస్తారు. ఈ పథకం మార్చి 2030 వరకు ఉంది (pmsvanidhi.mohua.gov.in). ప్రస్తుత నిబంధనలు చూడండి.', g7t:'చేతివృత్తులవారు, టైలర్లు: PM విశ్వకర్మ', g7:'టైలర్లు, క్షురకులు వంటి జాబితాలోని సంప్రదాయ వృత్తులవారి కోసం. గుర్తింపు కార్డ్, రోజువారీ స్టైపెండ్‌తో నైపుణ్య శిక్షణ, పనిముట్ల గ్రాంట్, తక్కువ వడ్డీ రుణాలు అందిస్తుంది (pmvishwakarma.gov.in).', g8t:'మహిళా వ్యవస్థాపకుల కోసం', g8:'స్టాండ్-అప్ ఇండియా మహిళలు, SC/ST తొలి వ్యవస్థాపకులకు ₹10 లక్షల నుండి ₹1 కోటి వరకు రుణాలు ఇస్తుంది (standupmitra.in). స్వయం సహాయక సంఘాలు (SHG) మహిళలకు తక్కువ వడ్డీ గ్రూప్ రుణాలు ఇస్తాయి. WE Hub అనేది హైదరాబాద్‌లో మహిళలు నడిపే స్టార్టప్‌ల కోసం తెలంగాణ ప్రభుత్వ ఇంక్యుబేటర్, కాబట్టి ఒక్కరే చేసే సేవ కంటే వృద్ధి కోరుకునే వ్యాపారాలకు ఎక్కువ సరిపోతుంది.', g9t:'ఉద్యమ్ నమోదు', g9:'udyamregistration.gov.inలో సూక్ష్మ సంస్థగా ఉచిత నమోదు. ఇది బ్యాంక్ రుణాలు, పథకాల ప్రయోజనాలు పొందడానికి సహాయపడుతుంది. ఏజెంట్లకు డబ్బు ఇవ్వకండి, ఎందుకంటే అధికారిక సైట్ ఉచితం.', g10t:'గిగ్ కార్మికుల హక్కులు', g10:'సామాజిక భద్రతా కోడ్ 21 నవంబర్ 2025 నుండి అమల్లోకి వచ్చింది, గిగ్, ప్లాట్‌ఫారమ్ కార్మికులను గుర్తిస్తుంది. ప్లాట్‌ఫారమ్‌లు తమ టర్నోవర్‌లో 1 నుండి 2 శాతం సామాజిక భద్రతా నిధికి జమ చేయాలి. 16 ఏళ్లు పైబడిన కార్మికులు ఈ-శ్రమ్‌లో నమోదు చేసుకోవాలి, ప్రయోజనాలకు సాధారణంగా సంవత్సరంలో ఒక ప్లాట్‌ఫారమ్‌లో సుమారు 90 రోజులు లేదా పలు ప్లాట్‌ఫారమ్‌లలో 120 రోజులు పని అవసరం. తెలంగాణ కూడా సొంత గిగ్ కార్మికుల చట్టం ముసాయిదా రూపొందించింది, మీకు ఏది వర్తిస్తుందో రాష్ట్ర కార్మిక శాఖను అడగండి.', g11t:'జన్ ధన్ ఖాతా', g11:'ప్రమాద బీమా ఉన్న రూపే కార్డ్‌తో జీరో బ్యాలెన్స్ బ్యాంక్ ఖాతా. ప్రభుత్వ చెల్లింపులు నేరుగా మీకు చేరేది కూడా ఇక్కడికే.', n6t:'నకిలీ పథకాలు, నమోదు రుసుము కాల్స్', n6:'ప్రభుత్వ పథకాలు నమోదుకు డబ్బు తీసుకోవు, రుణం ఇవ్వడానికి రుసుము అడగవు. gov.inతో ముగిసే వెబ్‌సైట్‌లనే వాడండి, సందేహం ఉంటే బ్యాంక్ లేదా కామన్ సర్వీస్ సెంటర్‌కు వెళ్లండి.', n7t:'డబ్బు అందుకోవడానికి ఎప్పుడూ చెల్లించకండి', n7:'డబ్బు పంపడానికి మాత్రమే UPI PIN నమోదు చేస్తారు, అందుకోవడానికి ఎప్పుడూ కాదు. "కలెక్ట్ రిక్వెస్ట్", లేదా రీఫండ్ లేదా బహుమతి కోసం PIN అడిగే సందేశం మోసం. మోసాన్ని cybercrime.gov.inలో లేదా 1930కి తెలియజేయండి.' },
 hi:{ navDues:'बकाया', navMore:'और', back:'वापस',
- dues_title:'आपको मिलने वाला पैसा', dues_who:'किसे देना है?', dues_amount:'रकम (₹)', dues_date:'भुगतान की तारीख (वैकल्पिक)', dues_phone:'फ़ोन नंबर (वैकल्पिक, रिमाइंडर के लिए)', dues_note:'नोट (वैकल्पिक)',
+ dues_title:'आपको मिलने वाला पैसा', dues_who:'किसे देना है?', dues_amount:'रकम (₹)', dues_date:'भुगतान की तारीख (ज़रूरी नहीं)', dues_phone:'फ़ोन नंबर (ज़रूरी नहीं, रिमाइंडर के लिए)', dues_note:'नोट (ज़रूरी नहीं)',
  dues_add:'जोड़ें', dues_outstanding:'अभी वसूलना बाकी', dues_overdue:'देर हो चुकी', dues_due:'देय {d}', dues_markPaid:'भुगतान मिला', dues_remind:'WhatsApp पर याद दिलाएँ', dues_undo:'वापस करें', dues_paid:'चुकाए गए',
  dues_empty:'अभी आपको कोई पैसा नहीं लेना।', dues_needFields:'नाम और रकम भरें।', dues_overdueCount:'{n} देर से',
  dues_msg:'नमस्ते {who}, {amt} के बकाया भुगतान की यह एक विनम्र याद दिलाई है। कृपया बताएँ कि आप कब भुगतान कर सकते हैं। धन्यवाद।',
- perHourTitle:'प्रति घंटा असली हाथ में आने वाली कमाई', hoursHint:'सिर्फ़ ट्रिप का समय नहीं, काम के इंतज़ार का समय भी जोड़ें।', copyLast:'पिछला दिन कॉपी करें', copiedLast:'{d} से कॉपी हुआ। जो अलग है उसे बदलें।', noLast:'कॉपी करने के लिए पिछला दिन नहीं है।', extraCosts:'खर्चे (वैकल्पिक)', appHoursTitle:'हर ऐप पर घंटे (वैकल्पिक)', appHoursHint:'ऐप की तुलना के लिए भरें। इंतज़ार का समय जोड़ें।', cmpTitle:'कौन सा ऐप प्रति घंटा सबसे ज़्यादा देता है?', cmpNote:'खर्चों के बाद, घंटों के हिसाब से बाँटा गया। यह उन दिनों पर आधारित अनुमान है जब हर ऐप के घंटे भरे थे।', cmpNeed:'यह देखने के लिए कुछ दिन हर ऐप के घंटे भरें।', evTitle:'पेट्रोल या इलेक्ट्रिक?', evKmDay:'प्रति दिन कि.मी.', evDaysM:'महीने में दिन', evRate:'इलेक्ट्रिक: प्रति कि.मी. चार्जिंग खर्च (₹)', evPet:'पेट्रोल प्रति माह', evEle:'इलेक्ट्रिक प्रति माह', evSave:'इलेक्ट्रिक से चलाने के खर्च में हर महीने लगभग {x} की बचत होगी।', evLoss:'पेट्रोल चलाना हर महीने लगभग {x} सस्ता पड़ेगा।', evNote:'सिर्फ़ चलाने का खर्च: ईंधन या चार्जिंग और घिसाई। गाड़ी, बैटरी की कीमत या EMI शामिल नहीं।', backupDue:'पिछले बैकअप को काफ़ी समय हो गया। कोड कॉपी करके WhatsApp पर खुद को भेज दें।', backupNow:'अभी बैकअप लें', pinTitle:'PIN से लॉक करें', pinNote:'फ़ोन साझा करते हों तो उपयोगी। यह दूसरों को ऐप से दूर रखता है, बैंक जैसी सुरक्षा नहीं।', pinSet:'PIN लगाएँ (4 अंक)', pinRemove:'PIN हटाएँ', pinEnter:'PIN डालें', pinWrong:'गलत PIN', pinSaved:'PIN लग गया', pinBad:'ठीक 4 अंक डालें।', pinUnlock:'खोलें', pinForgot:'PIN भूल गए? ब्राउज़र में इस साइट का डेटा साफ़ करें, फिर बैकअप कोड से रीस्टोर करें।', cushionTitle:'सहारे के हफ़्ते', cushionSavings:'जो बचत इस्तेमाल कर सकते हैं (₹)', cushionSpend:'हर महीने का ज़रूरी खर्च (₹)', cushionWeeks:'{w} हफ़्तों का सहारा', cushionNote:'काम रुक जाए तो इतने समय तक खर्च चल सकता है। पहले 4 हफ़्ते, फिर 12 हफ़्ते का लक्ष्य रखें।', checked:'आख़िरी जाँच: अक्टूबर 2026। राशि और नियम बदलते रहते हैं, आधिकारिक साइट पर पुष्टि करें।', official:'आधिकारिक साइट', assume:'ईंधन ₹{f} प्रति कि.मी. और घिसाई ₹{w} प्रति कि.मी. मानी गई है। इन्हें सेटिंग्स में बदलें।', assumeBtn:'बदलें', backupWarn:'इस कोड में आपकी कमाई का ब्योरा है। इसे ग्रुप या सार्वजनिक चैट में न डालें।', a2hsTitle:'होम स्क्रीन पर जोड़ें', a2hs:'Chrome में मेन्यू (तीन बिंदु) दबाएँ, फिर Add to Home screen चुनें। यह ऐप की तरह खुलता है और पहली बार खोलने के बाद इंटरनेट के बिना चलता है।', unitHrs:'घं.', stampTarget:'लक्ष्य पूरा', dismiss:'बंद करें', themeTitle:'थीम', themeAuto:'ऑटो', themeLight:'लाइट', themeDark:'डार्क', goalTitle:'बचत का लक्ष्य', goalName:'आप किसके लिए बचत कर रहे हैं?', goalTarget:'लक्ष्य रकम (₹)', goalSet:'लक्ष्य तय करें', goalAdd:'बचत में जोड़ें (₹)', goalSaved:'{b} में से {a} बचत हुई', goalDone:'लक्ष्य पूरा हुआ!', goalRemove:'लक्ष्य हटाएँ',
+ perHourTitle:'प्रति घंटा असली हाथ में आने वाली कमाई', hoursHint:'सिर्फ़ ट्रिप का समय नहीं, काम के इंतज़ार का समय भी जोड़ें। 1 घंटा 30 मिनट के लिए 1:30 लिखें।', copyLast:'पिछला दिन कॉपी करें', copiedLast:'{d} से कॉपी हुआ। जो अलग है उसे बदलें।', noLast:'कॉपी करने के लिए पिछला दिन नहीं है।', extraCosts:'खर्चे (ज़रूरी नहीं)', appHoursTitle:'हर ऐप पर घंटे (ज़रूरी नहीं)', appHoursHint:'ऐप की तुलना के लिए भरें। इंतज़ार का समय जोड़ें।', cmpTitle:'कौन सा ऐप प्रति घंटा सबसे ज़्यादा देता है?', cmpNote:'खर्चों के बाद, घंटों के हिसाब से बाँटा गया। यह उन दिनों पर आधारित अनुमान है जब हर ऐप के घंटे भरे थे।', cmpNeed:'यह देखने के लिए कुछ दिन हर ऐप के घंटे भरें।', evTitle:'पेट्रोल या इलेक्ट्रिक?', evKmDay:'प्रति दिन कि.मी.', evDaysM:'महीने में दिन', evRate:'इलेक्ट्रिक: प्रति कि.मी. चार्जिंग खर्च (₹)', evPet:'पेट्रोल प्रति माह', evEle:'इलेक्ट्रिक प्रति माह', evSave:'इलेक्ट्रिक से चलाने के खर्च में हर महीने लगभग {x} की बचत होगी।', evLoss:'पेट्रोल चलाना हर महीने लगभग {x} सस्ता पड़ेगा।', evNote:'सिर्फ़ चलाने का खर्च: ईंधन या चार्जिंग और घिसाई। गाड़ी, बैटरी की कीमत या EMI शामिल नहीं।', backupDue:'आपने कुछ दिन सेव कर लिए हैं। कुछ खो न जाए, इसलिए अभी बैकअप WhatsApp पर खुद को भेज दें।', backupNow:'अभी बैकअप लें', pinTitle:'PIN से लॉक करें', pinNote:'फ़ोन साझा करते हों तो उपयोगी। यह दूसरों को ऐप से दूर रखता है, बैंक जैसी सुरक्षा नहीं।', pinSet:'PIN लगाएँ (4 अंक)', pinRemove:'PIN हटाएँ', pinEnter:'PIN डालें', pinWrong:'गलत PIN', pinSaved:'PIN लग गया', pinBad:'ठीक 4 अंक डालें।', pinUnlock:'खोलें', pinForgot:'PIN भूल गए? ब्राउज़र में इस साइट का डेटा साफ़ करें, फिर बैकअप कोड से रीस्टोर करें।', cushionTitle:'सहारे के हफ़्ते', cushionSavings:'जो बचत इस्तेमाल कर सकते हैं (₹)', cushionSpend:'हर महीने का ज़रूरी खर्च (₹)', cushionWeeks:'{w} हफ़्तों का सहारा', cushionNote:'काम रुक जाए तो इतने समय तक खर्च चल सकता है। पहले 4 हफ़्ते, फिर 12 हफ़्ते का लक्ष्य रखें।', checked:'आख़िरी जाँच: अक्टूबर 2026। राशि और नियम बदलते रहते हैं, आधिकारिक साइट पर पुष्टि करें।', official:'आधिकारिक साइट', assume:'ईंधन ₹{f} प्रति कि.मी. और घिसाई ₹{w} प्रति कि.मी. मानी गई है। इन्हें सेटिंग्स में बदलें।', assumeBtn:'बदलें', backupWarn:'इस कोड में आपकी कमाई का ब्योरा है। इसे ग्रुप या सार्वजनिक चैट में न डालें।', a2hsTitle:'होम स्क्रीन पर जोड़ें', a2hs:'Chrome में मेन्यू (तीन बिंदु) दबाएँ, फिर Add to Home screen चुनें। यह ऐप की तरह खुलता है और पहली बार खोलने के बाद इंटरनेट के बिना चलता है।', unitHrs:'घं.', stampTarget:'लक्ष्य पूरा', dismiss:'बंद करें', themeTitle:'थीम', themeAuto:'ऑटो', themeLight:'लाइट', themeDark:'डार्क', offBtn:'आज काम नहीं किया', offPick:'क्यों? एक दबाएँ, दिन सेव हो जाएगा।', offRain:'बारिश', offSick:'बीमार', offRepair:'गाड़ी की मरम्मत', offFestival:'त्योहार या छुट्टी', offNoOrders:'ऑर्डर नहीं थे', offSaved:'छुट्टी के दिन की तरह सेव हुआ।', offNote:'छुट्टी का दिन: {r}', daysOff:'छुट्टी के दिन: {n}', setupFixedQ:'क्या आप EMI, किराया या गाड़ी का किराया देते हैं?', setupFixedHint:'इसके बिना आपकी असली कमाई ज़्यादा दिखती है।', perWeek:'प्रति हफ़्ता', perMonth:'प्रति माह', saveIt:'सेव करें', noneToPay:'मैं कुछ नहीं देता', fixedLabel:'किराया, EMI, गाड़ी का किराया या बीमा (₹)', setupPhoneQ:'क्या इस फ़ोन को और लोग भी इस्तेमाल करते हैं?', setupPhoneHint:'PIN आपके हिसाब को निजी रखता है।', yes:'हाँ', no:'नहीं', paidMonthly:'महीने में एक बार पैसा', monthlyAmt:'₹ प्रति माह', monthlyNote:'महीने की कमाई आपके काम के दिनों में बँटती है: {x} प्रति दिन।', dues_earned:'काम किस दिन किया (ज़रूरी नहीं)', dues_credit:'{d} की कमाई में जोड़ें', dues_credited:'{d} में जुड़ गया', dues_paidOn:'{d} को मिला', dues_creditAs:'इसे ऐसे जोड़ें', backupSend:'बैकअप WhatsApp पर भेजें', cleanerWarn:'फ़ोन क्लीनर ऐप आपका रिकॉर्ड मिटा सकते हैं। बैकअप WhatsApp पर खुद को भेज दें।', f_penalty:'जुर्माना या कटौती (₹)', c_penalty:'जुर्माना', payoutQ:'क्या ऐप अपना कमीशन काटकर आपको पैसे देता है?', payoutYes:'हाँ, कमीशन कटकर', payoutNo:'नहीं, पूरी रकम', payoutNote:'आपके भुगतान में फ़ीस पहले ही कट चुकी है, इसलिए प्लेटफ़ॉर्म फ़ीस नहीं गिनी जाएगी।', spreadTitle:'बड़ी खरीद या सालाना खर्च', spreadHint:'गैस सिलेंडर, हफ़्ते का चावल, बीमा रिन्यूअल, परमिट। यह जितने दिन चले उतने दिनों में बँट जाता है।', spreadName:'क्या था?', spreadAmt:'रकम (₹)', spreadDays:'लगभग कितने दिन चलेगा', spreadAdd:'बाँट दें', spreadDaily:'{d} तक {x} प्रति दिन', c_bulk:'बड़ी खरीद (बँटी हुई)', f_returns:'आज की वापसी या रिफ़ंड (₹)', c_returns:'वापसी', c_cogs:'माल की लागत (आपके मार्जिन से)', shopHint:'जो माल आप खरीदते हैं वह रोज़ के खर्च में नहीं गिना जाता। आपका मार्जिन उसे कवर करता है।', defMargin:'जो बेचते हैं उस पर आम मार्जिन (%)', marginPct:'मार्जिन %', marginNote:'अगर मार्जिन अलग हैं तो हर तरह के सामान के लिए अलग लाइन जोड़ें और उसका मार्जिन भरें।', earlyGuess:'शुरुआती अंदाज़ा', earlyNote:'{n} दिनों पर आधारित। 3 हफ़्ते बाद ज़्यादा पक्का होगा।', hoursEntryHint:'1 घंटा 30 मिनट के लिए 1:30 लिखें।', splitHours:'मेरे घंटे कमाई के हिसाब से बाँटें', splitNeed:'पहले कुल घंटे और कमाई भरें।', src_cash:'नकद या सड़क की सवारी', pCng:'CNG ऑटो या कार', pTruck:'मिनी ट्रक या माल गाड़ी', cngFill:'CNG के लिए आज भरे गए रुपये लिखें।', f_helper:'मददगार की मज़दूरी (₹)', c_helper:'मददगार की मज़दूरी', voiceBtn:'अपना दिन बोलकर बताएँ (बीटा)', voiceHeard:'सुना: {x}। अंक जाँच लें।', voiceNone:'अंक नहीं मिले। ऐसे बोलें: Swiggy 1200, 8 घंटे, 60 कि.मी.', voiceFail:'इस फ़ोन पर आवाज़ काम नहीं की।', usdTitle:'डॉलर में पैसे मिले?', usdAmt:'रकम ($)', usdRate:'भाव (₹ प्रति $)', usdAdd:'कमाई में जोड़ें', usdNote:'बैंक ने जो भाव दिया वही डालें। चुने हुए कहाँ से कमाई में रुपये में जुड़ेगा।', readAloud:'बोलकर सुनाएँ', noVoice:'आपके फ़ोन में इस भाषा की आवाज़ नहीं है।', goalTitle:'बचत का लक्ष्य', goalName:'आप किसके लिए बचत कर रहे हैं?', goalTarget:'लक्ष्य रकम (₹)', goalSet:'लक्ष्य तय करें', goalAdd:'बचत में जोड़ें (₹)', goalSaved:'{b} में से {a} बचत हुई', goalDone:'लक्ष्य पूरा हुआ!', goalRemove:'लक्ष्य हटाएँ',
  goalHint:'अपने सुरक्षित मासिक बजट ({x}) का 10% बचाने पर यह लक्ष्य लगभग {n} महीनों में पूरा होगा।',
  stmtRange1:'एक महीना', stmtRange3:'3 महीने', avgMonth:'औसत मासिक मुनाफ़ा',
  loanNote:'यह एक सारांश है जो आप दिखा सकते हैं। क्या मानना है यह कर्ज़ देने वाले और मकान मालिक तय करते हैं, और ज़्यादातर बैंक स्टेटमेंट और ID भी माँगते हैं।',
  csvBtn:'CSV के रूप में डाउनलोड करें', moreIntro:'और टूल', grpStart:'अपने काम के लिए यहाँ से शुरू करें',
- onbVehicleS:'स्विगी, ज़ोमैटो, ब्लिंकिट, उबर, रैपिडो, ओला, अपना ऑटो या कैब', onbServiceS:'ब्यूटी, सिलाई, मरम्मत, सफ़ाई, खाना बनाना, घर जाकर सेवाएँ', onbOnlineS:'फ्रीलांसिंग, डिज़ाइन, लेखन, ट्यूशन, डेटा एंट्री, कंटेंट', onbOtherS:'दुकान, ठेला, घर की रसोई, हस्तशिल्प, पुनर्विक्रय या कोई और काम', learnTitle:'पैसा और सहायता गाइड', learnIntro:'आसान भाषा में पैसे की बुनियादी बातें और सरकारी मदद जो आप पा सकते हैं।', learnNote:'यह सिर्फ़ सामान्य जानकारी है, लिखते समय के नियमों पर आधारित। राशि और पात्रता बदल सकती है। आवेदन से पहले आधिकारिक वेबसाइट, बैंक या कॉमन सर्विस सेंटर पर पक्का कर लें। यह वित्तीय सलाह नहीं है।', grp1:'अपने आँकड़े जानें', grp2:'बचत और कर्ज़', grp3:'कुछ सरकारी योजनाएँ', grp4:'सुरक्षित रहें', n1t:'मरम्मत और रिन्यूअल के लिए पैसे अलग रखें', n1:'सर्विसिंग, टायर, औज़ार, उपकरण या माल के लिए हर काम वाले दिन थोड़ा पैसा अलग रखें। एक साथ आने वाले खर्च ही अच्छे महीने को बुरा बना देते हैं।', n5t:'बड़े ऑर्डर पर एडवांस लें', n5:'सिलाई, इवेंट या खास ऑर्डर पर 30 से 50 प्रतिशत पहले माँगें। इससे सामग्री का खर्च निकलता है और पैसा न मिलने का जोखिम घटता है। बाकी रकम बकाया टैब में दर्ज करें।', n2t:'अपना क्रेडिट स्कोर जानें', n2:'EMI और कार्ड के बिल समय पर चुकाएँ। आपको कर्ज़ मिलेगा या नहीं और किस दर पर, यह क्रेडिट (CIBIL) स्कोर तय करता है। हर क्रेडिट ब्यूरो से साल में एक बार पूरी क्रेडिट रिपोर्ट मुफ़्त मिलती है।', n3t:'सिर्फ़ पंजीकृत कर्ज़दाताओं से लें', n3:'कर्ज़ लेने से पहले देखें कि बैंक या NBFC RBI की सूची में है या नहीं। जो लोन ऐप आपके कॉन्टैक्ट या फ़ोटो माँगें या धमकाएँ, वे खतरे का संकेत हैं। cybercrime.gov.in पर या 1930 पर शिकायत करें।', n4t:'इनकम टैक्स रिटर्न भरें', n4:'टैक्स न बनता हो तब भी रिटर्न आय का सबूत है, जो कर्ज़, वीज़ा और किराए में काम आता है। फ्रीलांसर और छोटे कारोबारी आसान प्रिज़म्प्टिव टैक्स योजनाएँ (धारा 44ADA, 44AD) चुन सकते हैं। नियम बदलते हैं, इसलिए टैक्स विशेषज्ञ से पूछें।', g1t:'ई-श्रम कार्ड', g1:'EPFO या ESIC में न आने वाले, 16 से 59 साल के असंगठित और गिग कामगारों के लिए eshram.gov.in या किसी कॉमन सर्विस सेंटर पर मुफ़्त पंजीकरण। आपको कार्ड और नंबर मिलता है जो सरकारी लाभों से जोड़ता है, और पंजीकरण के साथ दुर्घटना बीमा दिया गया है। मौजूदा शर्तें देखें।', g2t:'साल के कुछ रुपये में दुर्घटना और जीवन बीमा', g2:'प्रधानमंत्री सुरक्षा बीमा योजना लगभग ₹20 सालाना में ₹2 लाख का दुर्घटना बीमा देती है। प्रधानमंत्री जीवन ज्योति बीमा योजना लगभग ₹436 सालाना में ₹2 लाख का जीवन बीमा देती है। दोनों बैंक खाते से ऑटो-डेबिट होती हैं। उम्र की सीमा लागू है।', g3t:'स्वास्थ्य कवर: आयुष्मान भारत और आरोग्यश्री', g3:'पात्र परिवारों को PM-JAY हर साल ₹5 लाख तक का मुफ़्त अस्पताल इलाज देता है (pmjay.gov.in, हेल्पलाइन 14555)। तेलंगाना की आरोग्यश्री प्रति परिवार हर साल ₹10 लाख तक कवर करती है, पर बकाया के कारण निजी अस्पताल पहले सेवाएँ रोक चुके हैं, इसलिए पक्का करें कि आपका अस्पताल इसे स्वीकार करता है। सरकार ने पंजीकृत गिग कामगारों के लिए PM-JAY कवर घोषित किया है, पर मैं पक्का नहीं कर सका कि यह शुरू हो चुका है, इसलिए ई-श्रम पर या कॉमन सर्विस सेंटर पर पूछें।', g4t:'पेंशन: अटल पेंशन योजना', g4:'18 से 40 साल की उम्र में बैंक के ज़रिए जुड़ें और 60 साल से हर महीने ₹1,000 से ₹5,000 की तय पेंशन पाएँ। आपकी मासिक किस्त आपकी उम्र और चुनी हुई पेंशन पर निर्भर करती है।', g5t:'कारोबार के लिए कर्ज़: मुद्रा', g5:'PM मुद्रा योजना छोटे गैर-कृषि कारोबारों को बिना गारंटी का कर्ज़ देती है। शिशु ₹50,000 तक, किशोर ₹5 लाख तक और तरुण ₹10 लाख तक। जिन्होंने तरुण कर्ज़ चुका दिया है, उनके लिए तरुण प्लस (₹20 लाख तक)। बैंक, सहकारी संस्था या माइक्रोफाइनेंस संस्था में आवेदन करें (mudra.org.in)।', g6t:'रेहड़ी-पटरी वाले: PM स्वनिधि', g6:'रेहड़ी-पटरी वालों के लिए चरणों में बिना गारंटी का छोटा कार्यशील पूँजी कर्ज़: समय पर चुकाने पर ₹15,000, फिर ₹25,000, फिर ₹50,000। डिजिटल भुगतान पर कैशबैक मिल सकता है और दूसरे कर्ज़ के बाद UPI से जुड़ा रूपे क्रेडिट कार्ड मिलता है। योजना मार्च 2030 तक चलेगी (pmsvanidhi.mohua.gov.in)। मौजूदा शर्तें देखें।', g7t:'कारीगर और दर्ज़ी: PM विश्वकर्मा', g7:'दर्ज़ी और नाई जैसे सूची में शामिल पारंपरिक पेशों के लोगों के लिए। इसमें पहचान पत्र, रोज़ाना वज़ीफ़े के साथ कौशल प्रशिक्षण, औज़ार अनुदान और कम ब्याज का कर्ज़ मिलता है (pmvishwakarma.gov.in)।', g8t:'महिला उद्यमियों के लिए', g8:'स्टैंड-अप इंडिया महिलाओं और SC/ST के पहली बार उद्यम शुरू करने वालों को ₹10 लाख से ₹1 करोड़ तक का कर्ज़ देता है (standupmitra.in)। स्वयं सहायता समूह (SHG) महिलाओं को कम ब्याज पर समूह कर्ज़ देते हैं। WE Hub हैदराबाद में महिलाओं द्वारा चलाए जा रहे स्टार्टअप के लिए तेलंगाना सरकार का इन्क्यूबेटर है, इसलिए यह अकेले की सेवा से ज़्यादा बढ़ने वाले कारोबारों के लिए ठीक है।', g9t:'उद्यम पंजीकरण', g9:'udyamregistration.gov.in पर सूक्ष्म उद्यम के रूप में मुफ़्त पंजीकरण। इससे बैंक कर्ज़ और योजनाओं के लाभ पाने में मदद मिलती है। एजेंट को पैसे न दें, क्योंकि आधिकारिक साइट मुफ़्त है।', g10t:'गिग कामगारों के अधिकार', g10:'सामाजिक सुरक्षा संहिता 21 नवंबर 2025 से लागू हुई है और गिग व प्लेटफ़ॉर्म कामगारों को मान्यता देती है। प्लेटफ़ॉर्म को अपने टर्नओवर का 1 से 2 प्रतिशत सामाजिक सुरक्षा कोष में देना होता है। 16 साल या उससे ऊपर के कामगार ई-श्रम पर पंजीकरण करें, और लाभों के लिए आम तौर पर साल में एक प्लेटफ़ॉर्म पर करीब 90 दिन या कई प्लेटफ़ॉर्म पर 120 दिन काम चाहिए। तेलंगाना ने भी अपने गिग कामगार कानून का मसौदा बनाया है, इसलिए राज्य श्रम विभाग से पूछें कि आप पर क्या लागू होता है।', g11t:'जन धन खाता', g11:'दुर्घटना बीमा वाले रूपे कार्ड के साथ ज़ीरो बैलेंस बैंक खाता। सरकारी भुगतान भी सीधे इसी में आते हैं।', n6t:'फ़र्ज़ी योजनाएँ और रजिस्ट्रेशन फ़ीस के कॉल', n6:'सरकारी योजनाएँ पंजीकरण के पैसे नहीं लेतीं और कर्ज़ जारी करने के लिए फ़ीस नहीं माँगतीं। सिर्फ़ gov.in पर खत्म होने वाली वेबसाइट इस्तेमाल करें, शक हो तो बैंक या कॉमन सर्विस सेंटर जाएँ।', n7t:'पैसे पाने के लिए कभी भुगतान न करें', n7:'UPI PIN सिर्फ़ पैसे भेजने के लिए डाला जाता है, पाने के लिए कभी नहीं। "कलेक्ट रिक्वेस्ट" या रिफ़ंड या इनाम के लिए PIN माँगने वाला संदेश ठगी है। ठगी की शिकायत cybercrime.gov.in पर या 1930 पर करें।' }
+ onbVehicleS:'स्विगी, ज़ोमैटो, ब्लिंकिट, उबर, रैपिडो, ओला, अपना ऑटो या कैब', onbServiceS:'ब्यूटी, सिलाई, मरम्मत, सफ़ाई, खाना बनाना, घर जाकर सेवाएँ', onbOnlineS:'फ्रीलांसिंग, डिज़ाइन, लेखन, ट्यूशन, डेटा एंट्री, कंटेंट', onbOtherS:'दुकान, ठेला, घर की रसोई, हस्तशिल्प, रीसेल (दोबारा बेचना) या कोई और काम', learnTitle:'पैसा और सहायता गाइड', learnIntro:'आसान भाषा में पैसे की बुनियादी बातें और सरकारी मदद जो आप पा सकते हैं।', learnNote:'यह सिर्फ़ सामान्य जानकारी है, लिखते समय के नियमों पर आधारित। राशि और पात्रता बदल सकती है। आवेदन से पहले आधिकारिक वेबसाइट, बैंक या कॉमन सर्विस सेंटर पर पक्का कर लें। यह वित्तीय सलाह नहीं है।', grp1:'अपने आँकड़े जानें', grp2:'बचत और कर्ज़', grp3:'कुछ सरकारी योजनाएँ', grp4:'सुरक्षित रहें', n1t:'मरम्मत और रिन्यूअल के लिए पैसे अलग रखें', n1:'सर्विसिंग, टायर, औज़ार, उपकरण या माल के लिए हर काम वाले दिन थोड़ा पैसा अलग रखें। एक साथ आने वाले खर्च ही अच्छे महीने को बुरा बना देते हैं।', n5t:'बड़े ऑर्डर पर एडवांस लें', n5:'सिलाई, इवेंट या खास ऑर्डर पर 30 से 50 प्रतिशत पहले माँगें। इससे सामग्री का खर्च निकलता है और पैसा न मिलने का जोखिम घटता है। बाकी रकम बकाया टैब में दर्ज करें।', n2t:'अपना क्रेडिट स्कोर जानें', n2:'EMI और कार्ड के बिल समय पर चुकाएँ। आपको कर्ज़ मिलेगा या नहीं और किस दर पर, यह क्रेडिट (CIBIL) स्कोर तय करता है। हर क्रेडिट ब्यूरो से साल में एक बार पूरी क्रेडिट रिपोर्ट मुफ़्त मिलती है।', n3t:'सिर्फ़ पंजीकृत कर्ज़दाताओं से लें', n3:'कर्ज़ लेने से पहले देखें कि बैंक या NBFC RBI की सूची में है या नहीं। जो लोन ऐप आपके कॉन्टैक्ट या फ़ोटो माँगें या धमकाएँ, वे खतरे का संकेत हैं। cybercrime.gov.in पर या 1930 पर शिकायत करें।', n4t:'इनकम टैक्स रिटर्न भरें', n4:'टैक्स न बनता हो तब भी रिटर्न आय का सबूत है, जो कर्ज़, वीज़ा और किराए में काम आता है। फ्रीलांसर और छोटे कारोबारी आसान प्रिज़म्प्टिव टैक्स योजनाएँ (धारा 44ADA, 44AD) चुन सकते हैं। नियम बदलते हैं, इसलिए टैक्स विशेषज्ञ से पूछें।', g1t:'ई-श्रम कार्ड', g1:'EPFO या ESIC में न आने वाले, 16 से 59 साल के असंगठित और गिग कामगारों के लिए eshram.gov.in या किसी कॉमन सर्विस सेंटर पर मुफ़्त पंजीकरण। आपको कार्ड और नंबर मिलता है जो सरकारी लाभों से जोड़ता है, और पंजीकरण के साथ दुर्घटना बीमा दिया गया है। मौजूदा शर्तें देखें।', g2t:'साल के कुछ रुपये में दुर्घटना और जीवन बीमा', g2:'प्रधानमंत्री सुरक्षा बीमा योजना लगभग ₹20 सालाना में ₹2 लाख का दुर्घटना बीमा देती है। प्रधानमंत्री जीवन ज्योति बीमा योजना लगभग ₹436 सालाना में ₹2 लाख का जीवन बीमा देती है। दोनों बैंक खाते से ऑटो-डेबिट होती हैं। उम्र की सीमा लागू है।', g3t:'स्वास्थ्य कवर: आयुष्मान भारत और आरोग्यश्री', g3:'पात्र परिवारों को PM-JAY हर साल ₹5 लाख तक का मुफ़्त अस्पताल इलाज देता है (pmjay.gov.in, हेल्पलाइन 14555)। तेलंगाना की आरोग्यश्री प्रति परिवार हर साल ₹10 लाख तक कवर करती है, पर बकाया के कारण निजी अस्पताल पहले सेवाएँ रोक चुके हैं, इसलिए पक्का करें कि आपका अस्पताल इसे स्वीकार करता है। सरकार ने पंजीकृत गिग कामगारों के लिए PM-JAY कवर घोषित किया है, पर मैं पक्का नहीं कर सका कि यह शुरू हो चुका है, इसलिए ई-श्रम पर या कॉमन सर्विस सेंटर पर पूछें।', g4t:'पेंशन: अटल पेंशन योजना', g4:'18 से 40 साल की उम्र में बैंक के ज़रिए जुड़ें और 60 साल से हर महीने ₹1,000 से ₹5,000 की तय पेंशन पाएँ। आपकी मासिक किस्त आपकी उम्र और चुनी हुई पेंशन पर निर्भर करती है।', g5t:'कारोबार के लिए कर्ज़: मुद्रा', g5:'PM मुद्रा योजना छोटे गैर-कृषि कारोबारों को बिना गारंटी का कर्ज़ देती है। शिशु ₹50,000 तक, किशोर ₹5 लाख तक और तरुण ₹10 लाख तक। जिन्होंने तरुण कर्ज़ चुका दिया है, उनके लिए तरुण प्लस (₹20 लाख तक)। बैंक, सहकारी संस्था या माइक्रोफाइनेंस संस्था में आवेदन करें (mudra.org.in)।', g6t:'रेहड़ी-पटरी वाले: PM स्वनिधि', g6:'रेहड़ी-पटरी वालों के लिए चरणों में बिना गारंटी का छोटा कार्यशील पूँजी कर्ज़: समय पर चुकाने पर ₹15,000, फिर ₹25,000, फिर ₹50,000। डिजिटल भुगतान पर कैशबैक मिल सकता है और दूसरे कर्ज़ के बाद UPI से जुड़ा रूपे क्रेडिट कार्ड मिलता है। योजना मार्च 2030 तक चलेगी (pmsvanidhi.mohua.gov.in)। मौजूदा शर्तें देखें।', g7t:'कारीगर और दर्ज़ी: PM विश्वकर्मा', g7:'दर्ज़ी और नाई जैसे सूची में शामिल पारंपरिक पेशों के लोगों के लिए। इसमें पहचान पत्र, रोज़ाना वज़ीफ़े के साथ कौशल प्रशिक्षण, औज़ार अनुदान और कम ब्याज का कर्ज़ मिलता है (pmvishwakarma.gov.in)।', g8t:'महिला उद्यमियों के लिए', g8:'स्टैंड-अप इंडिया महिलाओं और SC/ST के पहली बार उद्यम शुरू करने वालों को ₹10 लाख से ₹1 करोड़ तक का कर्ज़ देता है (standupmitra.in)। स्वयं सहायता समूह (SHG) महिलाओं को कम ब्याज पर समूह कर्ज़ देते हैं। WE Hub हैदराबाद में महिलाओं द्वारा चलाए जा रहे स्टार्टअप के लिए तेलंगाना सरकार का इन्क्यूबेटर है, इसलिए यह अकेले की सेवा से ज़्यादा बढ़ने वाले कारोबारों के लिए ठीक है।', g9t:'उद्यम पंजीकरण', g9:'udyamregistration.gov.in पर सूक्ष्म उद्यम के रूप में मुफ़्त पंजीकरण। इससे बैंक कर्ज़ और योजनाओं के लाभ पाने में मदद मिलती है। एजेंट को पैसे न दें, क्योंकि आधिकारिक साइट मुफ़्त है।', g10t:'गिग कामगारों के अधिकार', g10:'सामाजिक सुरक्षा संहिता 21 नवंबर 2025 से लागू हुई है और गिग व प्लेटफ़ॉर्म कामगारों को मान्यता देती है। प्लेटफ़ॉर्म को अपने टर्नओवर का 1 से 2 प्रतिशत सामाजिक सुरक्षा कोष में देना होता है। 16 साल या उससे ऊपर के कामगार ई-श्रम पर पंजीकरण करें, और लाभों के लिए आम तौर पर साल में एक प्लेटफ़ॉर्म पर करीब 90 दिन या कई प्लेटफ़ॉर्म पर 120 दिन काम चाहिए। तेलंगाना ने भी अपने गिग कामगार कानून का मसौदा बनाया है, इसलिए राज्य श्रम विभाग से पूछें कि आप पर क्या लागू होता है।', g11t:'जन धन खाता', g11:'दुर्घटना बीमा वाले रूपे कार्ड के साथ ज़ीरो बैलेंस बैंक खाता। सरकारी भुगतान भी सीधे इसी में आते हैं।', n6t:'फ़र्ज़ी योजनाएँ और रजिस्ट्रेशन फ़ीस के कॉल', n6:'सरकारी योजनाएँ पंजीकरण के पैसे नहीं लेतीं और कर्ज़ जारी करने के लिए फ़ीस नहीं माँगतीं। सिर्फ़ gov.in पर खत्म होने वाली वेबसाइट इस्तेमाल करें, शक हो तो बैंक या कॉमन सर्विस सेंटर जाएँ।', n7t:'पैसे पाने के लिए कभी भुगतान न करें', n7:'UPI PIN सिर्फ़ पैसे भेजने के लिए डाला जाता है, पाने के लिए कभी नहीं। "कलेक्ट रिक्वेस्ट" या रिफ़ंड या इनाम के लिए PIN माँगने वाला संदेश ठगी है। ठगी की शिकायत cybercrime.gov.in पर या 1930 पर करें।' }
 };
 ['en','te','hi'].forEach(function(l){ Object.assign(T[l], X[l]); });
 
 var COLORS = ['#7B2D5B','#E3A321','#2F5D8A','#6B8E23','#A8231C','#3E7C7B','#7B2D5B','#E3A321'];
-var QUICK = ['Ola','Porter','Zepto','Amazon Flex','Urban Company','inDrive','Upwork','Fiverr'];
+var QUICK = ['Porter','Zepto','Amazon Flex','Urban Company','inDrive','Meesho','Upwork','Fiverr'];
 
 var PRESETS = {
   bike:{mode:'perLitre', mileage:40, price:107, wear:1.0},
   ebike:{mode:'perKm', rate:0.6, wear:0.7},
   auto:{mode:'perLitre', mileage:30, price:95, wear:1.5},
-  cab:{mode:'perLitre', mileage:18, price:107, wear:2.5}
+  cab:{mode:'perLitre', mileage:18, price:107, wear:2.5},
+  cng:{mode:'perKm', rate:2.5, wear:1.5},
+  truck:{mode:'perLitre', mileage:12, price:92, wear:3.5}
 };
 var WORK = {
-  vehicle:{cells:['hours','km','jobs'], costs:['fuel','other'], otherKey:'otherExp'},
-  service:{cells:['hours','jobs'], costs:['materials','travel','other'], otherKey:'f_other_general'},
+  vehicle:{cells:['hours','km','jobs'], costs:['fuel','helper','other'], otherKey:'otherExp'},
+  service:{cells:['hours','jobs'], costs:['materials','travel','platform','penalty','helper','other'], otherKey:'f_other_general'},
   online:{cells:['hours','jobs'], costs:['platform','other'], otherKey:'f_other_online'},
-  other:{cells:['hours','jobs'], costs:['materials','travel','platform','other'], otherKey:'f_other_general'}
+  other:{cells:['hours','jobs'], costs:['returns','travel','platform','helper','other'], otherKey:'f_other_general'}
 };
 function defaultSources(type){
   var list;
-  if(type==='vehicle') list = [['swiggy','Swiggy'],['zomato','Zomato'],['blinkit','Blinkit'],['uber','Uber'],['rapido','Rapido'],['other',t('otherApp')]];
-  else if(type==='service') list = [['clients',t('src_clients')],['home',t('src_home')],['events',t('src_events')],['orders',t('src_orders')],['other',t('otherApp')]];
+  if(type==='vehicle') list = [['swiggy','Swiggy'],['zomato','Zomato'],['blinkit','Blinkit'],['uber','Uber'],['ola','Ola'],['rapido','Rapido'],['rapidoauto','Rapido Auto'],['cash',t('src_cash')],['other',t('otherApp')]];
+  else if(type==='service') list = [['clients',t('src_clients')],['home',t('src_home')],['events',t('src_events')],['orders',t('src_orders')],['uc','Urban Company'],['other',t('otherApp')]];
   else if(type==='online') list = [['upwork','Upwork'],['fiverr','Fiverr'],['freelancer','Freelancer'],['direct',t('src_direct')],['other',t('otherApp')]];
   else list = [['sales',t('src_sales')],['services',t('src_services')],['other',t('otherApp')]];
   return list.map(function(x){ return {id:x[0], name:x[1]}; });
@@ -521,15 +539,15 @@ var KEY = 'takeHomeTracker.v2';
 var mem = null;
 function defaults(){
   return {lang:'en', name:'', onboarded:false, oldNames:{},
-    settings:{type:'vehicle', vehicle:'bike', mode:'perLitre', mileage:40, price:107, rate:0.6, wear:1.0, fixedMonthly:0, workDays:26, target:120, sources:[]},
+    settings:{type:'vehicle', vehicle:'bike', mode:'perLitre', mileage:40, price:107, rate:0.6, wear:1.0, fixedMonthly:0, fixedAmt:'', fixedPer:'month', margin:'', payoutNet:'', workDays:26, target:120, sources:[]},
     pricing:{materials:'', travel:'', hours:'', hourly:'', fee:'', margin:'10', jobsMonth:'', current:''},
-    dues:[], goal:null, nudgeOff:'', theme:'auto', cushion:{savings:'', spend:''}, lastBackup:'', pin:'',
+    dues:[], goal:null, nudgeOff:'', theme:'auto', spreads:[], setup:{fixed:false, phone:false}, noFixed:false, usdRate:'', cushion:{savings:'', spend:''}, lastBackup:'', pin:'',
     entries:{}};
 }
 function load(){
   try{
     var raw = localStorage.getItem(KEY);
-    if(raw){ var s = JSON.parse(raw); var d = defaults(); s.settings = Object.assign(d.settings, s.settings||{}); s.pricing = Object.assign(d.pricing, s.pricing||{}); s.entries = s.entries||{}; s.oldNames = s.oldNames||{}; return Object.assign(d, s); }
+    if(raw){ var s = JSON.parse(raw); var d = defaults(); s.settings = Object.assign(d.settings, s.settings||{}); s.pricing = Object.assign(d.pricing, s.pricing||{}); s.entries = s.entries||{}; s.oldNames = s.oldNames||{}; s.setup = Object.assign(d.setup, s.setup||{}); if(!Array.isArray(s.spreads)) s.spreads = []; return Object.assign(d, s); }
   }catch(e){}
   return mem || defaults();
 }
@@ -565,23 +583,41 @@ var toastTimer;
 function toast(msg){ var el = $('toast'); el.textContent = msg; el.hidden = false; clearTimeout(toastTimer); toastTimer = setTimeout(function(){ el.hidden = true; }, 2200); }
 
 /* ---------- Calculation ---------- */
+function daySources(){ return state.settings.sources.filter(function(x){ return !x.m; }); }
 function paramsNow(){
   var s = state.settings;
   var fuelPerKm = s.mode==='perKm' ? num(s.rate) : (num(s.mileage)>0 ? num(s.price)/num(s.mileage) : 0);
-  return {type:s.type, fuelPerKm:fuelPerKm, wearPerKm:num(s.wear), fixedPerDay: num(s.workDays)>0 ? num(s.fixedMonthly)/num(s.workDays) : 0};
+  var wd = num(s.workDays), monthly = {}, margins = {};
+  s.sources.forEach(function(x){ if(x.m && num(x.mAmt)>0 && wd>0) monthly[x.id] = num(x.mAmt)/wd; if(num(x.mg)>0) margins[x.id] = num(x.mg); });
+  return {type:s.type, fuelPerKm:fuelPerKm, wearPerKm:num(s.wear), fixedPerDay: wd>0 ? num(s.fixedMonthly)/wd : 0, monthly:monthly, margins:margins, defMargin:num(s.margin), payoutNet:s.payoutNet==='yes'};
 }
-function calc(e, p){
+function bulkFor(date){
+  if(!date || !state.spreads) return 0;
+  var sum = 0;
+  state.spreads.forEach(function(x){ var d = Math.max(1, Math.round(num(x.days))), end = ymd(addDays(parse(x.start), d-1)); if(date>=x.start && date<=end) sum += num(x.amount)/d; });
+  return sum;
+}
+function calc(e, p, date){
   p = p || e.p || paramsNow();
-  var veh = p.type==='vehicle';
+  var veh = p.type==='vehicle', off = !!e.off;
   var gross = 0; for(var k in e.apps){ gross += num(e.apps[k]); }
+  var sales = gross, monthlyIn = 0;
+  if(!off && p.monthly){ for(var mk in p.monthly){ monthlyIn += p.monthly[mk]; } }
+  gross += monthlyIn;
   var km = veh ? num(e.km) : 0, hours = num(e.hours), jobs = num(e.jobs);
   var fuelEst = km*p.fuelPerKm;
   var fuel = veh ? ((e.fuelActual!==null && e.fuelActual!==undefined && e.fuelActual!=='') ? num(e.fuelActual) : fuelEst) : 0;
   var wear = veh ? km*p.wearPerKm : 0;
-  var fixed = p.fixedPerDay, materials = num(e.materials), travel = num(e.travel), platform = num(e.platform), other = num(e.other);
-  var costs = fuel+wear+fixed+materials+travel+platform+other;
+  var fixed = p.fixedPerDay, materials = num(e.materials), travel = num(e.travel), platform = p.payoutNet && !veh ? 0 : num(e.platform), other = num(e.other);
+  var penalty = num(e.penalty), helper = num(e.helper), returns = num(e.returns), bulk = bulkFor(date);
+  var cogs = 0;
+  if(p.type==='other' && sales>0){
+    var keep = Math.max(0, 1 - returns/sales);
+    for(var ak in e.apps){ var mg = p.margins && p.margins[ak]>0 ? p.margins[ak] : (p.defMargin||0); if(mg>0) cogs += num(e.apps[ak])*(1-mg/100)*keep; }
+  }
+  var costs = fuel+wear+fixed+materials+travel+platform+other+penalty+helper+returns+bulk+cogs;
   var net = gross - costs;
-  return {gross:gross, fuel:fuel, fuelEst:fuelEst, wear:wear, fixed:fixed, materials:materials, travel:travel, platform:platform, other:other, costs:costs, net:net,
+  return {gross:gross, fuel:fuel, fuelEst:fuelEst, wear:wear, fixed:fixed, materials:materials, travel:travel, platform:platform, other:other, penalty:penalty, helper:helper, returns:returns, bulk:bulk, cogs:cogs, monthlyIn:monthlyIn, off:off, costs:costs, net:net,
           hours:hours, km:km, jobs:jobs, perHour: hours>0 ? net/hours : null, perKm: km>0 ? net/km : null, perJob: jobs>0 ? net/jobs : null};
 }
 function costRows(r){
@@ -592,6 +628,11 @@ function costRows(r){
   if(r.travel>0) rows.push([t('c_travel'), r.travel]);
   if(r.platform>0) rows.push([t('c_platform'), r.platform]);
   if(r.fixed>0) rows.push([t('fixed'), r.fixed]);
+  if(r.penalty>0) rows.push([t('c_penalty'), r.penalty]);
+  if(r.helper>0) rows.push([t('c_helper'), r.helper]);
+  if(r.returns>0) rows.push([t('c_returns'), r.returns]);
+  if(r.cogs>0) rows.push([t('c_cogs'), r.cogs]);
+  if(r.bulk>0) rows.push([t('c_bulk'), r.bulk]);
   if(r.other>0) rows.push([t('other'), r.other]);
   return rows;
 }
@@ -615,6 +656,7 @@ var IC = {
  calendar:'<rect class="f" x="3.8" y="5.4" width="16.4" height="15" rx="2.2"/><path d="M3.8 10h16.4M8 3.4v4M16 3.2v4"/>',
  add:'<path d="M12 4.8v14.4M4.8 12.1h14.4"/>',
  ext:'<path d="M13.6 4.4h6v6M20 4.4L11.2 13"/><path d="M18 14v4.2c0 1-.8 1.8-1.8 1.8H5.8C4.8 20 4 19.2 4 18.2V7.8C4 6.8 4.8 6 5.8 6H10"/>',
+ speaker:'<path class="f" d="M4 9.6h3.4L12 5.8v12.4l-4.6-3.8H4z"/><path d="M15.4 9.2c1.2 1.5 1.2 4.1 0 5.6M18 6.8c2.4 2.8 2.4 7.6 0 10.4"/>',
  back:'<path d="M20 12H4.6M10 6.4L4.4 12l5.6 5.6"/>',
  del:'<path d="M20.4 6.2H9.2L3.4 12l5.8 5.8h11.2c.6 0 1-.4 1-1V7.2c0-.6-.4-1-1-1z"/><path d="M13 9.6l4.2 4.8M17.2 9.6L13 14.4"/>'
 };
@@ -647,7 +689,23 @@ function rupeeify(){
   } finally { _rbusy = false; }
 }
 var _rq = false;
-try{ new MutationObserver(function(){ if(_rq) return; _rq = true; requestAnimationFrame(function(){ _rq = false; rupeeify(); }); }).observe(document.body, {childList:true, subtree:true, characterData:true}); }catch(e){}
+try{ new MutationObserver(function(){ if(_rq) return; _rq = true; requestAnimationFrame(function(){ _rq = false; rupeeify(); addSpeakers(); }); }).observe(document.body, {childList:true, subtree:true, characterData:true}); }catch(e){}
+function addSpeakers(){
+  document.querySelectorAll('.view label:not([data-say])').forEach(function(lb){
+    lb.setAttribute('data-say','1');
+    if(lb.classList.contains('chk')) return;
+    var b = document.createElement('button'); b.type = 'button'; b.className = 'say'; b.setAttribute('aria-label', t('readAloud')); b.innerHTML = icon('speaker', 18);
+    b.addEventListener('click', function(ev){ ev.preventDefault(); ev.stopPropagation(); var c = lb.cloneNode(true); var x = c.querySelector('.say'); if(x) x.remove(); speak(c.textContent.replace(/\s+/g,' ').trim()); });
+    lb.appendChild(b);
+  });
+}
+function speak(text){
+  if(!('speechSynthesis' in window) || !window.SpeechSynthesisUtterance){ toast(t('noVoice')); return; }
+  var u = new SpeechSynthesisUtterance(text); u.lang = langTag();
+  var vs = speechSynthesis.getVoices();
+  if(vs.length && !vs.some(function(v){ return v.lang.toLowerCase().indexOf(u.lang.slice(0,2))===0; })){ toast(t('noVoice')); return; }
+  speechSynthesis.cancel(); speechSynthesis.speak(u);
+}
 var _bigPrev = {};
 function countUp(box, key){
   var el = box && box.querySelector('.hbig'); if(!el) return;
@@ -718,42 +776,149 @@ function money(id, label, hint){
   return '<div><label for="'+id+'">'+esc(label)+'</label><div class="rs"><span>₹</span><input type="number" id="'+id+'" inputmode="decimal" min="0" step="1" placeholder="0"></div>'+(hint?'<p class="hint" id="'+id+'-hint"></p>':'')+'</div>';
 }
 function captureForm(){
-  var ids = ['d-hours','d-km','d-jobs','d-fuel','d-materials','d-travel','d-platform','d-other'], o = {};
+  var ids = ['d-hours','d-km','d-jobs','d-fuel','d-materials','d-travel','d-platform','d-penalty','d-helper','d-returns','d-other'], o = {};
   ids.forEach(function(i){ if($(i)) o[i] = $(i).value; });
-  state.settings.sources.forEach(function(s){ var el = $('a-'+s.id); if(el) o['a-'+s.id] = el.value; var h = $('h-'+s.id); if(h) o['h-'+s.id] = h.value; });
+  daySources().forEach(function(s){ var el = $('a-'+s.id); if(el) o['a-'+s.id] = el.value; var h = $('h-'+s.id); if(h) o['h-'+s.id] = h.value; });
   return o;
 }
-function useAppHours(){ var ty = curType(); return (ty==='vehicle' || ty==='online') && state.settings.sources.length>=2; }
+function parseHours(v){
+  var x = String(v==null ? '' : v).trim().toLowerCase().replace(/,/g,'.'), m;
+  if(!x) return 0;
+  if((m = x.match(/^(\d+):(\d{1,2})$/))) return Math.round((+m[1] + (+m[2])/60)*100)/100;
+  if((m = x.match(/^(\d+(?:\.\d+)?)\s*h[a-z]*\s*(?:(\d+)\s*m[a-z]*)?$/))) return Math.round((+m[1] + (m[2] ? (+m[2])/60 : 0))*100)/100;
+  if((m = x.match(/^(\d+)\s*m[a-z]*$/))) return Math.round((+m[1])/60*100)/100;
+  return num(x);
+}
+function useAppHours(){ var ty = curType(); return (ty==='vehicle' || ty==='online') && daySources().length>=2; }
 function buildToday(){
-  var type = curType(), cfg = WORK[type], s = state.settings;
-  var html = '<div id="nudge"></div><button type="button" class="txt" id="copyLast">'+icon('copy',20)+esc(t('copyLast'))+'</button><div class="card ledger"><h2>'+esc(t('earningsToday'))+'</h2><div class="grid2">';
-  s.sources.forEach(function(x){ html += '<div><label class="srcl" id="lab-'+x.id+'" for="a-'+x.id+'" style="--c:'+srcColor(x.id)+'"><i></i>'+esc(x.name)+'</label><div class="rs"><span>₹</span><input type="number" id="a-'+x.id+'" inputmode="decimal" min="0" step="1" placeholder="0"></div></div>'; });
-  html += '</div></div><div class="card"><div class="grid2">';
+  var type = curType(), cfg = WORK[type], s = state.settings, ds = daySources();
+  var html = '<div id="nudge"></div><div class="actions" style="align-items:center"><button type="button" class="txt" id="copyLast">'+icon('copy',20)+esc(t('copyLast'))+'</button><button type="button" class="txt" id="voiceBtn" hidden>'+icon('speaker',20)+esc(t('voiceBtn'))+'</button></div><div class="card ledger"><h2>'+esc(t('earningsToday'))+'</h2><div class="grid2">';
+  ds.forEach(function(x){ html += '<div class="cell"><label class="srcl" id="lab-'+x.id+'" for="a-'+x.id+'" style="--c:'+srcColor(x.id)+'"><i></i>'+esc(x.name)+'</label><div class="rs"><span>₹</span><input type="number" id="a-'+x.id+'" inputmode="decimal" min="0" step="1" placeholder="0"></div><div class="qa">'+[100,500,1000].map(function(n){ return '<button type="button" data-qa="'+x.id+'" data-n="'+n+'">+'+n+'</button>'; }).join('')+'</div></div>'; });
+  html += '</div>';
+  var mon = Object.keys(paramsNow().monthly);
+  if(mon.length){ var tot = 0, pm = paramsNow().monthly; mon.forEach(function(k){ tot += pm[k]; }); html += '<p class="hint">'+esc(t('monthlyNote', {x: fmt(tot)}))+'</p>'; }
+  if(type==='other') html += '<p class="hint">'+esc(t('shopHint'))+'</p>';
+  html += '</div><div class="card"><div class="grid2">';
   cfg.cells.forEach(function(c){
-    if(c==='hours') html += '<div><label for="d-hours">'+esc(t('hours'))+'</label><div class="rs"><span>'+esc(t('unitHrs'))+'</span><input type="number" id="d-hours" inputmode="decimal" min="0" step="0.5" placeholder="0"></div></div>';
+    if(c==='hours') html += '<div><label for="d-hours">'+esc(t('hours'))+'</label><div class="rs"><span>'+esc(t('unitHrs'))+'</span><input type="text" id="d-hours" inputmode="decimal" autocomplete="off" placeholder="0"></div></div>';
     if(c==='km') html += '<div><label for="d-km">'+esc(t('km'))+'</label><div class="rs"><span>km</span><input type="number" id="d-km" inputmode="decimal" min="0" step="1" placeholder="0"></div></div>';
     if(c==='jobs') html += '<div><label for="d-jobs">'+esc(t('jobs_'+type))+'</label><input type="number" id="d-jobs" inputmode="decimal" min="0" step="1" placeholder="0"></div>';
   });
-  html += '</div><p class="hint">'+esc(t('hoursHint'))+'</p>';
+  html += '</div><div class="chips">'+[2,4,6,8,10].map(function(n){ return '<button type="button" data-hr="'+n+'">'+n+' '+esc(t('unitHrs'))+'</button>'; }).join('')+'</div><p class="hint">'+esc(t('hoursHint'))+'</p>';
   if(useAppHours()){
     html += '<details class="tip" data-auto="1" style="margin-top:12px"><summary>'+esc(t('appHoursTitle'))+'</summary><div><p class="hint" style="margin:0 0 10px">'+esc(t('appHoursHint'))+'</p><div class="grid2" style="margin-bottom:14px">';
-    s.sources.forEach(function(x){ html += '<div><label for="h-'+x.id+'">'+esc(x.name)+'</label><div class="rs"><span>'+esc(t('unitHrs'))+'</span><input type="number" id="h-'+x.id+'" inputmode="decimal" min="0" step="0.5" placeholder="0"></div></div>'; });
-    html += '</div></div></details>';
+    ds.forEach(function(x){ html += '<div><label for="h-'+x.id+'">'+esc(x.name)+'</label><div class="rs"><span>'+esc(t('unitHrs'))+'</span><input type="text" id="h-'+x.id+'" inputmode="decimal" autocomplete="off" placeholder="0"></div></div>'; });
+    html += '</div><button type="button" class="btn ghost small" id="splitHours" style="margin-bottom:14px">'+esc(t('splitHours'))+'</button></div></details>';
+  }
+  if(type==='online'){
+    html += '<details class="tip" style="margin-top:12px"><summary>'+esc(t('usdTitle'))+'</summary><div><div class="grid2" style="margin-bottom:12px"><div><label for="usd-amt">'+esc(t('usdAmt'))+'</label><input type="number" id="usd-amt" inputmode="decimal" min="0" placeholder="0"></div><div><label for="usd-rate">'+esc(t('usdRate'))+'</label><input type="number" id="usd-rate" inputmode="decimal" min="0" placeholder="e.g. 88" value="'+esc(state.usdRate||'')+'"></div></div><select id="usd-src" aria-label="'+esc(t('dues_creditAs'))+'" style="margin-bottom:12px">'+ds.map(function(x){ return '<option value="'+x.id+'">'+esc(x.name)+'</option>'; }).join('')+'</select><button type="button" class="btn ghost small" id="usd-add">'+esc(t('usdAdd'))+'</button><p class="hint" style="margin-bottom:14px">'+esc(t('usdNote'))+'</p></div></details>';
   }
   html += '<details class="tip" data-auto="1" style="margin-top:12px"><summary>'+esc(t('extraCosts'))+'</summary><div class="stack" style="padding-bottom:14px">';
+  if(cfg.costs.indexOf('platform')>=0 && type!=='vehicle'){
+    html += '<div><label>'+esc(t('payoutQ'))+'</label><div class="seg" id="payoutSeg" style="--n:2"><button type="button" data-po="yes" aria-pressed="'+(s.payoutNet==='yes')+'">'+esc(t('payoutYes'))+'</button><button type="button" data-po="no" aria-pressed="'+(s.payoutNet==='no')+'">'+esc(t('payoutNo'))+'</button></div></div>';
+  }
   cfg.costs.forEach(function(c){
     if(c==='fuel') html += money('d-fuel', t('fuelActual'), true);
     if(c==='materials') html += money('d-materials', t('f_materials'));
     if(c==='travel') html += money('d-travel', t('f_travel'));
-    if(c==='platform') html += money('d-platform', t('f_platform'));
+    if(c==='platform') html += (s.payoutNet==='yes' && type!=='vehicle') ? '<p class="hint" style="margin:0">'+esc(t('payoutNote'))+'</p>' : money('d-platform', t('f_platform'));
+    if(c==='penalty') html += money('d-penalty', t('f_penalty'));
+    if(c==='helper') html += money('d-helper', t('f_helper'));
+    if(c==='returns') html += money('d-returns', t('f_returns'));
     if(c==='other') html += money('d-other', t(cfg.otherKey));
   });
-  html += '</div></details></div>';
+  html += '<div class="spread"><h3>'+esc(t('spreadTitle'))+'</h3><p class="hint" style="margin:0 0 10px">'+esc(t('spreadHint'))+'</p><div class="stack"><div><label for="sp-name">'+esc(t('spreadName'))+'</label><input type="text" id="sp-name" maxlength="40" autocomplete="off"></div><div class="grid2"><div><label for="sp-amt">'+esc(t('spreadAmt'))+'</label><div class="rs"><span>₹</span><input type="number" id="sp-amt" inputmode="decimal" min="0" placeholder="0"></div></div><div><label for="sp-days">'+esc(t('spreadDays'))+'</label><input type="number" id="sp-days" inputmode="numeric" min="1" placeholder="30"></div></div><div class="chips" style="margin-top:0">'+[7,30,90,365].map(function(n){ return '<button type="button" data-sd="'+n+'">'+n+'</button>'; }).join('')+'</div><button type="button" class="btn ghost small" id="sp-add">'+icon('add',20)+esc(t('spreadAdd'))+'</button><div id="sp-list"></div></div></div>';
+  html += '</div></details></div><div id="offNote" class="hint" hidden></div>';
+  html += '<div id="offBox" class="card" hidden><h2>'+esc(t('offBtn'))+'</h2><p class="hint" style="margin:0 0 12px">'+esc(t('offPick'))+'</p><div class="chips" style="margin-top:0">'+['Rain','Sick','Repair','Festival','NoOrders'].map(function(r){ return '<button type="button" data-off="'+r+'">'+esc(t('off'+r))+'</button>'; }).join('')+'</div></div>';
   $('todayForm').innerHTML = html;
   $('todayForm').querySelectorAll('input').forEach(function(el){ el.addEventListener('input', updateToday); });
   $('copyLast').addEventListener('click', copyLastDay);
+  bindTodayExtras();
   renderNudge($('nudge'));
 }
+function bindTodayExtras(){
+  var f = $('todayForm');
+  f.querySelectorAll('[data-qa]').forEach(function(b){ b.addEventListener('click', function(){ var i = $('a-'+this.getAttribute('data-qa')); i.value = (num(i.value) + (+this.getAttribute('data-n'))); updateToday(); }); });
+  f.querySelectorAll('[data-hr]').forEach(function(b){ b.addEventListener('click', function(){ $('d-hours').value = this.getAttribute('data-hr'); updateToday(); }); });
+  f.querySelectorAll('[data-sd]').forEach(function(b){ b.addEventListener('click', function(){ $('sp-days').value = this.getAttribute('data-sd'); }); });
+  f.querySelectorAll('[data-po]').forEach(function(b){ b.addEventListener('click', function(){ state.settings.payoutNet = this.getAttribute('data-po'); save(); rebuildToday(); var d = document.querySelector('#todayForm details:last-of-type'); if(d) d.open = true; }); });
+  f.querySelectorAll('[data-off]').forEach(function(b){ b.addEventListener('click', function(){ saveOff(this.getAttribute('data-off')); }); });
+  var sp = $('splitHours'); if(sp) sp.addEventListener('click', splitHours);
+  var ua = $('usd-add'); if(ua) ua.addEventListener('click', addUsd);
+  var sa = $('sp-add'); if(sa) sa.addEventListener('click', addSpread);
+  var pos = f.querySelector('#payoutSeg'); if(pos){ var bs = pos.querySelectorAll('button'), i = 0; bs.forEach(function(b, k){ if(b.getAttribute('aria-pressed')==='true') i = k; }); pos.style.setProperty('--i', i); }
+  var vb = $('voiceBtn'); if(vb){ var SR = window.SpeechRecognition || window.webkitSpeechRecognition; if(SR){ vb.hidden = false; vb.addEventListener('click', voiceEntry); } }
+  renderSpreads();
+}
+function renderSpreads(){
+  var box = $('sp-list'); if(!box) return;
+  var d = $('d-date').value || todayStr();
+  var list = state.spreads.filter(function(x){ return ymd(addDays(parse(x.start), Math.max(1, Math.round(num(x.days)))-1)) >= todayStr(); });
+  box.innerHTML = list.map(function(x){ var n = Math.max(1, Math.round(num(x.days))); return '<div class="due" style="min-height:0;padding:10px 0"><div class="top"><span class="who">'+esc(x.name||'')+'</span><span class="amt">'+fmt(num(x.amount))+'</span></div><div class="meta"><span class="hint" style="margin:0">'+esc(t('spreadDaily', {x: fmt(num(x.amount)/n), d: dayLabel(ymd(addDays(parse(x.start), n-1)))}))+'</span><button type="button" class="txt" data-spdel="'+x.id+'" style="min-height:40px">'+esc(t('remove'))+'</button></div></div>'; }).join('');
+  box.querySelectorAll('[data-spdel]').forEach(function(b){ b.addEventListener('click', function(){ var id = this.getAttribute('data-spdel'); state.spreads = state.spreads.filter(function(x){ return x.id!==id; }); save(); renderSpreads(); updateToday(); }); });
+}
+function addSpread(){
+  var amt = num($('sp-amt').value), days = Math.round(num($('sp-days').value));
+  if(!amt || !days){ toast(t('enterSomething')); return; }
+  state.spreads.push({id:'s'+Date.now().toString(36), name:$('sp-name').value.trim(), amount:amt, days:days, start:$('d-date').value || todayStr()});
+  save(); $('sp-name').value = ''; $('sp-amt').value = ''; $('sp-days').value = ''; renderSpreads(); updateToday(); toast(t('saved'));
+}
+function splitHours(){
+  var total = parseHours($('d-hours').value), ds = daySources(), earn = {}, sum = 0;
+  ds.forEach(function(x){ earn[x.id] = num($('a-'+x.id).value); sum += earn[x.id]; });
+  if(!total || !sum){ toast(t('splitNeed')); return; }
+  ds.forEach(function(x){ var h = $('h-'+x.id); if(h) h.value = earn[x.id]>0 ? (Math.round(total*earn[x.id]/sum*10)/10) : ''; });
+  updateToday();
+}
+function addUsd(){
+  var amt = num($('usd-amt').value), rate = num($('usd-rate').value);
+  if(!amt || !rate){ toast(t('enterSomething')); return; }
+  state.usdRate = $('usd-rate').value; save();
+  var i = $('a-'+$('usd-src').value); i.value = Math.round(num(i.value) + amt*rate); $('usd-amt').value = ''; updateToday();
+}
+function saveOff(reason){
+  var d = $('d-date').value || todayStr(), hadEx = hasExamples(); if(hadEx) removeExamples();
+  var apps = {}; state.settings.sources.forEach(function(x){ apps[x.id] = 0; });
+  var prev = state.entries[d];
+  state.entries[d] = {apps:apps, appHours:{}, hours:0, km:0, jobs:0, fuelActual:null, materials:0, travel:0, platform:0, other:0, off:reason, p: prev && prev.p ? prev.p : paramsNow()};
+  state.onboarded = true; save(); updateBanner(); renderOnboard(); $('offBox').hidden = true; fillToday(); toast(t('offSaved'));
+}
+var VOICE_UNITS = {
+  hours:/^\s*(hours?|hrs?|ghante|ghanta|घंटे|घंटा|గంటలు|గంటల|గంట|گھنٹے|گھنٹہ)/,
+  km:/^\s*(km|kms|kilomet\w*|किमी|कि\.?\s?मी|కిమీ|కి\.?\s?మీ|کلومیٹر)/,
+  jobs:/^\s*(orders?|trips?|jobs?|rides?|deliver\w*|ऑर्डर|ट्रिप|ఆర్డర్లు|ఆర్డర్|ట్రిప్పులు|آرڈر)/
+};
+function parseVoice(txt){
+  var res = {apps:{}, hours:0, km:0, jobs:0}, x = String(txt||'').toLowerCase().replace(/(\d),(\d)/g,'$1$2'), re = /(\d+(?:\.\d+)?)/g, m, last = 0;
+  var names = daySources().map(function(s){ return {id:s.id, name:s.name.toLowerCase()}; });
+  if(!names.some(function(n){ return n.id==='cash'; })) {}
+  while((m = re.exec(x))){
+    var val = parseFloat(m[1]), after = x.slice(m.index+m[0].length, m.index+m[0].length+16), before = x.slice(last, m.index);
+    last = m.index + m[0].length;
+    if(VOICE_UNITS.hours.test(after)) res.hours = val;
+    else if(VOICE_UNITS.km.test(after)) res.km = val;
+    else if(VOICE_UNITS.jobs.test(after)) res.jobs = val;
+    else { var best = null, bi = -1; names.forEach(function(n){ var i = before.lastIndexOf(n.name); if(i>bi){ bi = i; best = n; } }); if(best) res.apps[best.id] = (res.apps[best.id]||0) + val; }
+  }
+  return res;
+}
+function applyVoice(res){
+  var heard = [];
+  for(var k in res.apps){ var i = $('a-'+k); if(i){ i.value = res.apps[k]; heard.push(srcName(k)+' '+res.apps[k]); } }
+  if(res.hours && $('d-hours')){ $('d-hours').value = res.hours; heard.push(res.hours+' '+t('unitHrs')); }
+  if(res.km && $('d-km')){ $('d-km').value = res.km; heard.push(res.km+' km'); }
+  if(res.jobs && $('d-jobs')){ $('d-jobs').value = res.jobs; heard.push(res.jobs); }
+  if(!heard.length){ toast(t('voiceNone')); return; }
+  updateToday(); toast(t('voiceHeard', {x: heard.join(', ')}));
+}
+function voiceEntry(){
+  var SR = window.SpeechRecognition || window.webkitSpeechRecognition; if(!SR) return;
+  try{ var r = new SR(); r.lang = langTag(); r.interimResults = false; r.maxAlternatives = 1;
+    r.onresult = function(ev){ applyVoice(parseVoice(ev.results[0][0].transcript)); };
+    r.onerror = function(){ toast(t('voiceFail')); };
+    r.start(); }catch(e){ toast(t('voiceFail')); }
+}
+function langTag(){ return {en:'en-IN', te:'te-IN', hi:'hi-IN', ur:'ur-IN'}[state.lang] || 'en-IN'; }
 function syncDetails(){
   document.querySelectorAll('#todayForm details[data-auto]').forEach(function(d){
     var any = false; d.querySelectorAll('input').forEach(function(i){ if(i.value!=='' && num(i.value)>0) any = true; });
@@ -762,28 +927,49 @@ function syncDetails(){
 }
 function copyLastDay(){
   var cur = $('d-date').value || todayStr();
-  var ds = Object.keys(state.entries).filter(function(k){ return k!==cur; }).sort();
+  var ds = Object.keys(state.entries).filter(function(k){ return k!==cur && !state.entries[k].off; }).sort();
   if(!ds.length){ toast(t('noLast')); return; }
   var d = ds[ds.length-1], e = state.entries[d];
-  state.settings.sources.forEach(function(x){ var a = $('a-'+x.id); if(a) a.value = e.apps && e.apps[x.id] ? e.apps[x.id] : ''; var h = $('h-'+x.id); if(h) h.value = e.appHours && e.appHours[x.id] ? e.appHours[x.id] : ''; });
+  daySources().forEach(function(x){ var a = $('a-'+x.id); if(a) a.value = e.apps && e.apps[x.id] ? e.apps[x.id] : ''; var h = $('h-'+x.id); if(h) h.value = e.appHours && e.appHours[x.id] ? e.appHours[x.id] : ''; });
   function set(id, v){ if($(id)) $(id).value = v ? v : ''; }
-  set('d-hours', e.hours); set('d-km', e.km); set('d-jobs', e.jobs); set('d-materials', e.materials); set('d-travel', e.travel); set('d-platform', e.platform); set('d-other', e.other);
+  set('d-hours', e.hours); set('d-km', e.km); set('d-jobs', e.jobs); set('d-materials', e.materials); set('d-travel', e.travel); set('d-platform', e.platform); set('d-penalty', e.penalty); set('d-helper', e.helper); set('d-returns', e.returns); set('d-other', e.other);
   if($('d-fuel')) $('d-fuel').value = '';
   syncDetails(); updateToday(); toast(t('copiedLast', {d: dayLabel(d)}));
 }
 function realEntryCount(){ return Object.keys(state.entries).filter(function(k){ return !state.entries[k].example; }).length; }
 function backupDue(){
-  if(realEntryCount()<5) return false;
+  if(realEntryCount()<3) return false;
   if(!state.lastBackup) return true;
   var days = Math.round((parse(todayStr()) - parse(state.lastBackup))/86400000);
-  return days>=14;
+  return days>=7;
+}
+function sendBackup(){
+  var code = backupCode(); state.lastBackup = todayStr(); save();
+  if(navigator.share){ navigator.share({text:code}).catch(function(){}); }
+  else { copyText(code); var u = 'https://wa.me/?text='+encodeURIComponent(code); if(u.length<6000) window.open(u, '_blank', 'noopener'); }
 }
 function backupCode(){ return btoa(unescape(encodeURIComponent(JSON.stringify(state)))); }
+function recomputeFixed(){ var st = state.settings, a = num(st.fixedAmt); st.fixedMonthly = st.fixedPer==='week' ? Math.round(a*4.33) : a; }
 function renderNudge(box){
   if(!box) return;
+  var main = box.id==='nudge', st = state.settings;
+  if(state.pin) state.setup.phone = true;
+  if(main && state.onboarded && !state.setup.fixed && !state.noFixed && num(st.fixedMonthly)===0){
+    box.innerHTML = '<div class="card nudge"><p class="verdict" style="margin:0">'+esc(t('setupFixedQ'))+'</p><p class="hint" style="margin:0">'+esc(t('setupFixedHint'))+'</p><div class="srcrow"><div class="rs" style="flex:1"><span>₹</span><input type="number" id="setup-amt" inputmode="decimal" min="0" placeholder="0" aria-label="'+esc(t('fixedLabel'))+'"></div><select id="setup-per" style="flex:1" aria-label="'+esc(t('perMonth'))+'"><option value="month">'+esc(t('perMonth'))+'</option><option value="week">'+esc(t('perWeek'))+'</option></select></div><div class="actions"><button type="button" class="btn small" id="setup-save">'+esc(t('saveIt'))+'</button><button type="button" class="txt" id="setup-none">'+esc(t('noneToPay'))+'</button></div></div>';
+    $('setup-save').addEventListener('click', function(){ var a = num($('setup-amt').value); if(!a){ toast(t('enterSomething')); return; } st.fixedAmt = a; st.fixedPer = $('setup-per').value; recomputeFixed(); state.setup.fixed = true; save(); toast(t('saved')); renderNudge(box); updateToday(); });
+    $('setup-none').addEventListener('click', function(){ state.setup.fixed = true; state.noFixed = true; save(); renderNudge(box); });
+    return;
+  }
+  if(main && state.onboarded && state.setup.fixed && !state.setup.phone && !state.pin){
+    box.innerHTML = '<div class="card nudge"><p class="verdict" style="margin:0">'+esc(t('setupPhoneQ'))+'</p><p class="hint" style="margin:0">'+esc(t('setupPhoneHint'))+'</p><div class="actions"><button type="button" class="btn small" id="ph-yes">'+esc(t('yes'))+'</button><button type="button" class="btn ghost small" id="ph-no">'+esc(t('no'))+'</button></div><div id="ph-pin" hidden><div class="srcrow"><input type="password" inputmode="numeric" maxlength="4" id="ph-pinin" placeholder="••••" aria-label="'+esc(t('pinSet'))+'"><button type="button" class="btn small" id="ph-set">'+icon('lock',20)+esc(t('pinSet'))+'</button></div></div></div>';
+    $('ph-no').addEventListener('click', function(){ state.setup.phone = true; save(); renderNudge(box); });
+    $('ph-yes').addEventListener('click', function(){ $('ph-pin').hidden = false; $('ph-pinin').focus(); });
+    $('ph-set').addEventListener('click', function(){ var p = $('ph-pinin').value; if(!/^\d{4}$/.test(p)){ toast(t('pinBad')); return; } state.pin = pinHash(p); state.setup.phone = true; save(); toast(t('pinSaved')); renderNudge(box); });
+    return;
+  }
   if(!backupDue() || state.nudgeOff===todayStr()){ box.innerHTML = ''; return; }
-  box.innerHTML = '<div class="card nudge"><p class="hint" style="margin:0">'+esc(t('backupDue'))+'</p><div class="actions"><button type="button" class="btn small" id="nudgeBtn">'+icon('backup',20)+esc(t('backupNow'))+'</button><button type="button" class="txt" id="nudgeOff">'+esc(t('dismiss'))+'</button></div></div>';
-  $('nudgeBtn').addEventListener('click', function(){ state.lastBackup = todayStr(); save(); copyText(backupCode()); renderNudge(box); });
+  box.innerHTML = '<div class="card nudge"><p class="hint" style="margin:0">'+esc(t('backupDue'))+'</p><div class="actions"><button type="button" class="btn wa small" id="nudgeBtn">'+icon('send',20)+esc(t('backupSend'))+'</button><button type="button" class="txt" id="nudgeOff">'+esc(t('dismiss'))+'</button></div></div>';
+  $('nudgeBtn').addEventListener('click', function(){ sendBackup(); renderNudge(box); });
   $('nudgeOff').addEventListener('click', function(){ state.nudgeOff = todayStr(); save(); renderNudge(box); });
 }
 function resetToday(){ buildToday(); fillToday(); renderOnboard(); }
@@ -795,33 +981,35 @@ function rebuildToday(){
   renderOnboard();
 }
 function readForm(){
-  var apps = {}; state.settings.sources.forEach(function(s){ apps[s.id] = num($('a-'+s.id).value); });
+  var apps = {}; daySources().forEach(function(s){ apps[s.id] = num($('a-'+s.id).value); });
   function v(id){ return $(id) ? $(id).value : ''; }
   var f = v('d-fuel');
-  var appHours = {}; state.settings.sources.forEach(function(s){ var el = $('h-'+s.id); if(el && num(el.value)>0) appHours[s.id] = num(el.value); });
-  return {apps:apps, appHours:appHours, hours:num(v('d-hours')), km:num(v('d-km')), jobs:num(v('d-jobs')), fuelActual: f===''? null : num(f),
-          materials:num(v('d-materials')), travel:num(v('d-travel')), platform:num(v('d-platform')), other:num(v('d-other'))};
+  var appHours = {}; daySources().forEach(function(s){ var el = $('h-'+s.id); if(el && parseHours(el.value)>0) appHours[s.id] = parseHours(el.value); });
+  return {apps:apps, appHours:appHours, hours:parseHours(v('d-hours')), km:num(v('d-km')), jobs:num(v('d-jobs')), fuelActual: f===''? null : num(f),
+          materials:num(v('d-materials')), travel:num(v('d-travel')), platform:num(v('d-platform')), penalty:num(v('d-penalty')), helper:num(v('d-helper')), returns:num(v('d-returns')), other:num(v('d-other'))};
 }
 function fillToday(){
   var d = $('d-date').value || todayStr(); $('d-date').value = d;
   var e = state.entries[d];
-  state.settings.sources.forEach(function(s){ $('a-'+s.id).value = e && e.apps[s.id] ? e.apps[s.id] : ''; });
+  daySources().forEach(function(s){ $('a-'+s.id).value = e && e.apps[s.id] ? e.apps[s.id] : ''; });
   function set(id, val){ if($(id)) $(id).value = val ? val : ''; }
   set('d-hours', e && e.hours); set('d-km', e && e.km); set('d-jobs', e && e.jobs);
   if($('d-fuel')) $('d-fuel').value = e && e.fuelActual!==null && e.fuelActual!==undefined ? e.fuelActual : '';
-  set('d-materials', e && e.materials); set('d-travel', e && e.travel); set('d-platform', e && e.platform); set('d-other', e && e.other);
-  state.settings.sources.forEach(function(x){ var h = $('h-'+x.id); if(h) h.value = e && e.appHours && e.appHours[x.id] ? e.appHours[x.id] : ''; });
+  set('d-materials', e && e.materials); set('d-travel', e && e.travel); set('d-platform', e && e.platform); set('d-penalty', e && e.penalty); set('d-helper', e && e.helper); set('d-returns', e && e.returns); set('d-other', e && e.other);
+  daySources().forEach(function(x){ var h = $('h-'+x.id); if(h) h.value = e && e.appHours && e.appHours[x.id] ? e.appHours[x.id] : ''; });
   $('delDay').hidden = !e;
+  var on = $('offNote'); if(on){ on.hidden = !(e && e.off); if(e && e.off) on.textContent = t('offNote', {r: t('off'+e.off)}); }
+  var ob = $('offBox'); if(ob) ob.hidden = true;
   syncDetails(); updateToday();
 }
 var _stamped = false;
 function updateToday(){
   var d = $('d-date').value || todayStr(); var saved = state.entries[d];
-  var entry = readForm(); var r = calc(entry, saved ? saved.p : paramsNow());
-  var fh = $('d-fuel-hint'); if(fh) fh.textContent = t('fuelEstimate', {x: fmt(r.fuelEst)});
-  var res = $('res'); var any = r.gross>0 || r.hours>0 || r.km>0;
+  var entry = readForm(); var r = calc(entry, saved ? saved.p : paramsNow(), d);
+  var fh = $('d-fuel-hint'); if(fh) fh.textContent = t('fuelEstimate', {x: fmt(r.fuelEst)}) + (state.settings.vehicle==='cng' ? ' '+t('cngFill') : '');
+  var res = $('res'); var any = r.gross>0 || r.hours>0 || r.km>0 || r.penalty>0 || r.returns>0;
   res.className = 'hero' + (any && r.net<0 ? ' loss' : '');
-  state.settings.sources.forEach(function(x){ var lb = $('lab-'+x.id), ip = $('a-'+x.id); if(lb && ip) lb.classList.toggle('on', num(ip.value)>0); });
+  daySources().forEach(function(x){ var lb = $('lab-'+x.id), ip = $('a-'+x.id); if(lb && ip) lb.classList.toggle('on', num(ip.value)>0); });
   if(!any){ res.innerHTML = heroBlock(t('trueProfit'), 0, 0, 0, 0, t('vEnter'), ''); _stamped = false; countUp(res, 'res'); $('breakdown').hidden = true; return; }
   var tg = num(state.settings.target), verdict;
   if(r.net<0) verdict = t('vLoss'); else if(r.perHour===null) verdict = '';
@@ -843,7 +1031,7 @@ function updateBanner(){ $('banner').hidden = !hasExamples(); }
 function saveDay(){
   var d = $('d-date').value || todayStr(); var f = readForm();
   var any = false; for(var k in f.apps){ if(f.apps[k]>0) any = true; }
-  if(!any && !f.hours && !f.km){ toast(t('enterSomething')); return; }
+  if(!any && !f.hours && !f.km && !Object.keys(paramsNow().monthly).length){ toast(t('enterSomething')); return; }
   if(!f.hours){ var sh = 0; for(var q in f.appHours){ sh += f.appHours[q]; } if(sh>0) f.hours = sh; }
   var hadEx = hasExamples(); if(hadEx) removeExamples();
   var prev = state.entries[d]; f.p = prev && prev.p ? prev.p : paramsNow();
@@ -854,7 +1042,7 @@ function deleteDay(){ var d = $('d-date').value; if(state.entries[d]){ delete st
 
 /* ---------- Summary ---------- */
 var period = 'last7';
-function entriesList(){ return Object.keys(state.entries).sort().map(function(d){ var e = state.entries[d]; return {date:d, e:e, r:calc(e)}; }); }
+function entriesList(){ return Object.keys(state.entries).sort().map(function(d){ var e = state.entries[d]; return {date:d, e:e, r:calc(e, undefined, d)}; }); }
 function inPeriod(list){ if(period==='all') return list; var n = period==='last7' ? 7 : 30; var from = ymd(addDays(new Date(), -(n-1))); return list.filter(function(x){ return x.date >= from; }); }
 function percentile(arr, p){ var a = arr.slice().sort(function(x,y){return x-y;}); if(a.length===1) return a[0]; var idx = (a.length-1)*p, lo = Math.floor(idx), hi = Math.ceil(idx); return a[lo] + (a[hi]-a[lo])*(idx-lo); }
 function renderSummary(){
@@ -867,14 +1055,15 @@ function renderSummary(){
   var html = '<div class="seg" role="group">'+['last7','last30','all'].map(function(p){ return '<button type="button" data-p="'+p+'" aria-pressed="'+(period===p)+'">'+esc(t(p==='all'?'allTime':p))+'</button>'; }).join('')+'</div>';
   if(!sel.length){ html += '<div class="card empty"><p>'+esc(t('noData'))+'</p></div>'; }
   else {
-    var net=0, hours=0, km=0, jobs=0, best=sel[0], worst=sel[0], byApp={};
-    sel.forEach(function(x){ net+=x.r.net; hours+=x.r.hours; km+=x.r.km; jobs+=x.r.jobs; if(x.r.net>best.r.net) best=x; if(x.r.net<worst.r.net) worst=x; for(var a in x.e.apps){ byApp[a] = (byApp[a]||0)+num(x.e.apps[a]); } });
+    var work = sel.filter(function(x){ return !x.e.off; }), offN = sel.length-work.length;
+    var net=0, hours=0, km=0, jobs=0, best=work[0]||sel[0], worst=work[0]||sel[0], byApp={};
+    sel.forEach(function(x){ net+=x.r.net; hours+=x.r.hours; km+=x.r.km; jobs+=x.r.jobs; if(!x.e.off){ if(x.r.net>best.r.net) best=x; if(x.r.net<worst.r.net) worst=x; var pm = (x.e.p||paramsNow()).monthly; if(pm){ for(var mk in pm){ byApp[mk] = (byApp[mk]||0)+pm[mk]; } } } for(var a in x.e.apps){ byApp[a] = (byApp[a]||0)+num(x.e.apps[a]); } });
     html += '<div class="hero'+(net<0?' loss':'')+'" id="sumHero">'+heroBlock(t('totalProfit'), net, hours, km, jobs)+'</div>';
     html += '<div class="card"><div class="stats">'+
-      '<div class="stat"><div class="k">'+esc(t('daysWorked'))+'</div><div class="v">'+sel.length+'</div></div>'+
-      '<div class="stat"><div class="k">'+esc(t('avgDay'))+'</div><div class="v">'+fmt(net/sel.length)+'</div></div>'+
+      '<div class="stat"><div class="k">'+esc(t('daysWorked'))+'</div><div class="v">'+work.length+'</div></div>'+
+      '<div class="stat"><div class="k">'+esc(t('avgDay'))+'</div><div class="v">'+fmt(net/Math.max(1,work.length))+'</div></div>'+
       '<div class="stat"><div class="k">'+esc(t('bestDay'))+'</div><div class="v">'+fmt(best.r.net)+'</div><div class="k">'+esc(dayLabel(best.date))+'</div></div>'+
-      '<div class="stat"><div class="k">'+esc(t('worstDay'))+'</div><div class="v">'+fmt(worst.r.net)+'</div><div class="k">'+esc(dayLabel(worst.date))+'</div></div></div></div>';
+      '<div class="stat"><div class="k">'+esc(t('worstDay'))+'</div><div class="v">'+fmt(worst.r.net)+'</div><div class="k">'+esc(dayLabel(worst.date))+'</div></div></div>'+(offN?'<p class="hint">'+esc(t('daysOff', {n:offN}))+'</p>':'')+'</div>';
     var ids = Object.keys(byApp).filter(function(a){ return byApp[a]>0; }), tot = 0; ids.forEach(function(a){ tot += byApp[a]; });
     if(tot>0){
       html += '<div class="card"><h2>'+esc(t('bySource'))+'</h2><div class="bar" role="img" aria-label="'+esc(t('bySource'))+'">'+
@@ -925,7 +1114,7 @@ function bindCushion(){
   a.addEventListener('input', upd); b.addEventListener('input', upd); upd();
 }
 function chart14(list){
-  var map = {}; list.forEach(function(x){ map[x.date] = x.r.net; });
+  var map = {}, offs = {}; list.forEach(function(x){ map[x.date] = x.e.off ? 0 : x.r.net; if(x.e.off) offs[x.date] = 1; });
   var days = []; for(var i=13;i>=0;i--){ days.push(ymd(addDays(new Date(), -i))); }
   var vals = days.map(function(d){ return map.hasOwnProperty(d) ? map[d] : null; });
   var present = vals.filter(function(x){ return x!==null; });
@@ -937,7 +1126,8 @@ function chart14(list){
   var s = '<svg class="chart" viewBox="0 0 '+W+' 146" role="img" aria-label="'+esc(t('last14'))+'"><line class="c-line" x1="0" x2="'+W+'" y1="'+y(0)+'" y2="'+y(0)+'"/>';
   vals.forEach(function(v, i){
     var x = i*slot + (slot-bw)/2;
-    if(v!==null){
+    if(v!==null && offs[days[i]]){ s += '<path d="M'+(x+4).toFixed(1)+' '+y(0).toFixed(1)+'h'+(bw-8)+'" stroke="var(--ink-soft)" stroke-width="3" stroke-linecap="round" fill="none"/>'; }
+    else if(v!==null){
       var y1 = y(Math.max(v,0)), y2 = y(Math.min(v,0)), h = Math.max(1.5, y2-y1);
       var rr = Math.min(8, bw/2, h), X = x, Y = y1, H = h, B = bw;
       if(v>=0) s += '<path class="c-pos" d="M'+X.toFixed(1)+' '+(Y+H).toFixed(1)+'V'+(Y+rr).toFixed(1)+'Q'+X.toFixed(1)+' '+Y.toFixed(1)+' '+(X+rr).toFixed(1)+' '+Y.toFixed(1)+'H'+(X+B-rr).toFixed(1)+'Q'+(X+B).toFixed(1)+' '+Y.toFixed(1)+' '+(X+B).toFixed(1)+' '+(Y+rr).toFixed(1)+'V'+(Y+H).toFixed(1)+'Z"/>';
@@ -957,7 +1147,11 @@ function safeMonthly(list){
 }
 function volatilityCard(list){
   var sm = safeMonthly(list), h = '<div class="card"><h2>'+esc(t('safeBudget'))+'</h2>';
-  if(!sm) return h+'<p class="hint" style="margin:0">'+esc(t('needWeeks'))+'</p></div>';
+  if(!sm){
+    var dn = list.filter(function(x){ return !x.e.off; }).map(function(x){ return x.r.net; });
+    if(dn.length>=10){ var est = Math.max(0, percentile(dn, 0.25)*num(state.settings.workDays)); return h+'<div class="stat"><div class="v">'+fmt(est)+'</div></div><p class="hint"><b>'+esc(t('earlyGuess'))+'.</b> '+esc(t('earlyNote', {n:dn.length}))+'</p><p class="hint">'+esc(t('safeNote'))+'</p></div>'; }
+    return h+'<p class="hint" style="margin:0">'+esc(t('needWeeks'))+'</p></div>';
+  }
   return h+'<div class="stat"><div class="v">'+fmt(sm.monthly)+'</div></div><p class="hint">'+esc(t('weeklyRange', {a:fmt(Math.min.apply(null,sm.nets)), b:fmt(Math.max.apply(null,sm.nets))}))+'</p><p class="hint">'+esc(t('safeNote'))+'</p></div>';
 }
 function goalCard(list){
@@ -1012,10 +1206,11 @@ function monthsEnding(m, n){ var p = m.split('-'), out = []; for(var i=n-1;i>=0;
 function statementData(){
   var last = stmtMonth || monthKey(), ms = monthsEnding(last, stmtRange==='3' ? 3 : 1);
   var list = entriesList().filter(function(x){ return ms.indexOf(x.date.slice(0,7))>=0; });
-  var o = {ms:ms, label: ms.length>1 ? ms[0]+' to '+ms[ms.length-1] : ms[0], last:last, list:list, gross:0, net:0, hours:0, byApp:{}, byMonth:{}, c:{fuel:0, wear:0, materials:0, travel:0, platform:0, fixed:0, other:0}};
+  var o = {ms:ms, label: ms.length>1 ? ms[0]+' to '+ms[ms.length-1] : ms[0], last:last, list:list, gross:0, net:0, hours:0, byApp:{}, byMonth:{}, c:{fuel:0, wear:0, materials:0, travel:0, platform:0, fixed:0, penalty:0, helper:0, returns:0, cogs:0, bulk:0, other:0}};
+  o.work = list.filter(function(x){ return !x.e.off; }).length; o.off = list.length - o.work;
   ms.forEach(function(m){ o.byMonth[m] = {gross:0, net:0, days:0}; });
   list.forEach(function(x){ var bm = o.byMonth[x.date.slice(0,7)]; bm.gross+=x.r.gross; bm.net+=x.r.net; bm.days++;
-    o.gross+=x.r.gross; o.net+=x.r.net; o.hours+=x.r.hours; for(var k in o.c){ o.c[k]+=x.r[k]; } for(var a in x.e.apps){ o.byApp[a] = (o.byApp[a]||0)+num(x.e.apps[a]); } });
+    o.gross+=x.r.gross; o.net+=x.r.net; o.hours+=x.r.hours; for(var k in o.c){ o.c[k]+=x.r[k]; } for(var a in x.e.apps){ o.byApp[a] = (o.byApp[a]||0)+num(x.e.apps[a]); } if(!x.e.off){ var pm = (x.e.p||paramsNow()).monthly; if(pm){ for(var mk in pm){ o.byApp[mk] = (o.byApp[mk]||0)+pm[mk]; } } } });
   return o;
 }
 function statementText(o){
@@ -1024,7 +1219,7 @@ function statementText(o){
   L.push(t('grossEarnings')+': '+fmt(o.gross)); costRows(o.c).forEach(function(r){ L.push(r[0]+': '+neg(r[1])); });
   L.push(t('netProfit')+': '+fmt(o.net));
   if(o.ms.length>1){ o.ms.forEach(function(m){ L.push(m+': '+fmt(o.byMonth[m].net)+' ('+o.byMonth[m].days+')'); }); L.push(t('avgMonth')+': '+fmt(o.net/o.ms.length)); }
-  L.push(t('daysWorked')+': '+o.list.length+', '+t('totalHours')+': '+(Math.round(o.hours*10)/10)); L.push('', t('stmtNote'));
+  L.push(t('daysWorked')+': '+o.work+(o.off?', '+t('daysOff', {n:o.off}):'')+', '+t('totalHours')+': '+(Math.round(o.hours*10)/10)); L.push('', t('stmtNote'));
   return L.join('\n');
 }
 function renderStatement(){
@@ -1038,13 +1233,13 @@ function renderStatement(){
     '<tr class="tot"><td>'+esc(t('grossEarnings'))+'</td><td>'+fmt(o.gross)+'</td></tr>'+rowsHtml(costRows(o.c))+
     '<tr class="tot"><td>'+esc(t('netProfit'))+'</td><td>'+fmt(o.net)+'</td></tr>'+
     (o.ms.length>1 ? '<tr class="tot"><td>'+esc(t('avgMonth'))+'</td><td>'+fmt(o.net/o.ms.length)+'</td></tr>' : '')+
-    '<tr><td>'+esc(t('daysWorked'))+'</td><td>'+o.list.length+'</td></tr><tr><td>'+esc(t('totalHours'))+'</td><td>'+(Math.round(o.hours*10)/10)+'</td></tr>'+
-    '<tr><td>'+esc(t('avgDay'))+'</td><td>'+fmt(o.net/o.list.length)+'</td></tr></tbody></table><p class="note">'+esc(t('stmtNote'))+'</p></div>';
+    '<tr><td>'+esc(t('daysWorked'))+'</td><td>'+o.work+'</td></tr>'+(o.off?'<tr><td>'+esc(t('daysOff', {n:''}).replace(/:\s*$/,''))+'</td><td>'+o.off+'</td></tr>':'')+'<tr><td>'+esc(t('totalHours'))+'</td><td>'+(Math.round(o.hours*10)/10)+'</td></tr>'+
+    '<tr><td>'+esc(t('avgDay'))+'</td><td>'+fmt(o.net/Math.max(1,o.work))+'</td></tr></tbody></table><p class="note">'+esc(t('stmtNote'))+'</p></div>';
   if(o.ms.length>1){
     html += '<div class="card"><h2>'+esc(t('month'))+'</h2><table class="table"><tbody>'+o.ms.map(function(m){ var b = o.byMonth[m]; return '<tr><td>'+esc(m)+' ('+b.days+')</td><td>'+fmt(b.gross)+'</td><td>'+fmt(b.net)+'</td></tr>'; }).join('')+'</tbody></table></div>';
   }
   html += '<div class="card"><h2>'+esc(t('dayByDay'))+'</h2><div class="scroll"><table class="table"><tbody>'+
-    o.list.map(function(x){ return '<tr><td>'+esc(dayLabel(x.date))+'</td><td>'+fmt(x.r.gross)+'</td><td>'+fmt(x.r.net)+'</td></tr>'; }).join('')+'</tbody></table></div></div>';
+    o.list.map(function(x){ return '<tr><td>'+esc(dayLabel(x.date))+(x.e.off?' ('+esc(t('off'+x.e.off))+')':'')+'</td><td>'+fmt(x.r.gross)+'</td><td>'+fmt(x.r.net)+'</td></tr>'; }).join('')+'</tbody></table></div></div>';
   html += '<div class="actions"><button type="button" class="btn" id="copyStmt">'+icon('copy',20)+esc(t('copyText'))+'</button><a class="btn wa" href="https://wa.me/?text='+encodeURIComponent(statementText(o))+'" target="_blank" rel="noopener">'+icon('send',20)+esc(t('whatsapp'))+'</a></div><p class="hint">'+esc(t('screenshotHint'))+'</p><p class="hint">'+esc(t('loanNote'))+'</p>';
   v.innerHTML = html; bindStmt(); segInit(v); $('copyStmt').addEventListener('click', function(){ copyText(statementText(o)); });
 }
@@ -1068,6 +1263,7 @@ function renderDues(){
     '<div><label for="u-who">'+esc(t('dues_who'))+'</label><input type="text" id="u-who" maxlength="50" autocomplete="off"></div>'+
     '<div class="grid2"><div><label for="u-amt">'+esc(t('dues_amount'))+'</label><div class="rs"><span>₹</span><input type="number" id="u-amt" inputmode="decimal" min="0" placeholder="0"></div></div>'+
     '<div><label for="u-date">'+esc(t('dues_date'))+'</label><input type="date" id="u-date"></div></div>'+
+    '<div><label for="u-earned">'+esc(t('dues_earned'))+'</label><input type="date" id="u-earned"></div>'+
     '<div><label for="u-phone">'+esc(t('dues_phone'))+'</label><input type="text" id="u-phone" inputmode="tel" maxlength="15" autocomplete="off"></div>'+
     '<div><label for="u-note">'+esc(t('dues_note'))+'</label><input type="text" id="u-note" maxlength="80" autocomplete="off"></div>'+
     '<button type="button" class="btn" id="u-add">'+icon('add',20)+esc(t('dues_add'))+'</button></div></div>';
@@ -1088,7 +1284,12 @@ function renderDues(){
   if(open.length) html += '</div>';
   if(paid.length){
     html += '<div class="card list"><h2>'+esc(t('dues_paid'))+'</h2>';
-    paid.forEach(function(d){ html += '<div class="due"><div class="top"><span class="who">'+esc(d.who)+'</span><span class="amt">'+fmt(d.amount)+'</span></div><div class="meta"><span class="stamp thump">'+esc(t('dues_paid'))+'</span></div><div class="actions"><button type="button" class="btn ghost small" data-undo="'+d.id+'">'+esc(t('dues_undo'))+'</button><button type="button" class="btn danger small" data-del="'+d.id+'">'+esc(t('remove'))+'</button></div></div>'; });
+    paid.forEach(function(d){
+      var cr = '';
+      if(d.earned && !d.credited && state.entries && d.earned<=todayStr()){ cr = '<div class="srcrow"><select data-credsel="'+d.id+'" aria-label="'+esc(t('dues_creditAs'))+'">'+daySources().map(function(x){ return '<option value="'+x.id+'">'+esc(x.name)+'</option>'; }).join('')+'</select><button type="button" class="btn small" data-cred="'+d.id+'">'+esc(t('dues_credit', {d: dayLabel(d.earned)}))+'</button></div>'; }
+      else if(d.credited) cr = '<span class="hint" style="margin:0">'+esc(t('dues_credited', {d: dayLabel(d.earned)}))+'</span>';
+      html += '<div class="due"><div class="top"><span class="who">'+esc(d.who)+'</span><span class="amt">'+fmt(d.amount)+'</span></div><div class="meta"><span class="stamp thump">'+esc(t('dues_paid'))+'</span>'+(d.paidOn?'<span class="hint" style="margin:0">'+esc(t('dues_paidOn', {d: dayLabel(d.paidOn)}))+'</span>':'')+'</div>'+cr+'<div class="actions"><button type="button" class="btn ghost small" data-undo="'+d.id+'">'+esc(t('dues_undo'))+'</button><button type="button" class="btn danger small" data-del="'+d.id+'">'+esc(t('remove'))+'</button></div></div>';
+    });
     html += '</div>';
   }
   v.innerHTML = html;
@@ -1096,10 +1297,16 @@ function renderDues(){
   $('u-add').addEventListener('click', function(){
     var who = $('u-who').value.trim(), amt = num($('u-amt').value);
     if(!who || !amt){ toast(t('dues_needFields')); return; }
-    state.dues.push({id:'d'+Date.now().toString(36)+Math.floor(Math.random()*100), who:who, amount:amt, due:$('u-date').value||'', phone:$('u-phone').value.trim(), note:$('u-note').value.trim(), paid:false});
+    state.dues.push({id:'d'+Date.now().toString(36)+Math.floor(Math.random()*100), who:who, amount:amt, due:$('u-date').value||'', phone:$('u-phone').value.trim(), note:$('u-note').value.trim(), earned:$('u-earned').value||'', paid:false});
     save(); toast(t('saved')); renderDues();
   });
-  v.querySelectorAll('[data-paid]').forEach(function(b){ b.addEventListener('click', function(){ var d = byId(this.getAttribute('data-paid')); if(d){ d.paid = true; save(); renderDues(); } }); });
+  v.querySelectorAll('[data-paid]').forEach(function(b){ b.addEventListener('click', function(){ var d = byId(this.getAttribute('data-paid')); if(d){ d.paid = true; d.paidOn = todayStr(); save(); renderDues(); } }); });
+  v.querySelectorAll('[data-cred]').forEach(function(b){ b.addEventListener('click', function(){
+    var id = this.getAttribute('data-cred'), d = byId(id), src = v.querySelector('[data-credsel="'+id+'"]').value; if(!d || !d.earned) return;
+    var e = state.entries[d.earned];
+    if(!e){ var ap = {}; state.settings.sources.forEach(function(x){ ap[x.id] = 0; }); e = state.entries[d.earned] = {apps:ap, appHours:{}, hours:0, km:0, jobs:0, fuelActual:null, materials:0, travel:0, platform:0, other:0, p:paramsNow()}; }
+    e.apps[src] = num(e.apps[src]) + d.amount; d.credited = true; save(); toast(t('dues_credited', {d: dayLabel(d.earned)})); renderDues();
+  }); });
   v.querySelectorAll('[data-undo]').forEach(function(b){ b.addEventListener('click', function(){ var d = byId(this.getAttribute('data-undo')); if(d){ d.paid = false; save(); renderDues(); } }); });
   v.querySelectorAll('[data-del]').forEach(function(b){ b.addEventListener('click', function(){ var id = this.getAttribute('data-del'); state.dues = state.dues.filter(function(d){ return d.id!==id; }); save(); renderDues(); }); });
 }
@@ -1110,7 +1317,7 @@ function renderMore(){
   $('m-learn').addEventListener('click', function(){ show('learn'); });
   $('m-settings').addEventListener('click', function(){ show('settings'); });
   if(curType()==='vehicle') renderEv();
-  var a = document.createElement('div'); a.innerHTML = '<div class="card"><h2>'+esc(t('a2hsTitle'))+'</h2><p class="hint" style="margin:0">'+esc(t('a2hs'))+'</p></div>'; $('v-more').appendChild(a.firstChild);
+  var a = document.createElement('div'); a.innerHTML = '<div class="card"><h2>'+esc(t('a2hsTitle'))+'</h2><p class="hint" style="margin:0">'+esc(t('a2hs'))+'</p><p class="hint">'+esc(t('cleanerWarn'))+'</p></div>'; $('v-more').appendChild(a.firstChild);
 }
 var evVals = null;
 function renderEv(){
@@ -1135,7 +1342,7 @@ function csvDownload(){
   var ids = []; Object.keys(state.entries).forEach(function(d){ for(var a in state.entries[d].apps){ if(ids.indexOf(a)<0) ids.push(a); } });
   function q(x){ x = String(x); return /[",\n]/.test(x) ? '"'+x.replace(/"/g,'""')+'"' : x; }
   var rows = [['Date'].concat(ids.map(srcName), ['Gross','Costs','Net profit','Hours','Km','Jobs']).map(q).join(',')];
-  Object.keys(state.entries).sort().forEach(function(d){ var e = state.entries[d], r = calc(e);
+  Object.keys(state.entries).sort().forEach(function(d){ var e = state.entries[d], r = calc(e, undefined, d);
     rows.push([d].concat(ids.map(function(a){ return num(e.apps[a]); }), [Math.round(r.gross), Math.round(r.costs), Math.round(r.net), r.hours, r.km, r.jobs]).map(q).join(',')); });
   var blob = new Blob([rows.join('\n')], {type:'text/csv;charset=utf-8'}), a = document.createElement('a');
   a.href = URL.createObjectURL(blob); a.download = 'take-home-tracker.csv'; document.body.appendChild(a); a.click(); document.body.removeChild(a);
@@ -1214,16 +1421,16 @@ function renderSettings(){
   html += '<div class="card"><label for="s-type">'+esc(t('workType'))+'</label><select id="s-type">'+
     [['vehicle','onbVehicle'],['service','onbService'],['online','onbOnline'],['other','onbOther']].map(function(x){ return '<option value="'+x[0]+'"'+(s.type===x[0]?' selected':'')+'>'+esc(t(x[1]))+'</option>'; }).join('')+'</select></div>';
   html += '<div class="card"><h2>'+esc(t('sources'))+'</h2><div class="stack" id="srcList">'+
-    s.sources.map(function(x, i){ return '<div class="srcrow"><input type="text" data-i="'+i+'" value="'+esc(x.name)+'" maxlength="40" aria-label="'+esc(x.name)+'"><button type="button" class="btn danger small" data-rm="'+i+'">'+esc(t('remove'))+'</button></div>'; }).join('')+
+    s.sources.map(function(x, i){ return '<div class="srcbox"><div class="srcrow"><input type="text" data-i="'+i+'" value="'+esc(x.name)+'" maxlength="40" aria-label="'+esc(x.name)+'"><button type="button" class="btn danger small" data-rm="'+i+'">'+esc(t('remove'))+'</button></div><div class="srcx"><label class="chk"><input type="checkbox" data-m="'+i+'"'+(x.m?' checked':'')+'><span>'+esc(t('paidMonthly'))+'</span></label>'+(x.m?'<input type="number" data-mamt="'+i+'" inputmode="decimal" min="0" placeholder="'+esc(t('monthlyAmt'))+'" value="'+esc(x.mAmt||'')+'" aria-label="'+esc(t('monthlyAmt'))+'">':'')+(s.type==='other'?'<input type="number" data-mg="'+i+'" inputmode="decimal" min="0" max="99" placeholder="'+esc(t('marginPct'))+'" value="'+esc(x.mg||'')+'" aria-label="'+esc(t('marginPct'))+'">':'')+'</div></div>'; }).join('')+
     '</div><div class="srcrow" style="margin-top:12px"><input type="text" id="s-new" placeholder="'+esc(t('srcPlaceholder'))+'" maxlength="40" aria-label="'+esc(t('addSource'))+'"><button type="button" class="btn small" id="addSrc">'+icon('add',20)+esc(t('addSource'))+'</button></div>'+
     '<p class="hint">'+esc(t('quickAdd'))+'</p><div class="chips" style="margin-top:6px">'+QUICK.map(function(q){ return '<button type="button" data-q="'+esc(q)+'">+ '+esc(q)+'</button>'; }).join('')+'</div></div>';
-  html += '<div class="card"><div class="grid2">'+field('s-fixed', t('fixedMonthly'), s.fixedMonthly, '100')+field('s-days', t('workDays'), s.workDays, '1')+field('s-target', t('target'), s.target, '5')+'</div></div>';
+  html += '<div class="card"><div class="grid2">'+'<div style="grid-column:1/-1"><label for="s-fixedamt">'+esc(t('fixedLabel'))+'</label><div class="srcrow"><input type="number" id="s-fixedamt" inputmode="decimal" min="0" step="100" value="'+esc(String(s.fixedAmt!=='' && s.fixedAmt!==undefined ? s.fixedAmt : (s.fixedMonthly||'')))+'" placeholder="0"><select id="s-fixedper" aria-label="'+esc(t('perMonth'))+'"><option value="month"'+(s.fixedPer!=='week'?' selected':'')+'>'+esc(t('perMonth'))+'</option><option value="week"'+(s.fixedPer==='week'?' selected':'')+'>'+esc(t('perWeek'))+'</option></select></div></div>'+field('s-days', t('workDays'), s.workDays, '1')+field('s-target', t('target'), s.target, '5')+(s.type==='other'?'<div style="grid-column:1/-1">'+field('s-margin', t('defMargin'), s.margin, '1')+'<p class="hint">'+esc(t('marginNote'))+'</p></div>':'')+'</div></div>';
   if(veh){
-    html += '<div class="card"><h2>'+esc(t('vehicle'))+'</h2><select id="s-veh" aria-label="'+esc(t('vehicle'))+'">'+['bike','ebike','auto','cab'].map(function(k){ var nm = {bike:'pBike', ebike:'pEbike', auto:'pAuto', cab:'pCab'}[k]; return '<option value="'+k+'"'+(s.vehicle===k?' selected':'')+'>'+esc(t(nm))+'</option>'; }).join('')+'</select><div style="height:12px"></div><div class="grid2">'+
-      (s.mode==='perKm' ? field('s-rate', t('costPerKm'), s.rate, '0.05') : field('s-mileage', t('mileage'), s.mileage, '1')+field('s-price', t('fuelPrice'), s.price, '0.5'))+field('s-wear', t('wearPerKm'), s.wear, '0.1')+'</div></div>';
+    html += '<div class="card"><h2>'+esc(t('vehicle'))+'</h2><select id="s-veh" aria-label="'+esc(t('vehicle'))+'">'+['bike','ebike','auto','cng','cab','truck'].map(function(k){ var nm = {bike:'pBike', ebike:'pEbike', auto:'pAuto', cng:'pCng', cab:'pCab', truck:'pTruck'}[k]; return '<option value="'+k+'"'+(s.vehicle===k?' selected':'')+'>'+esc(t(nm))+'</option>'; }).join('')+'</select><div style="height:12px"></div><div class="grid2">'+
+      (s.mode==='perKm' ? field('s-rate', t('costPerKm'), s.rate, '0.05') : field('s-mileage', t('mileage'), s.mileage, '1')+field('s-price', t('fuelPrice'), s.price, '0.5'))+field('s-wear', t('wearPerKm'), s.wear, '0.1')+'</div>'+(s.vehicle==='cng'?'<p class="hint">'+esc(t('cngFill'))+'</p>':'')+'</div>';
   }
   html += '<p class="hint">'+esc(t('priceNote'))+'</p>';
-  html += '<div class="card"><h2>'+icon('backup',20)+esc(t('backup'))+'</h2><p class="hint" style="margin-top:0">'+esc(t('backupNote'))+'</p><p class="hint">'+esc(t('backupWarn'))+'</p><div style="height:10px"></div><button type="button" class="btn ghost block" id="copyBackup">'+icon('copy',20)+esc(t('copyBackup'))+'</button>'+(inFrame()?'':'<div style="height:10px"></div><button type="button" class="btn ghost block" id="csvDl">'+esc(t('csvBtn'))+'</button>')+'<div style="height:12px"></div>'+
+  html += '<div class="card"><h2>'+icon('backup',20)+esc(t('backup'))+'</h2><p class="hint" style="margin-top:0">'+esc(t('backupNote'))+'</p><p class="hint">'+esc(t('backupWarn'))+'</p><p class="hint">'+esc(t('cleanerWarn'))+'</p><div style="height:10px"></div><button type="button" class="btn wa block" id="sendBackup">'+icon('send',20)+esc(t('backupSend'))+'</button><div style="height:10px"></div><button type="button" class="btn ghost block" id="copyBackup">'+icon('copy',20)+esc(t('copyBackup'))+'</button>'+(inFrame()?'':'<div style="height:10px"></div><button type="button" class="btn ghost block" id="csvDl">'+esc(t('csvBtn'))+'</button>')+'<div style="height:12px"></div>'+
     '<label for="s-code">'+esc(t('restore'))+'</label><textarea id="s-code" placeholder="'+esc(t('pasteCode'))+'"></textarea><div style="height:10px"></div><button type="button" class="btn ghost block" id="doRestore">'+esc(t('restore'))+'</button></div>';
   html += '<div class="card"><h2>'+esc(t('themeTitle'))+'</h2><div class="seg" id="themeSeg">'+['auto','light','dark'].map(function(m){ return '<button type="button" data-th="'+m+'" aria-pressed="'+((state.theme||'auto')===m)+'">'+esc(t('theme'+m.charAt(0).toUpperCase()+m.slice(1)))+'</button>'; }).join('')+'</div></div>';
   html += '<div class="card"><h2>'+icon('lock',20)+esc(t('pinTitle'))+'</h2><p class="hint" style="margin:0 0 10px">'+esc(t('pinNote'))+'</p>'+
@@ -1234,16 +1441,23 @@ function renderSettings(){
 
   $('s-name').addEventListener('input', function(){ state.name = this.value; save(); });
   $('s-type').addEventListener('change', function(){ setType(this.value, false); resetToday(); renderSettings(); });
-  v.querySelectorAll('#srcList input').forEach(function(el){ el.addEventListener('input', function(){ s.sources[+this.getAttribute('data-i')].name = this.value; save(); }); });
+  v.querySelectorAll('#srcList input[data-i]').forEach(function(el){ el.addEventListener('input', function(){ s.sources[+this.getAttribute('data-i')].name = this.value; save(); }); });
   v.querySelectorAll('[data-rm]').forEach(function(b){ b.addEventListener('click', function(){ var i = +this.getAttribute('data-rm'); var x = s.sources[i]; state.oldNames[x.id] = x.name; s.sources.splice(i,1); save(); rebuildToday(); renderSettings(); }); });
   function addSource(name){
     name = (name||'').trim(); if(!name || s.sources.length>=10) return;
     var id = 'c'+Date.now().toString(36)+Math.floor(Math.random()*100); s.sources.push({id:id, name:name}); save(); rebuildToday(); renderSettings();
   }
+  v.querySelectorAll('[data-m]').forEach(function(c){ c.addEventListener('change', function(){ var x = s.sources[+this.getAttribute('data-m')]; x.m = this.checked; save(); rebuildToday(); renderSettings(); }); });
+  v.querySelectorAll('[data-mamt]').forEach(function(c){ c.addEventListener('input', function(){ s.sources[+this.getAttribute('data-mamt')].mAmt = this.value; save(); }); });
+  v.querySelectorAll('[data-mg]').forEach(function(c){ c.addEventListener('input', function(){ s.sources[+this.getAttribute('data-mg')].mg = this.value; save(); }); });
+  var fa = $('s-fixedamt'), fp = $('s-fixedper');
+  function fixedChanged(){ s.fixedAmt = fa.value; s.fixedPer = fp.value; recomputeFixed(); save(); }
+  fa.addEventListener('input', fixedChanged); fp.addEventListener('change', fixedChanged);
   $('addSrc').addEventListener('click', function(){ addSource($('s-new').value); });
   v.querySelectorAll('[data-q]').forEach(function(b){ b.addEventListener('click', function(){ addSource(this.getAttribute('data-q')); }); });
   var sv = $('s-veh'); if(sv) sv.addEventListener('change', function(){ var k = this.value, pr = PRESETS[k]; s.vehicle = k; s.mode = pr.mode; s.wear = pr.wear; if(pr.mode==='perKm'){ s.rate = pr.rate; } else { s.mileage = pr.mileage; s.price = pr.price; } save(); renderSettings(); });
-  [['s-rate','rate'],['s-mileage','mileage'],['s-price','price'],['s-wear','wear'],['s-fixed','fixedMonthly'],['s-days','workDays'],['s-target','target']].forEach(function(pair){ var el = $(pair[0]); if(el) el.addEventListener('input', function(){ s[pair[1]] = num(this.value); save(); }); });
+  [['s-rate','rate'],['s-mileage','mileage'],['s-price','price'],['s-wear','wear'],['s-days','workDays'],['s-target','target'],['s-margin','margin']].forEach(function(pair){ var el = $(pair[0]); if(el) el.addEventListener('input', function(){ s[pair[1]] = num(this.value); save(); }); });
+  $('sendBackup').addEventListener('click', sendBackup);
   $('copyBackup').addEventListener('click', function(){ state.lastBackup = todayStr(); save(); copyText(backupCode()); });
   var cd = $('csvDl'); if(cd) cd.addEventListener('click', csvDownload);
   v.querySelectorAll('[data-th]').forEach(function(b){ b.addEventListener('click', function(){ state.theme = this.getAttribute('data-th'); save(); applyTheme(); renderSettings(); }); });
@@ -1286,6 +1500,7 @@ $('d-date').value = todayStr();
 $('d-date').addEventListener('change', fillToday);
 $('saveDay').addEventListener('click', saveDay);
 $('delDay').addEventListener('click', deleteDay);
+$('offBtn').addEventListener('click', function(){ var b = $('offBox'); b.hidden = !b.hidden; if(!b.hidden && b.scrollIntoView) b.scrollIntoView({behavior: REDUCE ? 'auto' : 'smooth', block:'center'}); });
 $('clearExample').addEventListener('click', function(){ removeExamples(); save(); updateBanner(); renderCurrent(); fillToday(); toast(t('examplesRemoved')); });
 document.querySelectorAll('.lang button').forEach(function(b){ b.addEventListener('click', function(){ state.lang = this.getAttribute('data-lang'); save(); applyLang(); }); });
 document.querySelectorAll('nav.tabs button').forEach(function(b){ b.addEventListener('click', function(){ show(this.getAttribute('data-view')); }); });
