@@ -1,0 +1,1321 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="theme-color" content="#0A7C52"><title>Take-Home Tracker</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Anek+Devanagari:wdth,wght@75..125,100..800&family=Anek+Latin:wdth,wght@75..125,100..800&family=Anek+Telugu:wdth,wght@75..125,100..800&family=Special+Elite&display=swap">
+<style>
+/* Bahi-khata redesign: warm paper, ink, stamps, ruled lines. One narrow column, hero number first. */
+:root{
+  --paper:#FBF6EC; --paper-deep:#F3EAD7; --ink:#1F2340; --ink-soft:#5A5F7A; --rule:#E2D6BE;
+  --khata-red:#7B2D5B; --haldi:#E3A321; --profit:#1E7A4C; --loss:#C2410C; --loss-text:#A8360A; --on-red:#FFFFFF;
+  --s1:#7B2D5B; --s2:#E3A321; --s3:#2F5D8A; --s4:#6B8E23; --s5:#A8231C; --s6:#3E7C7B;
+  --shadow:0 1px 0 var(--rule),0 6px 16px rgba(31,35,64,0.06);
+  --action:var(--khata-red); --btn:var(--khata-red); --on-btn:#FFFFFF;
+  --grain:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='180' height='180'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='2' stitchTiles='stitch'/></filter><rect width='180' height='180' filter='url(%23n)' opacity='.04'/></svg>");
+  --grain-dark:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='180' height='180'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='2' stitchTiles='stitch'/><feColorMatrix type='matrix' values='0 0 0 0 .95  0 0 0 0 .78  0 0 0 0 .55  0 0 0 1.8 -.35'/></filter><rect width='180' height='180' filter='url(%23n)' opacity='.04'/></svg>");
+  --sans:'Anek Latin',system-ui,'Noto Sans Telugu','Noto Sans Devanagari',sans-serif;
+  --stamp:'Special Elite','Courier New',monospace;
+  --ease:cubic-bezier(.2,.8,.2,1);
+  color-scheme:light;
+}
+:root:lang(te){--sans:'Anek Telugu',system-ui,'Noto Sans Telugu',sans-serif}
+:root:lang(hi){--sans:'Anek Devanagari',system-ui,'Noto Sans Devanagari',sans-serif}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --paper:#1A1311; --paper-deep:#251B17; --ink:#F3E6D0; --ink-soft:#B8A58C; --rule:#3D2D25;
+    --khata-red:#D9483B; --haldi:#F0B23A; --profit:#6CC08B; --loss:#F08A5D; --loss-text:#F08A5D;
+    --action:#F0B23A; --btn:#F0B23A; --on-btn:#1A1311; --grain:var(--grain-dark);
+    --shadow:none; color-scheme:dark;
+  }
+}
+:root[data-theme="dark"]{
+  --paper:#1A1311; --paper-deep:#251B17; --ink:#F3E6D0; --ink-soft:#B8A58C; --rule:#3D2D25;
+    --khata-red:#D9483B; --haldi:#F0B23A; --profit:#6CC08B; --loss:#F08A5D; --loss-text:#F08A5D;
+    --action:#F0B23A; --btn:#F0B23A; --on-btn:#1A1311; --grain:var(--grain-dark);
+    --shadow:none; color-scheme:dark;
+}
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+html{-webkit-text-size-adjust:100%}
+body{
+  margin:0; color:var(--ink); font-family:var(--sans); font-size:17px; line-height:1.5;
+  background:var(--grain) 0 0/180px 180px, var(--paper);
+  padding:0 max(16px, env(safe-area-inset-right, 0px)) calc(104px + env(safe-area-inset-bottom, 0px)) max(16px, env(safe-area-inset-left, 0px));
+}
+:root:lang(te) body,:root:lang(hi) body{line-height:1.7}
+body::before{content:'';position:fixed;top:0;left:0;right:0;height:8px;z-index:20;pointer-events:none;
+  background:repeating-linear-gradient(90deg,rgba(251,246,236,.55) 0 6px,transparent 6px 11px) 0 3px/100% 1px no-repeat var(--khata-red)}
+.wrap{max-width:480px;margin:0 auto}
+header.top{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:28px 0 6px}
+h1{font-family:var(--sans);font-weight:700;font-size:24px;line-height:1.2;margin:0;letter-spacing:-0.01em}
+.tag{color:var(--ink-soft);font-size:14px;margin:0 0 8px;line-height:1.5}
+.lang{display:flex;gap:2px;background:var(--paper-deep);border:1.5px solid var(--rule);border-radius:999px;padding:3px;flex:none}
+.lang button{border:0;background:transparent;color:var(--ink-soft);font:600 14px/1 var(--sans);min-width:44px;min-height:44px;border-radius:999px;cursor:pointer;transition:background-color .15s var(--ease),color .15s}
+.lang button[aria-pressed="true"]{background:var(--ink);color:var(--paper)}
+.banner{position:sticky;top:12px;z-index:6;display:flex;align-items:center;justify-content:space-between;gap:10px;background:var(--haldi);color:#1F2340;border-radius:10px 10px 4px 4px;padding:10px 12px 14px;margin:8px 0;font-size:14px;font-weight:600;line-height:1.4}
+.banner::after{content:'';position:absolute;left:0;right:0;bottom:0;height:6px;border-radius:0 0 4px 4px;background:repeating-linear-gradient(45deg,#1F2340 0 5px,transparent 5px 10px);opacity:.55}
+.banner button{border:1.5px solid #1F2340;background:transparent;color:#1F2340;border-radius:10px;padding:0 12px;font:600 13px var(--sans);cursor:pointer;min-height:48px}
+.view{display:flex;flex-direction:column;gap:16px;padding-top:24px}
+.card,.hero,.stmt{position:relative;background:var(--paper-deep);border:1.5px solid var(--rule);border-radius:14px;padding:20px;box-shadow:var(--shadow);min-width:0}
+.card:has(>h2:first-child){margin-top:20px}
+.card>h2:first-child{position:absolute;left:14px;bottom:calc(100% - 1.5px);max-width:calc(100% - 28px);margin:0;padding:6px 14px 5px;background:var(--paper-deep);border:1.5px solid var(--rule);border-bottom:0;border-radius:8px 8px 0 0;font-size:18px;line-height:1.3}
+h2{font-family:var(--sans);font-weight:700;font-size:18px;line-height:1.3;margin:0 0 12px}
+h2 svg,.btn svg,label svg,.ico svg{vertical-align:-4px}
+h2 svg{width:20px;height:20px;margin-right:6px}
+h2.grp{margin:14px 0 2px}
+label,.lbl{display:block;font-size:13px;font-weight:600;line-height:1.4;margin-bottom:6px}
+:root:lang(en) label:not(.srcl),:root:lang(en) .hlabel,:root:lang(en) .hero .small,:root:lang(en) .stat .k{text-transform:uppercase;letter-spacing:.08em}
+label svg{width:16px;height:16px;margin-right:6px;vertical-align:-3px}
+.hint{font-size:14px;color:var(--ink-soft);margin:8px 0 0;line-height:1.5}
+input[type=number],input[type=date],input[type=month],input[type=text],input[type=password],select,textarea{
+  width:100%;min-height:52px;border:1.5px solid var(--rule);border-radius:10px;background:var(--paper-deep);color:var(--ink);
+  font:500 18px/1.3 var(--sans);padding:8px 14px;font-variant-numeric:tabular-nums;box-shadow:inset 0 1px 0 rgba(31,35,64,.05);transition:border-color .15s var(--ease)
+}
+input::-webkit-outer-spin-button,input::-webkit-inner-spin-button{-webkit-appearance:none;margin:0}
+input[type=number]{-moz-appearance:textfield}
+textarea{font-size:16px;min-height:96px;resize:vertical}
+select{font-size:17px}
+input:focus,select:focus,textarea:focus{outline:none;border-color:var(--haldi);box-shadow:0 0 0 .5px var(--haldi)}
+button:focus-visible,a:focus-visible,summary:focus-visible{outline:2px solid var(--ink);outline-offset:3px;border-radius:6px}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:16px 12px}
+.grid2>*{min-width:0}
+.stack{display:flex;flex-direction:column;gap:16px}
+.rs{position:relative}
+.rs span{position:absolute;right:14px;top:50%;transform:translateY(-50%);color:var(--ink-soft);font-weight:600;font-size:15px;pointer-events:none}
+.rs input{padding-right:46px}
+label.srcl{display:inline-flex;align-items:center;gap:8px;max-width:100%;min-height:36px;padding:5px 14px 5px 12px;border:1.5px solid var(--rule);border-radius:999px;font-size:14px;font-weight:600;line-height:1.3;overflow-wrap:anywhere;margin-bottom:8px;text-transform:none;letter-spacing:0;transition:background-color .15s var(--ease),border-color .15s var(--ease)}
+label.srcl i{flex:none;width:10px;height:10px;border-radius:50%;background:var(--c)}
+label.srcl.on{background:color-mix(in srgb,var(--c) 15%,transparent);border-color:var(--c)}
+/* hero result panel */
+.hero{padding:20px 20px 20px}
+.htop{display:flex;justify-content:space-between;align-items:flex-start;gap:12px}
+.hlabel,.hero .small{font-size:13px;font-weight:600;line-height:1.4;color:var(--ink-soft)}
+.hbig,.hero .big{font-family:var(--sans);font-weight:800;font-stretch:75%;font-variation-settings:'wdth' 75;font-size:clamp(40px,14vw,56px);line-height:1;letter-spacing:-0.02em;font-variant-numeric:tabular-nums;margin:8px 0 0;overflow-wrap:anywhere}
+.hero.loss .hbig,.hero.loss .big{color:var(--loss-text)}
+svg.brush{display:block;width:min(100%,260px);height:12px;margin:4px 0 14px;overflow:visible}
+svg.brush path{fill:none;stroke:var(--haldi);stroke-linecap:round}
+.hero .row{display:flex;gap:6px 18px;flex-wrap:wrap;font-weight:600;font-variant-numeric:tabular-nums}
+.verdict{margin:12px 0 0;font-size:17px;font-weight:600;line-height:1.5}
+.hero .verdict{margin-top:0}
+.sd{display:inline-block;width:10px;height:10px;border-radius:50%;margin-right:8px;background:var(--ink-soft);vertical-align:1px}
+.sd.good{background:var(--profit)} .sd.mid{background:var(--haldi)} .sd.bad{background:var(--loss)}
+.tiles{display:flex;gap:8px;margin-top:16px;flex-wrap:wrap}
+.tile{flex:1 1 92px;min-width:0;background:var(--paper);border:1.5px solid var(--rule);border-radius:10px;padding:10px 10px 8px;font-variant-numeric:tabular-nums}
+.stat:has(>.v:empty){display:none}
+.tile b{display:inline-block;font-size:clamp(17px,5.4vw,22px);font-weight:700;line-height:1.25;overflow-wrap:anywhere}
+.tile>span{display:block;font-size:13px;color:var(--ink-soft);line-height:1.4}
+.dbl{padding-bottom:6px;background:linear-gradient(var(--ink),var(--ink)) 0 calc(100% - 4px)/100% 1px no-repeat,linear-gradient(var(--ink),var(--ink)) 0 100%/100% 1px no-repeat}
+.cur{font-size:.6em;vertical-align:.5em;font-weight:inherit;margin-right:1px;line-height:0}
+.table{width:100%;border-collapse:collapse;font-variant-numeric:tabular-nums;font-size:16px}
+.table td,.table th{padding:10px 0;border-bottom:1px solid var(--rule);text-align:left;vertical-align:top;line-height:1.4}
+.table td:last-child,.table th:last-child{text-align:right;white-space:nowrap}
+.table tr:last-child td{border-bottom:0}
+.table .tot td{font-weight:700}
+.table .tot td:last-child{padding-bottom:12px;border-bottom:0;background:linear-gradient(var(--ink),var(--ink)) 0 calc(100% - 6px)/100% 1px no-repeat,linear-gradient(var(--ink),var(--ink)) 0 calc(100% - 3px)/100% 1px no-repeat}
+.scroll{overflow-x:auto}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;min-height:52px;padding:0 20px;border-radius:12px;border:1.5px solid var(--btn);background:var(--btn);color:var(--on-btn);font:700 17px/1.25 var(--sans);cursor:pointer;text-decoration:none;text-align:center;transition:transform .15s var(--ease),background-color .15s var(--ease)}
+.btn:active{transform:translateY(1px);background:color-mix(in srgb,var(--btn) 80%,#000);border-color:color-mix(in srgb,var(--btn) 80%,#000)}
+.btn svg{width:20px;height:20px;flex:none}
+.btn.ghost{background:transparent;border-color:var(--ink);color:var(--ink)}
+.btn.ghost:active{background:color-mix(in srgb,var(--ink) 8%,transparent)}
+.btn.danger{background:transparent;color:var(--loss-text);border-color:var(--loss)}
+.btn.wa{background:#25D366;border-color:#25D366;color:#10301E}
+.btn.small{min-height:48px;padding:0 14px;font-size:15px}
+.btn.block{width:100%}
+.txt{display:inline-flex;align-items:center;gap:6px;min-height:48px;padding:0;border:0;background:none;color:var(--action);font:700 16px/1.2 var(--sans);cursor:pointer;text-decoration:none;align-self:flex-start}
+.txt:hover,.txt:active{text-decoration:underline wavy var(--haldi);text-decoration-thickness:2px;text-underline-offset:6px}
+.actions{display:flex;gap:12px;flex-wrap:wrap}
+.actions>*{flex:1 1 140px}
+.seg{position:relative;display:grid;grid-template-columns:repeat(var(--n,3),1fr);background:var(--paper-deep);border:1.5px solid var(--rule);border-radius:999px;padding:4px}
+.seg::before{content:'';position:absolute;top:4px;bottom:4px;left:4px;width:calc((100% - 8px)/var(--n,3));border-radius:999px;background:var(--ink);transform:translateX(calc(var(--i,0)*100%));transition:transform .2s var(--ease)}
+.seg button{position:relative;z-index:1;min-height:48px;border:0;border-radius:999px;background:transparent;color:var(--ink);font:600 15px/1.2 var(--sans);cursor:pointer;padding:0 8px;transition:color .2s var(--ease)}
+.seg button[aria-pressed="true"]{color:var(--paper)}
+.choice{display:flex;flex-direction:column;gap:12px}
+.choice button{min-height:64px;border-radius:12px;border:1.5px solid var(--rule);background:var(--paper);color:var(--ink);font:700 17px/1.3 var(--sans);cursor:pointer;text-align:left;padding:10px 16px;display:flex;flex-direction:row;align-items:center;gap:14px;transition:border-color .15s var(--ease),transform .15s var(--ease)}
+.choice button:active{transform:translateY(1px)}
+.choice button .wtx{display:flex;flex-direction:column;gap:2px;min-width:0}
+.choice button small{font:400 14px/1.4 var(--sans);color:var(--ink-soft)}
+.choice button svg{flex:none}
+.choice button:hover{border-color:var(--khata-red)}
+.wi{display:inline-flex;flex:none;color:var(--khata-red)}
+.wi svg{width:48px;height:48px;fill:none;stroke:currentColor;stroke-width:1.75;stroke-linecap:round;stroke-linejoin:round}
+.stats{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.stat{background:var(--paper);border:1.5px solid var(--rule);border-radius:10px;padding:12px;min-width:0}
+.stat .k{font-size:13px;color:var(--ink-soft);font-weight:600;line-height:1.4}
+.stat .v{font-size:22px;font-weight:700;font-variant-numeric:tabular-nums;line-height:1.3;overflow-wrap:anywhere}
+.bar{display:flex;gap:2px;height:14px;border-radius:999px;overflow:hidden;background:var(--paper);margin:8px 0 12px}
+.bar i{display:block;height:100%;min-width:4px}
+.legend{display:flex;flex-wrap:wrap;gap:8px 16px;font-size:14px;font-variant-numeric:tabular-nums}
+.legend b{display:inline-block;width:10px;height:10px;border-radius:50%;margin-right:6px}
+.empty{text-align:center;color:var(--ink-soft);padding:28px 16px}
+.empty .btn{margin-top:12px}
+svg.chart{width:100%;height:auto;display:block}
+svg.chart text{font-family:var(--sans);font-variant-numeric:tabular-nums}
+.c-ink{fill:var(--ink)} .c-muted{fill:var(--ink-soft)} .c-pos{fill:var(--profit)} .c-neg{fill:var(--loss)} .c-line{stroke:var(--rule);stroke-width:1.5;stroke-dasharray:4 4}
+.stmt{border-style:dashed}
+.stmt h3{font-size:18px;font-weight:700;margin:0 0 2px}
+.note{font-size:14px;color:var(--ink-soft);margin:12px 0 0}
+.srcrow{display:flex;gap:8px;align-items:center}
+.srcrow input{flex:1;min-width:0}
+.chips{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px}
+.chips button{min-height:48px;border-radius:999px;border:1.5px solid var(--rule);background:var(--paper);color:var(--ink);font:600 14px var(--sans);padding:0 14px;cursor:pointer;display:inline-flex;align-items:center;gap:6px}
+.chips button svg{width:16px;height:16px}
+.min{font-weight:800;font-size:40px;letter-spacing:-0.02em;line-height:1.1;font-variant-numeric:tabular-nums}
+.card.list{padding-top:12px;padding-bottom:12px}
+.card.list>*:not(h2:first-child){margin-left:0}
+.due{display:flex;flex-direction:column;gap:8px;min-height:64px;padding:14px 0;border-bottom:1px solid var(--rule)}
+.card.list>.due:last-child{border-bottom:0}
+.due.late{border-left:4px solid var(--loss);padding-left:12px;margin-left:-20px;padding-right:0}
+.due.late{margin-left:-20px;padding-left:16px}
+.due .top{display:flex;justify-content:space-between;gap:10px;align-items:baseline}
+.due .who{font-weight:700;overflow-wrap:anywhere}
+.due .amt{font-weight:700;font-size:20px;font-variant-numeric:tabular-nums;white-space:nowrap}
+.due .meta{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.badge{display:inline-block;font-size:13px;font-weight:600;border-radius:999px;padding:2px 12px;border:1.5px solid var(--rule);color:var(--ink-soft)}
+.stamp{display:inline-block;font-family:var(--stamp);font-size:15px;line-height:1.2;letter-spacing:.06em;text-transform:uppercase;color:var(--khata-red);border:2px solid var(--khata-red);border-radius:4px;padding:3px 10px;transform:rotate(-6deg);opacity:.85;filter:url(#rough2);white-space:nowrap}
+.stamp svg{width:16px;height:16px;vertical-align:-3px;margin-right:4px}
+.stamp.small{font-size:12px;padding:1px 8px;border-width:1.5px;transform:rotate(-3deg);color:var(--loss-text);border-color:var(--loss)}
+.stamp.thump{animation:thump .15s var(--ease)}
+@keyframes thump{from{transform:rotate(-6deg) scale(1.3);opacity:0}to{transform:rotate(-6deg) scale(1);opacity:.85}}
+.prog{position:relative;height:12px;border-radius:999px;background:var(--rule);margin:32px 0 10px}
+.prog i{display:block;height:100%;border-radius:999px;background:var(--haldi)}
+.ptag{position:absolute;top:-30px;transform:translateX(-50%) rotate(-4deg);font-family:var(--stamp);font-style:normal;font-size:13px;line-height:1;padding:4px 8px;background:var(--paper);border:1.5px solid var(--ink);border-radius:4px;color:var(--ink)}
+details.tip{border:0;border-bottom:1px solid var(--rule);border-radius:0;background:transparent;padding:0}
+details.tip:last-of-type{border-bottom:0}
+details.tip summary{min-height:64px;display:flex;align-items:center;cursor:pointer;font-weight:700;list-style:none;padding:8px 0;line-height:1.4}
+details.tip summary::-webkit-details-marker{display:none}
+details.tip summary::after{content:'+';margin-left:auto;padding-left:12px;font-size:24px;color:var(--action);font-weight:600}
+details.tip[open] summary::after{content:'\2212'}
+details.tip p{margin:0 0 14px;color:var(--ink-soft);font-size:16px}
+details.tip a{color:var(--action);font-weight:700;display:inline-flex;align-items:center;gap:6px;min-height:48px}
+details.tip a svg{width:16px;height:16px}
+.card>details.tip{margin:0 0 -1px}
+/* ledger log card */
+.ledger{padding-left:40px;background-image:repeating-linear-gradient(to bottom,transparent 0 31px,color-mix(in srgb,var(--rule) 70%,transparent) 31px 32px);background-position:0 12px}
+.ledger::before{content:'';position:absolute;left:14px;top:0;bottom:0;width:2px;background:var(--khata-red)}
+.nudge{border:1.5px dashed var(--khata-red);box-shadow:none;display:flex;flex-direction:column;gap:8px}
+.nudge .actions>*{flex:0 1 auto}
+.ico{display:inline-flex}
+svg.ic{width:24px;height:24px;fill:none;stroke:currentColor;stroke-width:1.75;stroke-linecap:round;stroke-linejoin:round;filter:url(#rough)}
+nav.tabs{position:fixed;left:0;right:0;bottom:0;background:var(--paper-deep);border-top:1.5px solid var(--rule);height:calc(64px + env(safe-area-inset-bottom, 0px));padding:0 8px env(safe-area-inset-bottom, 0px);z-index:10}
+nav.tabs .in{max-width:480px;margin:0 auto;display:grid;grid-template-columns:repeat(5,1fr);height:64px}
+nav.tabs button{position:relative;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;border:0;background:transparent;color:var(--ink-soft);font:600 12px/1.1 var(--sans);cursor:pointer;padding:0 2px;transition:color .15s var(--ease)}
+nav.tabs button span{max-width:100%;overflow-wrap:anywhere;text-align:center}
+nav.tabs button[aria-current="page"]{color:var(--action)}
+nav.tabs button[aria-current="page"]::before{content:'';position:absolute;top:0;left:24%;right:24%;height:3px;background:var(--haldi);border-radius:0 0 3px 3px}
+nav.tabs button[aria-current="page"] .f{fill:var(--haldi)}
+.toast{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(80px + env(safe-area-inset-bottom, 0px));background:var(--ink);color:var(--paper);padding:12px 18px;border-radius:12px;font-weight:600;font-size:15px;line-height:1.4;z-index:30;max-width:calc(100vw - 32px)}
+/* PIN lock */
+.lock{position:fixed;inset:0;z-index:50;background:var(--paper);display:flex;align-items:flex-start;justify-content:center;padding:48px 16px 24px;overflow:auto}
+.lockin{width:100%;max-width:320px;text-align:center}
+.lockin h2{display:flex;align-items:center;justify-content:center;gap:8px}
+.dots{display:flex;justify-content:center;gap:16px;margin:16px 0 8px}
+.dots i{width:16px;height:16px;border-radius:50%;border:1.5px solid var(--ink);display:block;transition:background-color .15s var(--ease)}
+.dots i.on{background:var(--khata-red);border-color:var(--khata-red)}
+.dots.shake{animation:shake .3s var(--ease)}
+@keyframes shake{20%{transform:translateX(-8px)}60%{transform:translateX(8px)}}
+.pad{display:grid;grid-template-columns:repeat(3,72px);gap:16px 20px;justify-content:center;margin:20px 0}
+.pad button{width:72px;height:72px;border-radius:50%;border:1.5px solid var(--rule);background:var(--paper-deep);color:var(--ink);font:600 28px/1 var(--sans);cursor:pointer;display:flex;align-items:center;justify-content:center;transition:transform .15s var(--ease),background-color .15s}
+.pad button:active{transform:scale(.94);background:var(--rule)}
+.pad button.nokey{visibility:hidden}
+.pad button svg{width:28px;height:28px}
+:root:lang(te) *,:root:lang(hi) *{letter-spacing:normal!important}
+@media (prefers-reduced-motion: no-preference){
+  .view>*{animation:up .3s var(--ease) backwards}
+  @keyframes up{from{opacity:0;transform:translateY(8px)}}
+}
+@media (prefers-reduced-motion: reduce){
+  *,*::before,*::after{animation:none!important;transition:none!important}
+}
+
+</style></head><body>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false"><defs>
+  <filter id="rough" x="-5%" y="-5%" width="110%" height="110%"><feTurbulence type="fractalNoise" baseFrequency=".08" numOctaves="2" seed="3" result="n"/><feDisplacementMap in="SourceGraphic" in2="n" scale="1.3"/></filter>
+  <filter id="rough2" x="-5%" y="-5%" width="110%" height="110%"><feTurbulence type="fractalNoise" baseFrequency=".5" numOctaves="2" seed="7" result="n"/><feDisplacementMap in="SourceGraphic" in2="n" scale="2" result="d"/><feTurbulence type="fractalNoise" baseFrequency="1.3" numOctaves="1" seed="2" result="s"/><feColorMatrix in="s" type="matrix" values="0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 -2.4 2.4" result="m"/><feComposite in="d" in2="m" operator="in"/></filter>
+</defs></svg>
+
+<div class="wrap">
+  <header class="top">
+    <h1 data-i18n="appName">Take-Home Tracker</h1>
+    <div class="lang" role="group" aria-label="Language">
+      <button type="button" data-lang="en" aria-pressed="true">EN</button>
+      <button type="button" data-lang="te" aria-pressed="false">తె</button>
+      <button type="button" data-lang="hi" aria-pressed="false">हि</button>
+    </div>
+  </header>
+  <p class="tag" data-i18n="tagline">See what you really earn after costs.</p>
+  <div id="banner" class="banner" hidden><span data-i18n="exampleBanner">Showing example data, not yours.</span><button type="button" id="clearExample" data-i18n="clearExample">Clear example</button></div>
+
+  <section id="v-today" class="view" aria-label="Today">
+    <div id="onboard" class="card" hidden></div>
+    <div class="card">
+      <label for="d-date"><i class="ico" data-ic="calendar"></i><span data-i18n="date">Date</span></label>
+      <input type="date" id="d-date">
+    </div>
+    <div id="todayForm" class="stack"></div>
+    <div id="res" class="hero" aria-live="polite"></div>
+    <div class="card" id="breakdown"></div>
+    <div class="actions">
+      <button type="button" class="btn" id="saveDay" data-i18n="save">Save day</button>
+      <button type="button" class="btn danger" id="delDay" data-i18n="deleteDay" hidden>Delete this day</button>
+    </div>
+    <p class="hint" data-i18n="privacy">Your numbers never leave this phone.</p>
+  </section>
+  <section id="v-summary" class="view" aria-label="Summary" hidden></section>
+  <section id="v-statement" class="view" aria-label="Statement" hidden></section>
+  <section id="v-pricing" class="view" aria-label="Pricing" hidden></section>
+  <section id="v-dues" class="view" aria-label="Dues" hidden></section>
+  <section id="v-more" class="view" aria-label="More" hidden></section>
+  <section id="v-learn" class="view" aria-label="Learn" hidden></section>
+  <section id="v-settings" class="view" aria-label="Settings" hidden></section>
+</div>
+
+<nav class="tabs" aria-label="Main"><div class="in">
+  <button type="button" data-view="today" aria-current="page"><i class="ico" data-ic="today"></i><span data-i18n="navToday">Today</span></button>
+  <button type="button" data-view="summary"><i class="ico" data-ic="summary"></i><span data-i18n="navSummary">Summary</span></button>
+  <button type="button" data-view="dues"><i class="ico" data-ic="dues"></i><span data-i18n="navDues">Dues</span></button>
+  <button type="button" data-view="pricing"><i class="ico" data-ic="pricing"></i><span data-i18n="navPricing">Pricing</span></button>
+  <button type="button" data-view="more"><i class="ico" data-ic="more"></i><span data-i18n="navMore">More</span></button>
+</div></nav>
+<div id="toast" class="toast" hidden></div>
+
+<script>
+(function(){
+'use strict';
+
+/* WhatsApp number (country code + number, digits only) that receives feedback */
+var FEEDBACK_NUMBER = '919177750707';
+
+/* ---------- Translations ---------- */
+var T = {
+en:{
+ appName:'Take-Home Tracker', tagline:'See what you really earn after costs.',
+ navToday:'Today', navSummary:'Summary', navPricing:'Pricing', navLearn:'Learn', navSettings:'Settings',
+ onbTitle:'What kind of work do you do?', onbVehicle:'Delivery and driving', onbService:'Skilled services', onbOnline:'Online and remote work', onbOther:'Selling and small business', onbNote:'Not sure? Pick the closest one. You can change it later in Settings.',
+ date:'Date', earningsToday:'Earnings today by source (₹)', hours:'Hours worked', km:'Distance (km)',
+ jobs_vehicle:'Orders or trips (optional)', jobs_service:'Clients served (optional)', jobs_online:'Projects done (optional)', jobs_other:'Jobs done (optional)',
+ fuelActual:'Fuel spent (₹), leave blank to estimate', otherExp:'Other costs: parking, toll, phone data (₹)',
+ f_materials:'Materials or supplies (₹)', f_travel:'Travel (₹)', f_platform:'Platform fees or commission (₹)', f_other_online:'Software, internet or data (₹)', f_other_general:'Other costs (₹)',
+ fuelEstimate:'Estimated fuel: {x}', trueProfit:'True profit', perHour:'per hour', perKm:'per km', perJob:'per job',
+ earnings:'Earnings', fuel:'Fuel', wear:'Vehicle wear', fixed:'Rent, EMI and insurance share', other:'Other costs', c_materials:'Materials', c_travel:'Travel', c_platform:'Platform fees', breakdown:'Where it went',
+ vGreat:'Above your target of ₹{t} per hour.', vNear:'Close to your target of ₹{t} per hour.', vLow:'Below your target of ₹{t} per hour.',
+ vLoss:'You lost money today after costs.', vEnter:"Enter today's numbers to see your real profit.",
+ save:'Save day', deleteDay:'Delete this day', saved:'Saved', deleted:'Deleted', enterSomething:'Enter some earnings or hours first.', examplesRemoved:'Example data removed.',
+ last7:'Last 7 days', last30:'Last 30 days', allTime:'All time', daysWorked:'Days worked', avgDay:'Average per day',
+ bestDay:'Best day', worstDay:'Weakest day', bySource:'Earnings by source', last14:'Last 14 days, true profit',
+ weeklyRange:'Weekly profit ranged from {a} to {b}.', safeBudget:'Safe monthly budget',
+ safeNote:'Based on your weaker weeks, so a slow month does not catch you out.',
+ needWeeks:'Log at least 3 weeks with 4 or more days each to see your safe budget.',
+ noData:'No days logged yet.', loadExample:'See an example week', exampleBanner:'Showing example data, not yours.', clearExample:'Clear example',
+ totalProfit:'True profit', totalHours:'Hours', openStatement:'Monthly income summary',
+ back:'Back',
+ month:'Month', stmtTitle:'Monthly income summary', stmtNote:'Self-reported by the worker. Not verified by any platform.',
+ grossEarnings:'Gross earnings', totalCosts:'Total costs', netProfit:'Net profit', copyText:'Copy statement', whatsapp:'Share on WhatsApp',
+ copied:'Copied', copyFailed:'Could not copy. Select the text and copy it.', screenshotHint:'Tip: take a screenshot to share this page.', name:'Your name (optional)',
+ dayByDay:'Day by day', noMonth:'No days logged in this month.',
+ workType:'Type of work', sources:'Where your income comes from', addSource:'Add', srcPlaceholder:'e.g. Urban Company', remove:'Remove', quickAdd:'Quick add',
+ vehicle:'Vehicle', pBike:'Bike or scooter (petrol)', pEbike:'Electric bike or scooter', pAuto:'Auto (CNG)', pCab:'Car or cab (petrol or CNG)',
+ mileage:'Mileage (km per litre or kg)', fuelPrice:'Fuel price (₹ per litre or kg)', costPerKm:'Energy cost (₹ per km)',
+ wearPerKm:'Wear and servicing (₹ per km)', fixedMonthly:'Rent, EMI, loan and insurance (₹ per month)', workDays:'Days you usually work per month',
+ target:'Target (₹ per hour)', priceNote:"Starting values are estimates. Please update them to match your work and today's prices.",
+ backup:'Back up your data', backupNote:'Your data stays on this phone only. Copy the code and keep it safe to restore later.',
+ copyBackup:'Copy backup code', restore:'Restore from code', pasteCode:'Paste backup code here', restored:'Restored', badCode:'That code did not work.',
+ clearAll:'Delete all my data', sure:'Tap again to delete everything', cleared:'All data deleted',
+ feedback:'Help improve this tool', feedbackQ:'What was confusing, missing or useful?', sendFeedback:'Send on WhatsApp',
+ privacy:'Your numbers never leave this phone.', otherApp:'Other',
+ src_clients:'Clients at my place or salon', src_home:'Home visits', src_events:'Events and bookings', src_orders:'Online or phone orders', src_direct:'Direct clients', src_sales:'Sales', src_services:'Services',
+ pr_title:'What should you charge?', pr_intro:'Work out the lowest price that covers your costs, your time and a little savings.',
+ pr_materials:'Materials per job (₹)', pr_travel:'Travel per job (₹)', pr_hours:'Hours per job', pr_hourly:'Pay you want per hour (₹)', pr_fee:'Platform fee or commission (%)', pr_margin:'Savings margin (%)',
+ pr_jobsMonth:'Jobs you do per month', pr_current:'Your current price per job (₹)', pr_minPrice:'Minimum price per job', pr_made:'How it adds up',
+ pr_time:'Your time', pr_fixedShare:'Share of fixed costs', pr_feeMargin:'Fees and savings',
+ pr_keep:'At your current price you keep {a} per job after materials, travel and fees, which is {b} per hour of work.',
+ pr_breakeven:'You need about {n} jobs a month to cover your fixed costs of {f}.',
+ pr_noMargin:'At this price you would lose money on every job. Raise the price or cut costs.',
+ pr_above:'Your price is above the minimum.', pr_below:'Your price is below the minimum. Raising it would help you cover your costs and time.',
+ pr_note:'Fixed costs come from Settings.', pr_bad:'Savings and fees together must be under 100%.',
+ learnTitle:'Money tips', learnIntro:'Short ideas for people who earn from their own work.', learnNote:'General information only. Check current details with your bank or official websites.',
+ tip1t:'Know your true hourly pay', tip1:'Earnings are not profit. Subtract fuel, materials, fees and your share of rent or EMI, then divide by the hours you worked. That is your real hourly pay.',
+ tip2t:'Keep work money and home money apart', tip2:'Use a separate account, UPI ID or wallet for work. Pay yourself a fixed amount each week. This shows clearly whether the work is making money.',
+ tip3t:'Price to cover everything', tip3:'Add materials, travel, your time, a share of fixed costs and a little to save. Before giving a discount, check your minimum price in the Pricing tab.',
+ tip4t:'Plan for slow weeks', tip4:'Income goes up and down. Plan your monthly budget around your weaker weeks, and set aside the extra from good weeks.',
+ tip5t:'Build an emergency fund', tip5:'Start with one week of expenses, then grow it to one month and later three. Even ₹100 a day adds up. Keep it in a separate savings account.',
+ tip6t:'Borrow carefully', tip6:'Before taking a loan, ask for the total amount you will repay, not just the monthly EMI. Compare the interest rate across a bank, a cooperative or microfinance lender and any loan app. Small business schemes such as PM Mudra Yojana exist, so ask your bank.',
+ tip7t:'Use official support', tip7:'Register on e-Shram (eshram.gov.in), the government portal for unorganised and gig workers. Ask about health and accident insurance that protects your income if you cannot work. Rules change, so check official sources.',
+ tip8t:'Protect yourself from scams', tip8:'Never share your UPI PIN or an OTP, even with someone who says they are from a bank or a platform. Real companies never ask for them.'
+},
+te:{
+ appName:'టేక్-హోమ్ ట్రాకర్', tagline:'ఖర్చులు పోగా మీరు నిజంగా ఎంత సంపాదిస్తున్నారో చూడండి.',
+ navToday:'ఈరోజు', navSummary:'సారాంశం', navPricing:'ధర', navLearn:'నేర్చుకోండి', navSettings:'సెట్టింగ్స్',
+ onbTitle:'మీరు ఏ రకమైన పని చేస్తారు?', onbVehicle:'డెలివరీ మరియు డ్రైవింగ్', onbService:'నైపుణ్య సేవలు', onbOnline:'ఆన్‌లైన్ మరియు రిమోట్ పని', onbOther:'అమ్మకాలు మరియు చిన్న వ్యాపారం', onbNote:'ఖచ్చితంగా తెలియదా? దగ్గరగా ఉన్నదాన్ని ఎంచుకోండి. తర్వాత సెట్టింగ్స్‌లో మార్చవచ్చు.',
+ date:'తేదీ', earningsToday:'ఈరోజు మూలం వారీగా సంపాదన (₹)', hours:'పని చేసిన గంటలు', km:'దూరం (కి.మీ.)',
+ jobs_vehicle:'ఆర్డర్లు లేదా ట్రిప్‌లు (ఐచ్ఛికం)', jobs_service:'సేవ చేసిన కస్టమర్లు (ఐచ్ఛికం)', jobs_online:'పూర్తి చేసిన ప్రాజెక్టులు (ఐచ్ఛికం)', jobs_other:'పూర్తి చేసిన పనులు (ఐచ్ఛికం)',
+ fuelActual:'ఖర్చు చేసిన పెట్రోల్ (₹), ఖాళీగా ఉంచితే అంచనా వేస్తుంది', otherExp:'ఇతర ఖర్చులు: పార్కింగ్, టోల్, ఫోన్ డేటా (₹)',
+ f_materials:'సామగ్రి లేదా సరుకులు (₹)', f_travel:'ప్రయాణం (₹)', f_platform:'ప్లాట్‌ఫారమ్ ఫీజు లేదా కమీషన్ (₹)', f_other_online:'సాఫ్ట్‌వేర్, ఇంటర్నెట్ లేదా డేటా (₹)', f_other_general:'ఇతర ఖర్చులు (₹)',
+ fuelEstimate:'అంచనా ఇంధన ఖర్చు: {x}', trueProfit:'నిజమైన లాభం', perHour:'గంటకు', perKm:'కి.మీ.కు', perJob:'ఒక పనికి',
+ earnings:'సంపాదన', fuel:'ఇంధనం', wear:'వాహనం అరుగుదల', fixed:'అద్దె, EMI, ఇన్సూరెన్స్ వాటా', other:'ఇతర ఖర్చులు', c_materials:'సామగ్రి', c_travel:'ప్రయాణం', c_platform:'ప్లాట్‌ఫారమ్ ఫీజు', breakdown:'డబ్బు ఎక్కడికి వెళ్లింది',
+ vGreat:'మీ లక్ష్యం గంటకు ₹{t} కంటే ఎక్కువ.', vNear:'మీ లక్ష్యం గంటకు ₹{t} కు దగ్గరగా ఉంది.', vLow:'మీ లక్ష్యం గంటకు ₹{t} కంటే తక్కువ.',
+ vLoss:'ఖర్చులు పోగా ఈరోజు నష్టం వచ్చింది.', vEnter:'మీ నిజమైన లాభం చూడటానికి ఈరోజు వివరాలు నమోదు చేయండి.',
+ save:'రోజును సేవ్ చేయండి', deleteDay:'ఈ రోజును తొలగించండి', saved:'సేవ్ అయింది', deleted:'తొలగించబడింది', enterSomething:'ముందు కొంత సంపాదన లేదా గంటలు నమోదు చేయండి.', examplesRemoved:'ఉదాహరణ డేటా తొలగించబడింది.',
+ last7:'గత 7 రోజులు', last30:'గత 30 రోజులు', allTime:'మొత్తం', daysWorked:'పని చేసిన రోజులు', avgDay:'రోజుకు సగటు',
+ bestDay:'ఉత్తమ రోజు', worstDay:'బలహీన రోజు', bySource:'మూలం వారీగా సంపాదన', last14:'గత 14 రోజులు, నిజమైన లాభం',
+ weeklyRange:'వారపు లాభం {a} నుండి {b} వరకు ఉంది.', safeBudget:'సురక్షిత నెలవారీ బడ్జెట్',
+ safeNote:'మీ బలహీన వారాల ఆధారంగా, నెమ్మదిగా ఉన్న నెల కూడా ఇబ్బంది పెట్టదు.',
+ needWeeks:'సురక్షిత బడ్జెట్ చూడటానికి కనీసం 3 వారాలు, ప్రతి వారం 4 లేదా అంతకంటే ఎక్కువ రోజులు నమోదు చేయండి.',
+ noData:'ఇంకా రోజులు నమోదు కాలేదు.', loadExample:'ఉదాహరణ చూడండి', exampleBanner:'ఇది ఉదాహరణ డేటా, మీది కాదు.', clearExample:'ఉదాహరణ తొలగించండి',
+ totalProfit:'నిజమైన లాభం', totalHours:'గంటలు', openStatement:'నెలవారీ ఆదాయ సారాంశం',
+ back:'వెనుకకు',
+ month:'నెల', stmtTitle:'నెలవారీ ఆదాయ సారాంశం', stmtNote:'కార్మికుడు స్వయంగా నమోదు చేసినది. ఏ ప్లాట్‌ఫారమ్ ధృవీకరించలేదు.',
+ grossEarnings:'మొత్తం సంపాదన', totalCosts:'మొత్తం ఖర్చులు', netProfit:'నికర లాభం', copyText:'స్టేట్‌మెంట్ కాపీ చేయండి', whatsapp:'WhatsAppలో షేర్ చేయండి',
+ copied:'కాపీ అయింది', copyFailed:'కాపీ కాలేదు. టెక్స్ట్ ఎంచుకుని కాపీ చేయండి.', screenshotHint:'సూచన: ఈ పేజీని షేర్ చేయడానికి స్క్రీన్‌షాట్ తీసుకోండి.', name:'మీ పేరు (ఐచ్ఛికం)',
+ dayByDay:'రోజు వారీగా', noMonth:'ఈ నెలలో రోజులు నమోదు కాలేదు.',
+ workType:'పని రకం', sources:'మీ ఆదాయం ఎక్కడి నుండి వస్తుంది', addSource:'జోడించండి', srcPlaceholder:'ఉదా. Urban Company', remove:'తొలగించండి', quickAdd:'త్వరగా జోడించండి',
+ vehicle:'వాహనం', pBike:'బైక్ లేదా స్కూటర్ (పెట్రోల్)', pEbike:'ఎలక్ట్రిక్ బైక్ లేదా స్కూటర్', pAuto:'ఆటో (CNG)', pCab:'కారు లేదా క్యాబ్ (పెట్రోల్ లేదా CNG)',
+ mileage:'మైలేజీ (లీటర్ లేదా కిలోకు కి.మీ.)', fuelPrice:'ఇంధన ధర (లీటర్ లేదా కిలోకు ₹)', costPerKm:'శక్తి ఖర్చు (కి.మీ.కు ₹)',
+ wearPerKm:'అరుగుదల, సర్వీసింగ్ (కి.మీ.కు ₹)', fixedMonthly:'అద్దె, EMI, లోన్, ఇన్సూరెన్స్ (నెలకు ₹)', workDays:'నెలలో మీరు సాధారణంగా పనిచేసే రోజులు',
+ target:'లక్ష్యం (గంటకు ₹)', priceNote:'ప్రారంభ విలువలు అంచనాలు మాత్రమే. మీ పని, ఈరోజు ధరలకు తగ్గట్టు మార్చండి.',
+ backup:'మీ డేటా బ్యాకప్', backupNote:'మీ డేటా ఈ ఫోన్‌లోనే ఉంటుంది. తర్వాత రీస్టోర్ చేయడానికి కోడ్ కాపీ చేసి భద్రపరచండి.',
+ copyBackup:'బ్యాకప్ కోడ్ కాపీ చేయండి', restore:'కోడ్ నుండి రీస్టోర్', pasteCode:'బ్యాకప్ కోడ్ ఇక్కడ పేస్ట్ చేయండి', restored:'రీస్టోర్ అయింది', badCode:'ఆ కోడ్ పని చేయలేదు.',
+ clearAll:'నా డేటా మొత్తం తొలగించండి', sure:'అన్నీ తొలగించడానికి మళ్లీ నొక్కండి', cleared:'డేటా మొత్తం తొలగించబడింది',
+ feedback:'ఈ టూల్ మెరుగుపరచడంలో సహాయం చేయండి', feedbackQ:'ఏది గందరగోళంగా ఉంది, ఏది లేదు, ఏది ఉపయోగపడింది?', sendFeedback:'WhatsAppలో పంపండి',
+ privacy:'మీ అంకెలు ఈ ఫోన్ దాటి వెళ్లవు.', otherApp:'ఇతరాలు',
+ src_clients:'నా దగ్గర లేదా సెలూన్‌లో కస్టమర్లు', src_home:'ఇంటి సందర్శనలు', src_events:'ఈవెంట్లు, బుకింగ్‌లు', src_orders:'ఆన్‌లైన్ లేదా ఫోన్ ఆర్డర్లు', src_direct:'నేరుగా క్లయింట్లు', src_sales:'అమ్మకాలు', src_services:'సేవలు',
+ pr_title:'మీరు ఎంత ధర పెట్టాలి?', pr_intro:'మీ ఖర్చులు, సమయం, కొంత పొదుపు కవర్ అయ్యే కనీస ధరను లెక్కించండి.',
+ pr_materials:'ఒక పనికి సామగ్రి (₹)', pr_travel:'ఒక పనికి ప్రయాణం (₹)', pr_hours:'ఒక పనికి గంటలు', pr_hourly:'మీరు కోరుకునే గంట వేతనం (₹)', pr_fee:'ప్లాట్‌ఫారమ్ ఫీజు లేదా కమీషన్ (%)', pr_margin:'పొదుపు మార్జిన్ (%)',
+ pr_jobsMonth:'నెలకు మీరు చేసే పనులు', pr_current:'ఒక పనికి మీ ప్రస్తుత ధర (₹)', pr_minPrice:'ఒక పనికి కనీస ధర', pr_made:'ఇది ఎలా కలుస్తుంది',
+ pr_time:'మీ సమయం', pr_fixedShare:'స్థిర ఖర్చుల వాటా', pr_feeMargin:'ఫీజులు, పొదుపు',
+ pr_keep:'మీ ప్రస్తుత ధరతో సామగ్రి, ప్రయాణం, ఫీజులు పోగా ఒక పనికి {a} మిగులుతుంది, అంటే పని గంటకు {b}.',
+ pr_breakeven:'మీ స్థిర ఖర్చులు {f} కవర్ కావడానికి నెలకు సుమారు {n} పనులు కావాలి.',
+ pr_noMargin:'ఈ ధరతో ప్రతి పనిలో నష్టం వస్తుంది. ధర పెంచండి లేదా ఖర్చులు తగ్గించండి.',
+ pr_above:'మీ ధర కనీస ధర కంటే ఎక్కువ.', pr_below:'మీ ధర కనీస ధర కంటే తక్కువ. పెంచితే మీ ఖర్చులు, సమయం కవర్ అవుతాయి.',
+ pr_note:'స్థిర ఖర్చులు సెట్టింగ్స్ నుండి వస్తాయి.', pr_bad:'పొదుపు, ఫీజులు కలిపి 100% కంటే తక్కువ ఉండాలి.',
+ learnTitle:'డబ్బు చిట్కాలు', learnIntro:'సొంత పనితో సంపాదించే వారి కోసం చిన్న చిట్కాలు.', learnNote:'ఇది సాధారణ సమాచారం మాత్రమే. తాజా వివరాలను మీ బ్యాంక్ లేదా అధికారిక వెబ్‌సైట్లలో చూడండి.',
+ tip1t:'మీ నిజమైన గంట వేతనం తెలుసుకోండి', tip1:'సంపాదన అంటే లాభం కాదు. ఇంధనం, సామగ్రి, ఫీజులు, అద్దె లేదా EMI వాటాను తీసివేసి, పని చేసిన గంటలతో భాగించండి. అదే మీ నిజమైన గంట వేతనం.',
+ tip2t:'పని డబ్బు, ఇంటి డబ్బు వేరు చేయండి', tip2:'పని కోసం వేరే ఖాతా, UPI ID లేదా వాలెట్ వాడండి. ప్రతి వారం మీకు స్థిరమైన మొత్తం చెల్లించుకోండి. ఇది పని నిజంగా డబ్బు సంపాదిస్తోందో లేదో స్పష్టంగా చూపిస్తుంది.',
+ tip3t:'అన్నీ కవర్ అయ్యేలా ధర పెట్టండి', tip3:'సామగ్రి, ప్రయాణం, మీ సమయం, స్థిర ఖర్చుల వాటా, కొంత పొదుపు కలపండి. డిస్కౌంట్ ఇవ్వడానికి ముందు ధర ట్యాబ్‌లో మీ కనీస ధరను చూడండి.',
+ tip4t:'నెమ్మదిగా ఉండే వారాలకు ప్లాన్ చేయండి', tip4:'ఆదాయం పెరుగుతూ తగ్గుతూ ఉంటుంది. మీ నెలవారీ బడ్జెట్‌ను బలహీన వారాల ఆధారంగా వేసుకోండి, మంచి వారాల్లో వచ్చిన అదనపు డబ్బును పక్కన పెట్టండి.',
+ tip5t:'అత్యవసర నిధిని నిర్మించండి', tip5:'ఒక వారం ఖర్చులతో మొదలుపెట్టి, ఒక నెల, తర్వాత మూడు నెలల వరకు పెంచండి. రోజుకు ₹100 అయినా కలిసి పెద్దదవుతుంది. దాన్ని వేరే సేవింగ్స్ ఖాతాలో ఉంచండి.',
+ tip6t:'జాగ్రత్తగా అప్పు తీసుకోండి', tip6:'అప్పు తీసుకునే ముందు, నెలవారీ EMI మాత్రమే కాకుండా మొత్తం తిరిగి చెల్లించాల్సిన మొత్తం అడగండి. బ్యాంక్, సహకార లేదా మైక్రోఫైనాన్స్ సంస్థ, లోన్ యాప్‌ల వడ్డీ రేట్లను పోల్చండి. PM ముద్ర యోజన వంటి చిన్న వ్యాపార పథకాలు ఉన్నాయి, మీ బ్యాంక్‌ను అడగండి.',
+ tip7t:'అధికారిక సహాయం వాడుకోండి', tip7:'అసంఘటిత, గిగ్ కార్మికుల కోసం ప్రభుత్వ పోర్టల్ ఈ-శ్రమ్ (eshram.gov.in)లో నమోదు చేసుకోండి. పని చేయలేనప్పుడు ఆదాయాన్ని కాపాడే ఆరోగ్య, ప్రమాద బీమా గురించి అడగండి. నియమాలు మారుతుంటాయి, అధికారిక వనరులు చూడండి.',
+ tip8t:'మోసాల నుండి జాగ్రత్త', tip8:'మీ UPI PIN లేదా OTP ఎవరితోనూ పంచుకోకండి, బ్యాంక్ లేదా ప్లాట్‌ఫారమ్ నుండి అని చెప్పినా సరే. నిజమైన కంపెనీలు వాటిని అడగవు.'
+},
+hi:{
+ appName:'टेक-होम ट्रैकर', tagline:'खर्च के बाद आप असल में कितना कमाते हैं, देखें।',
+ navToday:'आज', navSummary:'सारांश', navPricing:'मूल्य', navLearn:'सीखें', navSettings:'सेटिंग्स',
+ onbTitle:'आप किस तरह का काम करते हैं?', onbVehicle:'डिलीवरी और ड्राइविंग', onbService:'हुनर वाली सेवाएँ', onbOnline:'ऑनलाइन और रिमोट काम', onbOther:'बिक्री और छोटा व्यवसाय', onbNote:'पक्का नहीं पता? सबसे करीबी चुनें। बाद में सेटिंग्स में बदल सकते हैं।',
+ date:'तारीख', earningsToday:'आज की कमाई, स्रोत के अनुसार (₹)', hours:'काम के घंटे', km:'दूरी (कि.मी.)',
+ jobs_vehicle:'ऑर्डर या ट्रिप (वैकल्पिक)', jobs_service:'सेवा किए गए ग्राहक (वैकल्पिक)', jobs_online:'पूरे किए प्रोजेक्ट (वैकल्पिक)', jobs_other:'पूरे किए काम (वैकल्पिक)',
+ fuelActual:'ईंधन पर खर्च (₹), खाली छोड़ें तो अंदाज़ा लगेगा', otherExp:'अन्य खर्च: पार्किंग, टोल, फ़ोन डेटा (₹)',
+ f_materials:'सामग्री या सप्लाई (₹)', f_travel:'यात्रा (₹)', f_platform:'प्लेटफ़ॉर्म फ़ीस या कमीशन (₹)', f_other_online:'सॉफ़्टवेयर, इंटरनेट या डेटा (₹)', f_other_general:'अन्य खर्च (₹)',
+ fuelEstimate:'अनुमानित ईंधन खर्च: {x}', trueProfit:'असली मुनाफ़ा', perHour:'प्रति घंटा', perKm:'प्रति कि.मी.', perJob:'प्रति काम',
+ earnings:'कमाई', fuel:'ईंधन', wear:'गाड़ी की घिसाई', fixed:'किराया, EMI और बीमा का हिस्सा', other:'अन्य खर्च', c_materials:'सामग्री', c_travel:'यात्रा', c_platform:'प्लेटफ़ॉर्म फ़ीस', breakdown:'पैसा कहाँ गया',
+ vGreat:'आपके लक्ष्य ₹{t} प्रति घंटा से ऊपर।', vNear:'आपके लक्ष्य ₹{t} प्रति घंटा के करीब।', vLow:'आपके लक्ष्य ₹{t} प्रति घंटा से कम।',
+ vLoss:'खर्च निकालकर आज नुकसान हुआ।', vEnter:'असली मुनाफ़ा देखने के लिए आज के आँकड़े भरें।',
+ save:'दिन सेव करें', deleteDay:'यह दिन हटाएँ', saved:'सेव हो गया', deleted:'हटा दिया', enterSomething:'पहले कुछ कमाई या घंटे भरें।', examplesRemoved:'उदाहरण डेटा हटा दिया गया।',
+ last7:'पिछले 7 दिन', last30:'पिछले 30 दिन', allTime:'अब तक', daysWorked:'काम किए दिन', avgDay:'औसत प्रति दिन',
+ bestDay:'सबसे अच्छा दिन', worstDay:'सबसे कमज़ोर दिन', bySource:'स्रोत के अनुसार कमाई', last14:'पिछले 14 दिन, असली मुनाफ़ा',
+ weeklyRange:'साप्ताहिक मुनाफ़ा {a} से {b} के बीच रहा।', safeBudget:'सुरक्षित मासिक बजट',
+ safeNote:'आपके कमज़ोर हफ़्तों के आधार पर, ताकि धीमा महीना परेशान न करे।',
+ needWeeks:'सुरक्षित बजट देखने के लिए कम से कम 3 हफ़्ते, हर हफ़्ते 4 या ज़्यादा दिन दर्ज करें।',
+ noData:'अभी कोई दिन दर्ज नहीं है।', loadExample:'उदाहरण देखें', exampleBanner:'यह उदाहरण डेटा है, आपका नहीं।', clearExample:'उदाहरण हटाएँ',
+ totalProfit:'असली मुनाफ़ा', totalHours:'घंटे', openStatement:'मासिक आय सारांश',
+ back:'वापस',
+ month:'महीना', stmtTitle:'मासिक आय सारांश', stmtNote:'कामगार द्वारा खुद दर्ज की गई। किसी प्लेटफ़ॉर्म ने सत्यापित नहीं की।',
+ grossEarnings:'कुल कमाई', totalCosts:'कुल खर्च', netProfit:'शुद्ध मुनाफ़ा', copyText:'स्टेटमेंट कॉपी करें', whatsapp:'WhatsApp पर शेयर करें',
+ copied:'कॉपी हो गया', copyFailed:'कॉपी नहीं हो सका। टेक्स्ट चुनकर कॉपी करें।', screenshotHint:'सुझाव: इस पेज को शेयर करने के लिए स्क्रीनशॉट लें।', name:'आपका नाम (वैकल्पिक)',
+ dayByDay:'दिन के अनुसार', noMonth:'इस महीने कोई दिन दर्ज नहीं है।',
+ workType:'काम का प्रकार', sources:'आपकी आय कहाँ से आती है', addSource:'जोड़ें', srcPlaceholder:'जैसे Urban Company', remove:'हटाएँ', quickAdd:'जल्दी जोड़ें',
+ vehicle:'गाड़ी', pBike:'बाइक या स्कूटर (पेट्रोल)', pEbike:'इलेक्ट्रिक बाइक या स्कूटर', pAuto:'ऑटो (CNG)', pCab:'कार या कैब (पेट्रोल या CNG)',
+ mileage:'माइलेज (कि.मी. प्रति लीटर या किलो)', fuelPrice:'ईंधन की कीमत (₹ प्रति लीटर या किलो)', costPerKm:'ऊर्जा खर्च (₹ प्रति कि.मी.)',
+ wearPerKm:'घिसाई और सर्विसिंग (₹ प्रति कि.मी.)', fixedMonthly:'किराया, EMI, लोन और बीमा (₹ प्रति माह)', workDays:'महीने में आप आम तौर पर कितने दिन काम करते हैं',
+ target:'लक्ष्य (₹ प्रति घंटा)', priceNote:'शुरुआती मान अनुमान हैं। अपने काम और आज की कीमतों के अनुसार बदलें।',
+ backup:'अपना डेटा बैकअप करें', backupNote:'आपका डेटा सिर्फ़ इसी फ़ोन में रहता है। बाद में वापस लाने के लिए कोड कॉपी करके सुरक्षित रखें।',
+ copyBackup:'बैकअप कोड कॉपी करें', restore:'कोड से वापस लाएँ', pasteCode:'बैकअप कोड यहाँ पेस्ट करें', restored:'वापस आ गया', badCode:'वह कोड काम नहीं आया।',
+ clearAll:'मेरा सारा डेटा हटाएँ', sure:'सब हटाने के लिए फिर से दबाएँ', cleared:'सारा डेटा हटा दिया गया',
+ feedback:'इस टूल को बेहतर बनाने में मदद करें', feedbackQ:'क्या उलझाने वाला, गायब या उपयोगी था?', sendFeedback:'WhatsApp पर भेजें',
+ privacy:'आपके आँकड़े इस फ़ोन से बाहर नहीं जाते।', otherApp:'अन्य',
+ src_clients:'मेरे यहाँ या सैलून के ग्राहक', src_home:'घर जाकर सेवा', src_events:'इवेंट और बुकिंग', src_orders:'ऑनलाइन या फ़ोन ऑर्डर', src_direct:'सीधे क्लाइंट', src_sales:'बिक्री', src_services:'सेवाएँ',
+ pr_title:'आपको कितना दाम रखना चाहिए?', pr_intro:'ऐसा सबसे कम दाम निकालें जो आपके खर्च, समय और थोड़ी बचत को कवर करे।',
+ pr_materials:'प्रति काम सामग्री (₹)', pr_travel:'प्रति काम यात्रा (₹)', pr_hours:'प्रति काम घंटे', pr_hourly:'आप प्रति घंटा कितनी कमाई चाहते हैं (₹)', pr_fee:'प्लेटफ़ॉर्म फ़ीस या कमीशन (%)', pr_margin:'बचत मार्जिन (%)',
+ pr_jobsMonth:'महीने में आप कितने काम करते हैं', pr_current:'प्रति काम आपका मौजूदा दाम (₹)', pr_minPrice:'प्रति काम न्यूनतम दाम', pr_made:'यह कैसे जुड़ता है',
+ pr_time:'आपका समय', pr_fixedShare:'निश्चित खर्चों का हिस्सा', pr_feeMargin:'फ़ीस और बचत',
+ pr_keep:'आपके मौजूदा दाम पर सामग्री, यात्रा और फ़ीस निकालकर प्रति काम {a} बचता है, यानी काम के हर घंटे का {b}।',
+ pr_breakeven:'अपने निश्चित खर्च {f} को कवर करने के लिए महीने में लगभग {n} काम चाहिए।',
+ pr_noMargin:'इस दाम पर हर काम में नुकसान होगा। दाम बढ़ाएँ या खर्च घटाएँ।',
+ pr_above:'आपका दाम न्यूनतम से ऊपर है।', pr_below:'आपका दाम न्यूनतम से कम है। बढ़ाने से आपके खर्च और समय कवर होंगे।',
+ pr_note:'निश्चित खर्च सेटिंग्स से आते हैं।', pr_bad:'बचत और फ़ीस मिलाकर 100% से कम होनी चाहिए।',
+ learnTitle:'पैसे की सीख', learnIntro:'अपने काम से कमाने वालों के लिए छोटे सुझाव।', learnNote:'यह सिर्फ़ सामान्य जानकारी है। ताज़ा जानकारी अपने बैंक या सरकारी वेबसाइट पर देखें।',
+ tip1t:'अपनी असली प्रति घंटा कमाई जानें', tip1:'कमाई मतलब मुनाफ़ा नहीं होता। ईंधन, सामग्री, फ़ीस और किराए या EMI का हिस्सा घटाकर काम के घंटों से भाग दें। यही आपकी असली प्रति घंटा कमाई है।',
+ tip2t:'काम का पैसा और घर का पैसा अलग रखें', tip2:'काम के लिए अलग खाता, UPI ID या वॉलेट रखें। हर हफ़्ते खुद को एक तय रकम दें। इससे साफ़ दिखता है कि काम से सच में पैसा बन रहा है या नहीं।',
+ tip3t:'सब कुछ कवर करने वाला दाम रखें', tip3:'सामग्री, यात्रा, अपना समय, निश्चित खर्च का हिस्सा और थोड़ी बचत जोड़ें। छूट देने से पहले मूल्य टैब में अपना न्यूनतम दाम देखें।',
+ tip4t:'धीमे हफ़्तों की योजना बनाएँ', tip4:'आमदनी ऊपर-नीचे होती रहती है। अपना मासिक बजट कमज़ोर हफ़्तों के हिसाब से बनाएँ और अच्छे हफ़्तों की अतिरिक्त कमाई अलग रखें।',
+ tip5t:'आपातकालीन फ़ंड बनाएँ', tip5:'एक हफ़्ते के खर्च से शुरू करें, फिर एक महीने और बाद में तीन महीने तक बढ़ाएँ। रोज़ ₹100 भी जुड़कर बड़ा हो जाता है। इसे अलग बचत खाते में रखें।',
+ tip6t:'सोच-समझकर कर्ज़ लें', tip6:'कर्ज़ लेने से पहले सिर्फ़ मासिक EMI नहीं, कुल लौटाई जाने वाली रकम पूछें। बैंक, सहकारी या माइक्रोफ़ाइनेंस संस्था और लोन ऐप की ब्याज दरों की तुलना करें। PM मुद्रा योजना जैसी छोटे कारोबार की योजनाएँ हैं, अपने बैंक से पूछें।',
+ tip7t:'सरकारी सहायता का लाभ लें', tip7:'असंगठित और गिग कामगारों के सरकारी पोर्टल ई-श्रम (eshram.gov.in) पर पंजीकरण करें। स्वास्थ्य और दुर्घटना बीमा के बारे में पूछें, जो काम न कर पाने पर आमदनी की सुरक्षा करता है। नियम बदलते रहते हैं, सरकारी स्रोत देखें।',
+ tip8t:'ठगी से बचें', tip8:'अपना UPI PIN या OTP किसी को न बताएँ, भले ही कोई खुद को बैंक या प्लेटफ़ॉर्म का बताए। असली कंपनियाँ ये नहीं माँगतीं।'
+}};
+
+
+var X = {
+en:{ navDues:'Dues', navMore:'More', back:'Back',
+ dues_title:'Money owed to you', dues_who:'Who owes you?', dues_amount:'Amount (₹)', dues_date:'Due date (optional)', dues_phone:'Phone number (optional, for reminders)', dues_note:'Note (optional)',
+ dues_add:'Add', dues_outstanding:'Still to collect', dues_overdue:'Overdue', dues_due:'Due {d}', dues_markPaid:'Mark paid', dues_remind:'Remind on WhatsApp', dues_undo:'Undo', dues_paid:'Paid',
+ dues_empty:'Nothing owed to you right now.', dues_needFields:'Enter a name and an amount.', dues_overdueCount:'{n} overdue',
+ dues_msg:'Hello {who}, this is a gentle reminder about the pending payment of {amt}. Please let me know when you can pay. Thank you.',
+ perHourTitle:'True take-home per hour', hoursHint:'Count all the time you were working or waiting for jobs, not only time on trips.', copyLast:'Copy last day', copiedLast:'Copied from {d}. Change what is different.', noLast:'No earlier day to copy.', extraCosts:'Costs (optional)', appHoursTitle:'Hours on each app (optional)', appHoursHint:'Fill this to compare apps. Include waiting time.', cmpTitle:'Which app pays best per hour?', cmpNote:'After costs, shared out by hours. An estimate from days when you filled hours for each app.', cmpNeed:'Fill hours for each app on a few days to see this.', evTitle:'Petrol or electric?', evKmDay:'Km per day', evDaysM:'Days per month', evRate:'Electric: charging cost per km (₹)', evPet:'Petrol per month', evEle:'Electric per month', evSave:'Electric would save you about {x} a month in running costs.', evLoss:'Petrol would cost about {x} less a month to run.', evNote:'Running cost only: fuel or charging plus wear. It does not include the price of the vehicle, the battery or any EMI.', backupDue:'It has been a while since your last backup. Copy the code and send it to yourself on WhatsApp.', backupNow:'Back up now', pinTitle:'Lock with a PIN', pinNote:'Useful if you share your phone. It only keeps other people out of the app. It is not bank-level security.', pinSet:'Set PIN (4 digits)', pinRemove:'Remove PIN', pinEnter:'Enter PIN', pinWrong:'Wrong PIN', pinSaved:'PIN set', pinBad:'Use exactly 4 digits.', pinUnlock:'Unlock', pinForgot:'Forgot your PIN? Clear this site data in your browser, then restore from your backup code.', cushionTitle:'Weeks of cushion', cushionSavings:'Savings you can use (₹)', cushionSpend:'Spending you must cover each month (₹)', cushionWeeks:'{w} weeks of cushion', cushionNote:'This is how long you could cover your spending if work stopped. Aim for 4 weeks first, then 12.', checked:'Last checked: October 2026. Amounts and rules change, so confirm on the official site.', official:'Official site', assume:'Using fuel ₹{f} per km and wear ₹{w} per km. Change these in Settings.', assumeBtn:'Change', backupWarn:'This code contains your income details. Do not post it in groups or public chats.', a2hsTitle:'Add to home screen', a2hs:'In Chrome, tap the menu (three dots), then Add to Home screen. It opens like an app and works without internet after your first visit.', unitHrs:'hrs', stampTarget:'Target met', dismiss:'Dismiss', themeTitle:'Theme', themeAuto:'Auto', themeLight:'Light', themeDark:'Dark', goalTitle:'Savings goal', goalName:'What are you saving for?', goalTarget:'Target amount (₹)', goalSet:'Set goal', goalAdd:'Add to savings (₹)', goalSaved:'{a} saved of {b}', goalDone:'Goal reached!', goalRemove:'Remove goal',
+ goalHint:'Saving 10% of your safe monthly budget ({x}) would reach this goal in about {n} months.',
+ stmtRange1:'One month', stmtRange3:'3 months', avgMonth:'Average monthly profit',
+ loanNote:'This is a summary you can show. Lenders and landlords decide what they accept, and most also ask for bank statements and ID.',
+ csvBtn:'Download as CSV', moreIntro:'More tools', grpStart:'Start here for your work',
+ onbVehicleS:'Swiggy, Zomato, Blinkit, Uber, Rapido, Ola, your own auto or cab', onbServiceS:'Beauty, tailoring, repairs, cleaning, cooking, home visits', onbOnlineS:'Freelancing, design, writing, tutoring, data entry, content', onbOtherS:'Shop, stall, home kitchen, crafts, resale, or any other work', learnTitle:'Money and support guide', learnIntro:'Plain-language money basics and the government help you may be able to claim.', learnNote:'General information only, based on rules known at the time of writing. Amounts and eligibility change, so confirm on the official website or at a bank or Common Service Centre before you apply. This is not financial advice.', grp1:'Know your numbers', grp2:'Save and borrow', grp3:'A few government schemes', grp4:'Stay safe', n1t:'Set aside money for repairs and renewals', n1:'Put a small amount aside every working day for servicing, tyres, tools, equipment or stock. Costs that arrive in one lump are what turn a good month into a bad one.', n5t:'Take an advance on big orders', n5:'For stitching, events or custom work, ask for 30 to 50 percent upfront. It covers your materials and cuts the risk of non-payment. Track the balance in the Dues tab.', n2t:'Know your credit score', n2:'Pay EMIs and card bills on time. Your credit (CIBIL) score decides whether you get a loan and at what rate. You can get one free full credit report a year from each credit bureau.', n3t:'Borrow only from registered lenders', n3:'Check that a bank or NBFC is on the RBI list before borrowing. Loan apps that ask for your contacts or photos, or that threaten you, are a red flag. Report them at cybercrime.gov.in or call 1930.', n4t:'File an income tax return', n4:'Even if you owe no tax, a return is proof of income that helps with loans, visas and rent. Freelancers and small businesses can use simple presumptive tax schemes (sections 44ADA and 44AD). Ask a tax professional, as rules change.', g1t:'e-Shram card', g1:'Free registration at eshram.gov.in or any Common Service Centre for unorganised and gig workers aged 16 to 59 who are not in EPFO or ESIC. You get a card and number that link you to government benefits, and accident cover has been offered with registration. Check current terms.', g2t:'Accident and life insurance for rupees a year', g2:'PM Suraksha Bima Yojana gives accident cover of ₹2 lakh for about ₹20 a year. PM Jeevan Jyoti Bima Yojana gives ₹2 lakh life cover for about ₹436 a year. Both are paid by auto-debit from a bank account. Age limits apply.', g3t:'Health cover: Ayushman Bharat and Aarogyasri', g3:'PM-JAY gives free hospital treatment up to ₹5 lakh per family per year to eligible families (pmjay.gov.in, helpline 14555). Telangana\'s Aarogyasri covers up to ₹10 lakh per family per year, but private hospitals have paused services over unpaid dues before, so confirm that your hospital accepts it. The government has announced PM-JAY cover for registered gig workers, but I could not confirm that it has started, so ask on e-Shram or at a Common Service Centre.', g4t:'Pension: Atal Pension Yojana', g4:'Join between ages 18 and 40 through your bank to get a fixed pension of ₹1,000 to ₹5,000 a month from age 60. The monthly amount you pay depends on your age and the pension you choose.', g5t:'Business loans: Mudra', g5:'PM Mudra Yojana gives collateral-free loans for small non-farm businesses. Shishu is up to ₹50,000, Kishore up to ₹5 lakh and Tarun up to ₹10 lakh. Tarun Plus, up to ₹20 lakh, is for those who have already repaid a Tarun loan. Apply at a bank, cooperative or microfinance lender (mudra.org.in).', g6t:'Street vendors: PM SVANidhi', g6:'Small collateral-free working-capital loans in stages for street vendors: ₹15,000, then ₹25,000, then ₹50,000 as you repay on time. Digital payments can earn cashback, and a UPI-linked RuPay credit card is offered after the second loan. The scheme runs until March 2030 (pmsvanidhi.mohua.gov.in). Check the current terms.', g7t:'Artisans and tailors: PM Vishwakarma', g7:'For people in listed traditional trades such as tailors and barbers. It offers an ID card, skill training with a daily stipend, a toolkit grant and low-interest loans (pmvishwakarma.gov.in).', g8t:'For women entrepreneurs', g8:'Stand-Up India gives loans of ₹10 lakh to ₹1 crore to women and SC/ST first-time entrepreneurs (standupmitra.in). Self-help groups (SHGs) give women low-interest group loans. WE Hub is a Telangana government incubator in Hyderabad for women-led startups, so it suits growth-minded businesses more than a one-person service.', g9t:'Udyam registration', g9:'Free registration as a micro enterprise at udyamregistration.gov.in. It helps you get bank loans and scheme benefits. Do not pay agents, because the official site is free.', g10t:'Gig worker rights', g10:'India\'s Code on Social Security came into force on 21 November 2025 and recognises gig and platform workers. Platforms must contribute 1 to 2 percent of their turnover to a social security fund. Workers aged 16 and above register on e-Shram, and benefits usually need about 90 days of work with one platform or 120 days across several in a year. Telangana has also drafted its own gig workers law, so ask the state labour department what applies to you.', g11t:'Jan Dhan account', g11:'A zero-balance bank account with a RuPay card that includes accident cover. It is also where government payments reach you directly.', n6t:'Fake schemes and registration-fee calls', n6:'Government schemes never charge you to register or ask for a fee to release a loan. Use only websites ending in gov.in, and visit a bank or Common Service Centre if unsure.', n7t:'Never pay to receive money', n7:'You enter a UPI PIN only to send money, never to receive it. A "collect request" or a message asking for your PIN to get a refund or prize is a scam. Report fraud at cybercrime.gov.in or call 1930.' },
+te:{ navDues:'బాకీలు', navMore:'మరిన్ని', back:'వెనుకకు',
+ dues_title:'మీకు రావాల్సిన డబ్బు', dues_who:'ఎవరు ఇవ్వాలి?', dues_amount:'మొత్తం (₹)', dues_date:'చెల్లించాల్సిన తేదీ (ఐచ్ఛికం)', dues_phone:'ఫోన్ నంబర్ (ఐచ్ఛికం, రిమైండర్ కోసం)', dues_note:'గమనిక (ఐచ్ఛికం)',
+ dues_add:'జోడించండి', dues_outstanding:'ఇంకా వసూలు చేయాల్సింది', dues_overdue:'గడువు దాటింది', dues_due:'గడువు {d}', dues_markPaid:'చెల్లించారు', dues_remind:'WhatsAppలో గుర్తు చేయండి', dues_undo:'రద్దు', dues_paid:'చెల్లించినవి',
+ dues_empty:'ప్రస్తుతం మీకు ఏమీ రావాల్సిన బాకీ లేదు.', dues_needFields:'పేరు, మొత్తం నమోదు చేయండి.', dues_overdueCount:'{n} గడువు దాటాయి',
+ dues_msg:'నమస్కారం {who}, పెండింగ్‌లో ఉన్న {amt} చెల్లింపు గురించి చిన్న గుర్తు. ఎప్పుడు చెల్లించగలరో చెప్పండి. ధన్యవాదాలు.',
+ perHourTitle:'గంటకు నిజమైన చేతికొచ్చే సంపాదన', hoursHint:'ట్రిప్‌లో ఉన్న సమయమే కాదు, పని కోసం ఎదురుచూసిన సమయాన్నీ కలపండి.', copyLast:'గత రోజు కాపీ చేయండి', copiedLast:'{d} నుండి కాపీ అయింది. మారినవి సరిచేయండి.', noLast:'కాపీ చేయడానికి ముందు రోజు లేదు.', extraCosts:'ఖర్చులు (ఐచ్ఛికం)', appHoursTitle:'ప్రతి యాప్‌లో గంటలు (ఐచ్ఛికం)', appHoursHint:'యాప్‌లను పోల్చడానికి నింపండి. ఎదురుచూసే సమయం కలపండి.', cmpTitle:'ఏ యాప్ గంటకు ఎక్కువ ఇస్తుంది?', cmpNote:'ఖర్చుల తర్వాత, గంటల ప్రకారం పంచబడింది. ప్రతి యాప్ గంటలు నింపిన రోజుల ఆధారంగా అంచనా.', cmpNeed:'ఇది చూడటానికి కొన్ని రోజులు ప్రతి యాప్ గంటలు నింపండి.', evTitle:'పెట్రోల్ లేదా ఎలక్ట్రిక్?', evKmDay:'రోజుకు కి.మీ.', evDaysM:'నెలకు రోజులు', evRate:'ఎలక్ట్రిక్: కి.మీ.కు ఛార్జింగ్ ఖర్చు (₹)', evPet:'పెట్రోల్ నెలకు', evEle:'ఎలక్ట్రిక్ నెలకు', evSave:'ఎలక్ట్రిక్‌తో నడిపే ఖర్చులో నెలకు సుమారు {x} ఆదా అవుతుంది.', evLoss:'పెట్రోల్ నడిపే ఖర్చు నెలకు సుమారు {x} తక్కువ.', evNote:'నడిపే ఖర్చు మాత్రమే: ఇంధనం లేదా ఛార్జింగ్, అరుగుదల. వాహనం, బ్యాటరీ ధర లేదా EMI కలపలేదు.', backupDue:'చివరి బ్యాకప్ తర్వాత చాలా రోజులైంది. కోడ్ కాపీ చేసి WhatsApp లో మీకే పంపుకోండి.', backupNow:'ఇప్పుడు బ్యాకప్ చేయండి', pinTitle:'PIN తో లాక్ చేయండి', pinNote:'ఫోన్ ఇతరులతో పంచుకుంటే ఉపయోగపడుతుంది. ఇది ఇతరులు యాప్ చూడకుండా మాత్రమే ఆపుతుంది, బ్యాంక్ స్థాయి భద్రత కాదు.', pinSet:'PIN పెట్టండి (4 అంకెలు)', pinRemove:'PIN తొలగించండి', pinEnter:'PIN నమోదు చేయండి', pinWrong:'తప్పు PIN', pinSaved:'PIN పెట్టబడింది', pinBad:'సరిగ్గా 4 అంకెలు వాడండి.', pinUnlock:'అన్‌లాక్', pinForgot:'PIN మర్చిపోయారా? బ్రౌజర్‌లో ఈ సైట్ డేటా క్లియర్ చేసి, బ్యాకప్ కోడ్ నుండి రీస్టోర్ చేయండి.', cushionTitle:'కుషన్ వారాలు', cushionSavings:'వాడుకోగల పొదుపు (₹)', cushionSpend:'ప్రతి నెల తప్పనిసరి ఖర్చు (₹)', cushionWeeks:'{w} వారాల కుషన్', cushionNote:'పని ఆగిపోతే ఇంతకాలం ఖర్చులు గడుస్తాయి. మొదట 4 వారాలు, తరువాత 12 వారాలు లక్ష్యంగా పెట్టుకోండి.', checked:'చివరిగా తనిఖీ: అక్టోబర్ 2026. మొత్తాలు, నియమాలు మారవచ్చు, అధికారిక సైట్‌లో నిర్ధారించుకోండి.', official:'అధికారిక సైట్', assume:'ఇంధనం కి.మీ.కు ₹{f}, అరుగుదల కి.మీ.కు ₹{w} వాడుతున్నాం. వీటిని సెట్టింగ్స్‌లో మార్చండి.', assumeBtn:'మార్చండి', backupWarn:'ఈ కోడ్‌లో మీ ఆదాయ వివరాలు ఉంటాయి. గ్రూపులలో లేదా బహిరంగ చాట్‌లలో పెట్టకండి.', a2hsTitle:'హోమ్ స్క్రీన్‌కు జోడించండి', a2hs:'Chrome లో మెనూ (మూడు చుక్కలు) నొక్కి, Add to Home screen ఎంచుకోండి. ఇది యాప్‌లా తెరుచుకుంటుంది, మొదటిసారి తెరిచిన తర్వాత ఇంటర్నెట్ లేకుండా పనిచేస్తుంది.', unitHrs:'గం.', stampTarget:'లక్ష్యం చేరారు', dismiss:'మూసివేయండి', themeTitle:'థీమ్', themeAuto:'ఆటో', themeLight:'లైట్', themeDark:'డార్క్', goalTitle:'పొదుపు లక్ష్యం', goalName:'దేని కోసం పొదుపు చేస్తున్నారు?', goalTarget:'లక్ష్య మొత్తం (₹)', goalSet:'లక్ష్యం పెట్టండి', goalAdd:'పొదుపుకు జోడించండి (₹)', goalSaved:'{b} లో {a} పొదుపు అయింది', goalDone:'లక్ష్యం చేరుకున్నారు!', goalRemove:'లక్ష్యం తొలగించండి',
+ goalHint:'మీ సురక్షిత నెలవారీ బడ్జెట్ ({x}) లో 10% పొదుపు చేస్తే సుమారు {n} నెలల్లో ఈ లక్ష్యం చేరుతుంది.',
+ stmtRange1:'ఒక నెల', stmtRange3:'3 నెలలు', avgMonth:'నెలవారీ సగటు లాభం',
+ loanNote:'ఇది మీరు చూపించగల సారాంశం. ఏం అంగీకరించాలో రుణదాతలు, ఇంటి యజమానులే నిర్ణయిస్తారు; చాలామంది బ్యాంక్ స్టేట్‌మెంట్లు, ID కూడా అడుగుతారు.',
+ csvBtn:'CSVగా డౌన్‌లోడ్ చేయండి', moreIntro:'మరిన్ని సాధనాలు', grpStart:'మీ పనికి ఇక్కడ మొదలుపెట్టండి',
+ onbVehicleS:'స్విగ్గీ, జొమాటో, బ్లింకిట్, ఉబర్, రాపిడో, ఓలా, మీ సొంత ఆటో లేదా క్యాబ్', onbServiceS:'బ్యూటీ, టైలరింగ్, రిపేర్లు, క్లీనింగ్, వంట, ఇంటికి వెళ్లి చేసే సేవలు', onbOnlineS:'ఫ్రీలాన్సింగ్, డిజైన్, రచన, ట్యూషన్, డేటా ఎంట్రీ, కంటెంట్', onbOtherS:'దుకాణం, బండి, ఇంట్లో వంట, హస్తకళలు, రీసేల్ లేదా ఏదైనా ఇతర పని', learnTitle:'డబ్బు మరియు సహాయ గైడ్', learnIntro:'సులభమైన భాషలో డబ్బు ప్రాథమికాలు, మీరు పొందగలిగే ప్రభుత్వ సహాయం.', learnNote:'ఇది సాధారణ సమాచారం మాత్రమే, రాసిన సమయంలో తెలిసిన నియమాల ఆధారంగా. మొత్తాలు, అర్హతలు మారవచ్చు. దరఖాస్తు చేసే ముందు అధికారిక వెబ్‌సైట్‌లో లేదా బ్యాంక్ లేదా కామన్ సర్వీస్ సెంటర్‌లో నిర్ధారించుకోండి. ఇది ఆర్థిక సలహా కాదు.', grp1:'మీ లెక్కలు తెలుసుకోండి', grp2:'పొదుపు మరియు అప్పు', grp3:'కొన్ని ప్రభుత్వ పథకాలు', grp4:'సురక్షితంగా ఉండండి', n1t:'రిపేర్లు, రెన్యువల్స్ కోసం డబ్బు పక్కన పెట్టండి', n1:'సర్వీసింగ్, టైర్లు, పనిముట్లు, పరికరాలు లేదా సరుకు కోసం ప్రతి పని రోజూ కొంచెం పక్కన పెట్టండి. ఒకేసారి వచ్చే ఖర్చులే మంచి నెలను చెడ్డ నెలగా మారుస్తాయి.', n5t:'పెద్ద ఆర్డర్లకు అడ్వాన్స్ తీసుకోండి', n5:'కుట్టు పని, ఈవెంట్లు లేదా ప్రత్యేక ఆర్డర్లకు 30 నుండి 50 శాతం ముందే అడగండి. ఇది సామగ్రి ఖర్చును కవర్ చేస్తుంది, డబ్బు రాకపోయే ప్రమాదాన్ని తగ్గిస్తుంది. మిగతా మొత్తాన్ని బాకీలు ట్యాబ్‌లో నమోదు చేయండి.', n2t:'మీ క్రెడిట్ స్కోర్ తెలుసుకోండి', n2:'EMIలు, కార్డ్ బిల్లులు సమయానికి కట్టండి. మీకు అప్పు వస్తుందా, ఏ వడ్డీకి వస్తుందా అన్నది క్రెడిట్ (CIBIL) స్కోర్ నిర్ణయిస్తుంది. ప్రతి క్రెడిట్ బ్యూరో నుండి సంవత్సరానికి ఒకసారి పూర్తి క్రెడిట్ రిపోర్ట్ ఉచితంగా పొందవచ్చు.', n3t:'నమోదిత రుణదాతల నుండే అప్పు తీసుకోండి', n3:'అప్పు తీసుకునే ముందు ఆ బ్యాంక్ లేదా NBFC RBI జాబితాలో ఉందో లేదో చూడండి. మీ కాంటాక్ట్స్ లేదా ఫోటోలు అడిగే, లేదా బెదిరించే లోన్ యాప్‌లు ప్రమాద సంకేతం. cybercrime.gov.inలో లేదా 1930కి ఫిర్యాదు చేయండి.', n4t:'ఆదాయపు పన్ను రిటర్న్ దాఖలు చేయండి', n4:'పన్ను కట్టాల్సిన అవసరం లేకపోయినా, రిటర్న్ ఆదాయానికి రుజువు, అప్పులు, వీసా, అద్దె ఇళ్లకు ఉపయోగపడుతుంది. ఫ్రీలాన్సర్లు, చిన్న వ్యాపారులు సులభమైన ప్రిజంప్టివ్ పన్ను పథకాలు (సెక్షన్ 44ADA, 44AD) వాడవచ్చు. నియమాలు మారుతాయి కాబట్టి పన్ను నిపుణుడిని అడగండి.', g1t:'ఈ-శ్రమ్ కార్డ్', g1:'EPFO లేదా ESICలో లేని, 16 నుండి 59 ఏళ్ల అసంఘటిత, గిగ్ కార్మికులకు eshram.gov.in లేదా ఏదైనా కామన్ సర్వీస్ సెంటర్‌లో ఉచిత నమోదు. ప్రభుత్వ ప్రయోజనాలకు అనుసంధానమయ్యే కార్డ్, నంబర్ వస్తాయి. నమోదుతో పాటు ప్రమాద బీమా అందించారు. ప్రస్తుత నిబంధనలు చూడండి.', g2t:'సంవత్సరానికి కొన్ని రూపాయలకే ప్రమాద, జీవిత బీమా', g2:'ప్రధానమంత్రి సురక్ష బీమా యోజన సుమారు ₹20 సంవత్సరానికి ₹2 లక్షల ప్రమాద బీమా ఇస్తుంది. ప్రధానమంత్రి జీవన్ జ్యోతి బీమా యోజన సుమారు ₹436 సంవత్సరానికి ₹2 లక్షల జీవిత బీమా ఇస్తుంది. రెండూ బ్యాంక్ ఖాతా నుండి ఆటో-డెబిట్ అవుతాయి. వయోపరిమితులు ఉన్నాయి.', g3t:'ఆరోగ్య బీమా: ఆయుష్మాన్ భారత్, ఆరోగ్యశ్రీ', g3:'అర్హత ఉన్న కుటుంబాలకు PM-JAY సంవత్సరానికి ₹5 లక్షల వరకు ఉచిత ఆసుపత్రి చికిత్స ఇస్తుంది (pmjay.gov.in, హెల్ప్‌లైన్ 14555). తెలంగాణ ఆరోగ్యశ్రీ కుటుంబానికి సంవత్సరానికి ₹10 లక్షల వరకు కవర్ చేస్తుంది, కానీ బకాయిల కారణంగా ప్రైవేట్ ఆసుపత్రులు గతంలో సేవలు ఆపాయి, కాబట్టి మీ ఆసుపత్రి దీన్ని అంగీకరిస్తుందో నిర్ధారించుకోండి. నమోదైన గిగ్ కార్మికులకు PM-JAY కవరేజీని ప్రభుత్వం ప్రకటించింది, కానీ అది మొదలైందని నేను నిర్ధారించలేకపోయాను, కాబట్టి ఈ-శ్రమ్‌లో లేదా కామన్ సర్వీస్ సెంటర్‌లో అడగండి.', g4t:'పెన్షన్: అటల్ పెన్షన్ యోజన', g4:'18 నుండి 40 ఏళ్ల మధ్య బ్యాంక్ ద్వారా చేరితే 60 ఏళ్ల నుండి నెలకు ₹1,000 నుండి ₹5,000 స్థిర పెన్షన్ వస్తుంది. మీరు కట్టే నెలవారీ మొత్తం మీ వయసు, ఎంచుకున్న పెన్షన్‌పై ఆధారపడి ఉంటుంది.', g5t:'వ్యాపార రుణాలు: ముద్ర', g5:'PM ముద్ర యోజన చిన్న వ్యవసాయేతర వ్యాపారాలకు పూచీకత్తు లేని రుణాలు ఇస్తుంది. శిశు ₹50,000 వరకు, కిశోర్ ₹5 లక్షల వరకు, తరుణ్ ₹10 లక్షల వరకు. తరుణ్ రుణం ఇప్పటికే తీర్చినవారికి తరుణ్ ప్లస్ (₹20 లక్షల వరకు). బ్యాంక్, సహకార సంస్థ లేదా మైక్రోఫైనాన్స్ సంస్థలో దరఖాస్తు చేయండి (mudra.org.in).', g6t:'వీధి వ్యాపారులు: PM స్వనిధి', g6:'వీధి వ్యాపారులకు దశలవారీగా పూచీకత్తు లేని చిన్న వర్కింగ్ క్యాపిటల్ రుణాలు: సమయానికి చెల్లిస్తే ₹15,000, తర్వాత ₹25,000, ఆపై ₹50,000. డిజిటల్ చెల్లింపులకు క్యాష్‌బ్యాక్ రావచ్చు, రెండో రుణం తర్వాత UPI అనుసంధానమైన రూపే క్రెడిట్ కార్డ్ ఇస్తారు. ఈ పథకం మార్చి 2030 వరకు ఉంది (pmsvanidhi.mohua.gov.in). ప్రస్తుత నిబంధనలు చూడండి.', g7t:'చేతివృత్తులవారు, టైలర్లు: PM విశ్వకర్మ', g7:'టైలర్లు, క్షురకులు వంటి జాబితాలోని సంప్రదాయ వృత్తులవారి కోసం. గుర్తింపు కార్డ్, రోజువారీ స్టైపెండ్‌తో నైపుణ్య శిక్షణ, పనిముట్ల గ్రాంట్, తక్కువ వడ్డీ రుణాలు అందిస్తుంది (pmvishwakarma.gov.in).', g8t:'మహిళా వ్యవస్థాపకుల కోసం', g8:'స్టాండ్-అప్ ఇండియా మహిళలు, SC/ST తొలి వ్యవస్థాపకులకు ₹10 లక్షల నుండి ₹1 కోటి వరకు రుణాలు ఇస్తుంది (standupmitra.in). స్వయం సహాయక సంఘాలు (SHG) మహిళలకు తక్కువ వడ్డీ గ్రూప్ రుణాలు ఇస్తాయి. WE Hub అనేది హైదరాబాద్‌లో మహిళలు నడిపే స్టార్టప్‌ల కోసం తెలంగాణ ప్రభుత్వ ఇంక్యుబేటర్, కాబట్టి ఒక్కరే చేసే సేవ కంటే వృద్ధి కోరుకునే వ్యాపారాలకు ఎక్కువ సరిపోతుంది.', g9t:'ఉద్యమ్ నమోదు', g9:'udyamregistration.gov.inలో సూక్ష్మ సంస్థగా ఉచిత నమోదు. ఇది బ్యాంక్ రుణాలు, పథకాల ప్రయోజనాలు పొందడానికి సహాయపడుతుంది. ఏజెంట్లకు డబ్బు ఇవ్వకండి, ఎందుకంటే అధికారిక సైట్ ఉచితం.', g10t:'గిగ్ కార్మికుల హక్కులు', g10:'సామాజిక భద్రతా కోడ్ 21 నవంబర్ 2025 నుండి అమల్లోకి వచ్చింది, గిగ్, ప్లాట్‌ఫారమ్ కార్మికులను గుర్తిస్తుంది. ప్లాట్‌ఫారమ్‌లు తమ టర్నోవర్‌లో 1 నుండి 2 శాతం సామాజిక భద్రతా నిధికి జమ చేయాలి. 16 ఏళ్లు పైబడిన కార్మికులు ఈ-శ్రమ్‌లో నమోదు చేసుకోవాలి, ప్రయోజనాలకు సాధారణంగా సంవత్సరంలో ఒక ప్లాట్‌ఫారమ్‌లో సుమారు 90 రోజులు లేదా పలు ప్లాట్‌ఫారమ్‌లలో 120 రోజులు పని అవసరం. తెలంగాణ కూడా సొంత గిగ్ కార్మికుల చట్టం ముసాయిదా రూపొందించింది, మీకు ఏది వర్తిస్తుందో రాష్ట్ర కార్మిక శాఖను అడగండి.', g11t:'జన్ ధన్ ఖాతా', g11:'ప్రమాద బీమా ఉన్న రూపే కార్డ్‌తో జీరో బ్యాలెన్స్ బ్యాంక్ ఖాతా. ప్రభుత్వ చెల్లింపులు నేరుగా మీకు చేరేది కూడా ఇక్కడికే.', n6t:'నకిలీ పథకాలు, నమోదు రుసుము కాల్స్', n6:'ప్రభుత్వ పథకాలు నమోదుకు డబ్బు తీసుకోవు, రుణం ఇవ్వడానికి రుసుము అడగవు. gov.inతో ముగిసే వెబ్‌సైట్‌లనే వాడండి, సందేహం ఉంటే బ్యాంక్ లేదా కామన్ సర్వీస్ సెంటర్‌కు వెళ్లండి.', n7t:'డబ్బు అందుకోవడానికి ఎప్పుడూ చెల్లించకండి', n7:'డబ్బు పంపడానికి మాత్రమే UPI PIN నమోదు చేస్తారు, అందుకోవడానికి ఎప్పుడూ కాదు. "కలెక్ట్ రిక్వెస్ట్", లేదా రీఫండ్ లేదా బహుమతి కోసం PIN అడిగే సందేశం మోసం. మోసాన్ని cybercrime.gov.inలో లేదా 1930కి తెలియజేయండి.' },
+hi:{ navDues:'बकाया', navMore:'और', back:'वापस',
+ dues_title:'आपको मिलने वाला पैसा', dues_who:'किसे देना है?', dues_amount:'रकम (₹)', dues_date:'भुगतान की तारीख (वैकल्पिक)', dues_phone:'फ़ोन नंबर (वैकल्पिक, रिमाइंडर के लिए)', dues_note:'नोट (वैकल्पिक)',
+ dues_add:'जोड़ें', dues_outstanding:'अभी वसूलना बाकी', dues_overdue:'देर हो चुकी', dues_due:'देय {d}', dues_markPaid:'भुगतान मिला', dues_remind:'WhatsApp पर याद दिलाएँ', dues_undo:'वापस करें', dues_paid:'चुकाए गए',
+ dues_empty:'अभी आपको कोई पैसा नहीं लेना।', dues_needFields:'नाम और रकम भरें।', dues_overdueCount:'{n} देर से',
+ dues_msg:'नमस्ते {who}, {amt} के बकाया भुगतान की यह एक विनम्र याद दिलाई है। कृपया बताएँ कि आप कब भुगतान कर सकते हैं। धन्यवाद।',
+ perHourTitle:'प्रति घंटा असली हाथ में आने वाली कमाई', hoursHint:'सिर्फ़ ट्रिप का समय नहीं, काम के इंतज़ार का समय भी जोड़ें।', copyLast:'पिछला दिन कॉपी करें', copiedLast:'{d} से कॉपी हुआ। जो अलग है उसे बदलें।', noLast:'कॉपी करने के लिए पिछला दिन नहीं है।', extraCosts:'खर्चे (वैकल्पिक)', appHoursTitle:'हर ऐप पर घंटे (वैकल्पिक)', appHoursHint:'ऐप की तुलना के लिए भरें। इंतज़ार का समय जोड़ें।', cmpTitle:'कौन सा ऐप प्रति घंटा सबसे ज़्यादा देता है?', cmpNote:'खर्चों के बाद, घंटों के हिसाब से बाँटा गया। यह उन दिनों पर आधारित अनुमान है जब हर ऐप के घंटे भरे थे।', cmpNeed:'यह देखने के लिए कुछ दिन हर ऐप के घंटे भरें।', evTitle:'पेट्रोल या इलेक्ट्रिक?', evKmDay:'प्रति दिन कि.मी.', evDaysM:'महीने में दिन', evRate:'इलेक्ट्रिक: प्रति कि.मी. चार्जिंग खर्च (₹)', evPet:'पेट्रोल प्रति माह', evEle:'इलेक्ट्रिक प्रति माह', evSave:'इलेक्ट्रिक से चलाने के खर्च में हर महीने लगभग {x} की बचत होगी।', evLoss:'पेट्रोल चलाना हर महीने लगभग {x} सस्ता पड़ेगा।', evNote:'सिर्फ़ चलाने का खर्च: ईंधन या चार्जिंग और घिसाई। गाड़ी, बैटरी की कीमत या EMI शामिल नहीं।', backupDue:'पिछले बैकअप को काफ़ी समय हो गया। कोड कॉपी करके WhatsApp पर खुद को भेज दें।', backupNow:'अभी बैकअप लें', pinTitle:'PIN से लॉक करें', pinNote:'फ़ोन साझा करते हों तो उपयोगी। यह दूसरों को ऐप से दूर रखता है, बैंक जैसी सुरक्षा नहीं।', pinSet:'PIN लगाएँ (4 अंक)', pinRemove:'PIN हटाएँ', pinEnter:'PIN डालें', pinWrong:'गलत PIN', pinSaved:'PIN लग गया', pinBad:'ठीक 4 अंक डालें।', pinUnlock:'खोलें', pinForgot:'PIN भूल गए? ब्राउज़र में इस साइट का डेटा साफ़ करें, फिर बैकअप कोड से रीस्टोर करें।', cushionTitle:'सहारे के हफ़्ते', cushionSavings:'जो बचत इस्तेमाल कर सकते हैं (₹)', cushionSpend:'हर महीने का ज़रूरी खर्च (₹)', cushionWeeks:'{w} हफ़्तों का सहारा', cushionNote:'काम रुक जाए तो इतने समय तक खर्च चल सकता है। पहले 4 हफ़्ते, फिर 12 हफ़्ते का लक्ष्य रखें।', checked:'आख़िरी जाँच: अक्टूबर 2026। राशि और नियम बदलते रहते हैं, आधिकारिक साइट पर पुष्टि करें।', official:'आधिकारिक साइट', assume:'ईंधन ₹{f} प्रति कि.मी. और घिसाई ₹{w} प्रति कि.मी. मानी गई है। इन्हें सेटिंग्स में बदलें।', assumeBtn:'बदलें', backupWarn:'इस कोड में आपकी कमाई का ब्योरा है। इसे ग्रुप या सार्वजनिक चैट में न डालें।', a2hsTitle:'होम स्क्रीन पर जोड़ें', a2hs:'Chrome में मेन्यू (तीन बिंदु) दबाएँ, फिर Add to Home screen चुनें। यह ऐप की तरह खुलता है और पहली बार खोलने के बाद इंटरनेट के बिना चलता है।', unitHrs:'घं.', stampTarget:'लक्ष्य पूरा', dismiss:'बंद करें', themeTitle:'थीम', themeAuto:'ऑटो', themeLight:'लाइट', themeDark:'डार्क', goalTitle:'बचत का लक्ष्य', goalName:'आप किसके लिए बचत कर रहे हैं?', goalTarget:'लक्ष्य रकम (₹)', goalSet:'लक्ष्य तय करें', goalAdd:'बचत में जोड़ें (₹)', goalSaved:'{b} में से {a} बचत हुई', goalDone:'लक्ष्य पूरा हुआ!', goalRemove:'लक्ष्य हटाएँ',
+ goalHint:'अपने सुरक्षित मासिक बजट ({x}) का 10% बचाने पर यह लक्ष्य लगभग {n} महीनों में पूरा होगा।',
+ stmtRange1:'एक महीना', stmtRange3:'3 महीने', avgMonth:'औसत मासिक मुनाफ़ा',
+ loanNote:'यह एक सारांश है जो आप दिखा सकते हैं। क्या मानना है यह कर्ज़ देने वाले और मकान मालिक तय करते हैं, और ज़्यादातर बैंक स्टेटमेंट और ID भी माँगते हैं।',
+ csvBtn:'CSV के रूप में डाउनलोड करें', moreIntro:'और टूल', grpStart:'अपने काम के लिए यहाँ से शुरू करें',
+ onbVehicleS:'स्विगी, ज़ोमैटो, ब्लिंकिट, उबर, रैपिडो, ओला, अपना ऑटो या कैब', onbServiceS:'ब्यूटी, सिलाई, मरम्मत, सफ़ाई, खाना बनाना, घर जाकर सेवाएँ', onbOnlineS:'फ्रीलांसिंग, डिज़ाइन, लेखन, ट्यूशन, डेटा एंट्री, कंटेंट', onbOtherS:'दुकान, ठेला, घर की रसोई, हस्तशिल्प, पुनर्विक्रय या कोई और काम', learnTitle:'पैसा और सहायता गाइड', learnIntro:'आसान भाषा में पैसे की बुनियादी बातें और सरकारी मदद जो आप पा सकते हैं।', learnNote:'यह सिर्फ़ सामान्य जानकारी है, लिखते समय के नियमों पर आधारित। राशि और पात्रता बदल सकती है। आवेदन से पहले आधिकारिक वेबसाइट, बैंक या कॉमन सर्विस सेंटर पर पक्का कर लें। यह वित्तीय सलाह नहीं है।', grp1:'अपने आँकड़े जानें', grp2:'बचत और कर्ज़', grp3:'कुछ सरकारी योजनाएँ', grp4:'सुरक्षित रहें', n1t:'मरम्मत और रिन्यूअल के लिए पैसे अलग रखें', n1:'सर्विसिंग, टायर, औज़ार, उपकरण या माल के लिए हर काम वाले दिन थोड़ा पैसा अलग रखें। एक साथ आने वाले खर्च ही अच्छे महीने को बुरा बना देते हैं।', n5t:'बड़े ऑर्डर पर एडवांस लें', n5:'सिलाई, इवेंट या खास ऑर्डर पर 30 से 50 प्रतिशत पहले माँगें। इससे सामग्री का खर्च निकलता है और पैसा न मिलने का जोखिम घटता है। बाकी रकम बकाया टैब में दर्ज करें।', n2t:'अपना क्रेडिट स्कोर जानें', n2:'EMI और कार्ड के बिल समय पर चुकाएँ। आपको कर्ज़ मिलेगा या नहीं और किस दर पर, यह क्रेडिट (CIBIL) स्कोर तय करता है। हर क्रेडिट ब्यूरो से साल में एक बार पूरी क्रेडिट रिपोर्ट मुफ़्त मिलती है।', n3t:'सिर्फ़ पंजीकृत कर्ज़दाताओं से लें', n3:'कर्ज़ लेने से पहले देखें कि बैंक या NBFC RBI की सूची में है या नहीं। जो लोन ऐप आपके कॉन्टैक्ट या फ़ोटो माँगें या धमकाएँ, वे खतरे का संकेत हैं। cybercrime.gov.in पर या 1930 पर शिकायत करें।', n4t:'इनकम टैक्स रिटर्न भरें', n4:'टैक्स न बनता हो तब भी रिटर्न आय का सबूत है, जो कर्ज़, वीज़ा और किराए में काम आता है। फ्रीलांसर और छोटे कारोबारी आसान प्रिज़म्प्टिव टैक्स योजनाएँ (धारा 44ADA, 44AD) चुन सकते हैं। नियम बदलते हैं, इसलिए टैक्स विशेषज्ञ से पूछें।', g1t:'ई-श्रम कार्ड', g1:'EPFO या ESIC में न आने वाले, 16 से 59 साल के असंगठित और गिग कामगारों के लिए eshram.gov.in या किसी कॉमन सर्विस सेंटर पर मुफ़्त पंजीकरण। आपको कार्ड और नंबर मिलता है जो सरकारी लाभों से जोड़ता है, और पंजीकरण के साथ दुर्घटना बीमा दिया गया है। मौजूदा शर्तें देखें।', g2t:'साल के कुछ रुपये में दुर्घटना और जीवन बीमा', g2:'प्रधानमंत्री सुरक्षा बीमा योजना लगभग ₹20 सालाना में ₹2 लाख का दुर्घटना बीमा देती है। प्रधानमंत्री जीवन ज्योति बीमा योजना लगभग ₹436 सालाना में ₹2 लाख का जीवन बीमा देती है। दोनों बैंक खाते से ऑटो-डेबिट होती हैं। उम्र की सीमा लागू है।', g3t:'स्वास्थ्य कवर: आयुष्मान भारत और आरोग्यश्री', g3:'पात्र परिवारों को PM-JAY हर साल ₹5 लाख तक का मुफ़्त अस्पताल इलाज देता है (pmjay.gov.in, हेल्पलाइन 14555)। तेलंगाना की आरोग्यश्री प्रति परिवार हर साल ₹10 लाख तक कवर करती है, पर बकाया के कारण निजी अस्पताल पहले सेवाएँ रोक चुके हैं, इसलिए पक्का करें कि आपका अस्पताल इसे स्वीकार करता है। सरकार ने पंजीकृत गिग कामगारों के लिए PM-JAY कवर घोषित किया है, पर मैं पक्का नहीं कर सका कि यह शुरू हो चुका है, इसलिए ई-श्रम पर या कॉमन सर्विस सेंटर पर पूछें।', g4t:'पेंशन: अटल पेंशन योजना', g4:'18 से 40 साल की उम्र में बैंक के ज़रिए जुड़ें और 60 साल से हर महीने ₹1,000 से ₹5,000 की तय पेंशन पाएँ। आपकी मासिक किस्त आपकी उम्र और चुनी हुई पेंशन पर निर्भर करती है।', g5t:'कारोबार के लिए कर्ज़: मुद्रा', g5:'PM मुद्रा योजना छोटे गैर-कृषि कारोबारों को बिना गारंटी का कर्ज़ देती है। शिशु ₹50,000 तक, किशोर ₹5 लाख तक और तरुण ₹10 लाख तक। जिन्होंने तरुण कर्ज़ चुका दिया है, उनके लिए तरुण प्लस (₹20 लाख तक)। बैंक, सहकारी संस्था या माइक्रोफाइनेंस संस्था में आवेदन करें (mudra.org.in)।', g6t:'रेहड़ी-पटरी वाले: PM स्वनिधि', g6:'रेहड़ी-पटरी वालों के लिए चरणों में बिना गारंटी का छोटा कार्यशील पूँजी कर्ज़: समय पर चुकाने पर ₹15,000, फिर ₹25,000, फिर ₹50,000। डिजिटल भुगतान पर कैशबैक मिल सकता है और दूसरे कर्ज़ के बाद UPI से जुड़ा रूपे क्रेडिट कार्ड मिलता है। योजना मार्च 2030 तक चलेगी (pmsvanidhi.mohua.gov.in)। मौजूदा शर्तें देखें।', g7t:'कारीगर और दर्ज़ी: PM विश्वकर्मा', g7:'दर्ज़ी और नाई जैसे सूची में शामिल पारंपरिक पेशों के लोगों के लिए। इसमें पहचान पत्र, रोज़ाना वज़ीफ़े के साथ कौशल प्रशिक्षण, औज़ार अनुदान और कम ब्याज का कर्ज़ मिलता है (pmvishwakarma.gov.in)।', g8t:'महिला उद्यमियों के लिए', g8:'स्टैंड-अप इंडिया महिलाओं और SC/ST के पहली बार उद्यम शुरू करने वालों को ₹10 लाख से ₹1 करोड़ तक का कर्ज़ देता है (standupmitra.in)। स्वयं सहायता समूह (SHG) महिलाओं को कम ब्याज पर समूह कर्ज़ देते हैं। WE Hub हैदराबाद में महिलाओं द्वारा चलाए जा रहे स्टार्टअप के लिए तेलंगाना सरकार का इन्क्यूबेटर है, इसलिए यह अकेले की सेवा से ज़्यादा बढ़ने वाले कारोबारों के लिए ठीक है।', g9t:'उद्यम पंजीकरण', g9:'udyamregistration.gov.in पर सूक्ष्म उद्यम के रूप में मुफ़्त पंजीकरण। इससे बैंक कर्ज़ और योजनाओं के लाभ पाने में मदद मिलती है। एजेंट को पैसे न दें, क्योंकि आधिकारिक साइट मुफ़्त है।', g10t:'गिग कामगारों के अधिकार', g10:'सामाजिक सुरक्षा संहिता 21 नवंबर 2025 से लागू हुई है और गिग व प्लेटफ़ॉर्म कामगारों को मान्यता देती है। प्लेटफ़ॉर्म को अपने टर्नओवर का 1 से 2 प्रतिशत सामाजिक सुरक्षा कोष में देना होता है। 16 साल या उससे ऊपर के कामगार ई-श्रम पर पंजीकरण करें, और लाभों के लिए आम तौर पर साल में एक प्लेटफ़ॉर्म पर करीब 90 दिन या कई प्लेटफ़ॉर्म पर 120 दिन काम चाहिए। तेलंगाना ने भी अपने गिग कामगार कानून का मसौदा बनाया है, इसलिए राज्य श्रम विभाग से पूछें कि आप पर क्या लागू होता है।', g11t:'जन धन खाता', g11:'दुर्घटना बीमा वाले रूपे कार्ड के साथ ज़ीरो बैलेंस बैंक खाता। सरकारी भुगतान भी सीधे इसी में आते हैं।', n6t:'फ़र्ज़ी योजनाएँ और रजिस्ट्रेशन फ़ीस के कॉल', n6:'सरकारी योजनाएँ पंजीकरण के पैसे नहीं लेतीं और कर्ज़ जारी करने के लिए फ़ीस नहीं माँगतीं। सिर्फ़ gov.in पर खत्म होने वाली वेबसाइट इस्तेमाल करें, शक हो तो बैंक या कॉमन सर्विस सेंटर जाएँ।', n7t:'पैसे पाने के लिए कभी भुगतान न करें', n7:'UPI PIN सिर्फ़ पैसे भेजने के लिए डाला जाता है, पाने के लिए कभी नहीं। "कलेक्ट रिक्वेस्ट" या रिफ़ंड या इनाम के लिए PIN माँगने वाला संदेश ठगी है। ठगी की शिकायत cybercrime.gov.in पर या 1930 पर करें।' }
+};
+['en','te','hi'].forEach(function(l){ Object.assign(T[l], X[l]); });
+
+var COLORS = ['#7B2D5B','#E3A321','#2F5D8A','#6B8E23','#A8231C','#3E7C7B','#7B2D5B','#E3A321'];
+var QUICK = ['Ola','Porter','Zepto','Amazon Flex','Urban Company','inDrive','Upwork','Fiverr'];
+
+var PRESETS = {
+  bike:{mode:'perLitre', mileage:40, price:107, wear:1.0},
+  ebike:{mode:'perKm', rate:0.6, wear:0.7},
+  auto:{mode:'perLitre', mileage:30, price:95, wear:1.5},
+  cab:{mode:'perLitre', mileage:18, price:107, wear:2.5}
+};
+var WORK = {
+  vehicle:{cells:['hours','km','jobs'], costs:['fuel','other'], otherKey:'otherExp'},
+  service:{cells:['hours','jobs'], costs:['materials','travel','other'], otherKey:'f_other_general'},
+  online:{cells:['hours','jobs'], costs:['platform','other'], otherKey:'f_other_online'},
+  other:{cells:['hours','jobs'], costs:['materials','travel','platform','other'], otherKey:'f_other_general'}
+};
+function defaultSources(type){
+  var list;
+  if(type==='vehicle') list = [['swiggy','Swiggy'],['zomato','Zomato'],['blinkit','Blinkit'],['uber','Uber'],['rapido','Rapido'],['other',t('otherApp')]];
+  else if(type==='service') list = [['clients',t('src_clients')],['home',t('src_home')],['events',t('src_events')],['orders',t('src_orders')],['other',t('otherApp')]];
+  else if(type==='online') list = [['upwork','Upwork'],['fiverr','Fiverr'],['freelancer','Freelancer'],['direct',t('src_direct')],['other',t('otherApp')]];
+  else list = [['sales',t('src_sales')],['services',t('src_services')],['other',t('otherApp')]];
+  return list.map(function(x){ return {id:x[0], name:x[1]}; });
+}
+
+/* ---------- State ---------- */
+var KEY = 'takeHomeTracker.v2';
+var mem = null;
+function defaults(){
+  return {lang:'en', name:'', onboarded:false, oldNames:{},
+    settings:{type:'vehicle', vehicle:'bike', mode:'perLitre', mileage:40, price:107, rate:0.6, wear:1.0, fixedMonthly:0, workDays:26, target:120, sources:[]},
+    pricing:{materials:'', travel:'', hours:'', hourly:'', fee:'', margin:'10', jobsMonth:'', current:''},
+    dues:[], goal:null, nudgeOff:'', theme:'auto', cushion:{savings:'', spend:''}, lastBackup:'', pin:'',
+    entries:{}};
+}
+function load(){
+  try{
+    var raw = localStorage.getItem(KEY);
+    if(raw){ var s = JSON.parse(raw); var d = defaults(); s.settings = Object.assign(d.settings, s.settings||{}); s.pricing = Object.assign(d.pricing, s.pricing||{}); s.entries = s.entries||{}; s.oldNames = s.oldNames||{}; return Object.assign(d, s); }
+  }catch(e){}
+  return mem || defaults();
+}
+var state = load();
+function save(){ mem = state; try{ localStorage.setItem(KEY, JSON.stringify(state)); }catch(e){} }
+if(!state.settings.sources || !state.settings.sources.length){ state.settings.sources = defaultSources(state.settings.type); }
+if(!Array.isArray(state.dues)) state.dues = [];
+
+/* ---------- Helpers ---------- */
+function t(k, vars){
+  var s = (T[state && state.lang] && T[state.lang][k]) || T.en[k] || k;
+  if(vars){ for(var v in vars){ s = s.replace('{'+v+'}', vars[v]); } }
+  return s;
+}
+function num(v){ var n = parseFloat(v); return isFinite(n) && n>0 ? n : 0; }
+function fmt(n){ var r = Math.round(n); return (r<0?'-':'')+'₹'+Math.abs(r).toLocaleString('en-IN'); }
+function neg(n){ return '-'+fmt(n).replace('-',''); }
+function pad(n){ return (n<10?'0':'')+n; }
+function ymd(d){ return d.getFullYear()+'-'+pad(d.getMonth()+1)+'-'+pad(d.getDate()); }
+function parse(s){ var p = s.split('-'); return new Date(+p[0], +p[1]-1, +p[2]); }
+function addDays(d, n){ return new Date(d.getFullYear(), d.getMonth(), d.getDate()+n); }
+function todayStr(){ return ymd(new Date()); }
+function mondayOf(s){ var d = parse(s); return ymd(addDays(d, -((d.getDay()+6)%7))); }
+function esc(s){ return String(s).replace(/[&<>"]/g, function(c){ return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]; }); }
+function $(id){ return document.getElementById(id); }
+function locale(){ return state.lang==='te' ? 'te-IN' : (state.lang==='hi' ? 'hi-IN' : 'en-IN'); }
+function dayLabel(s){ try{ return parse(s).toLocaleDateString(locale(), {day:'numeric', month:'short'}); }catch(e){ return s; } }
+function srcName(id){ var s = state.settings.sources.filter(function(x){ return x.id===id; })[0]; return s ? s.name : (state.oldNames[id] || id); }
+function srcColor(id){ var i = -1; state.settings.sources.forEach(function(x, k){ if(x.id===id) i = k; }); return i<0 ? '#7A8A82' : COLORS[i % COLORS.length]; }
+function curType(){ return state.settings.type; }
+
+var toastTimer;
+function toast(msg){ var el = $('toast'); el.textContent = msg; el.hidden = false; clearTimeout(toastTimer); toastTimer = setTimeout(function(){ el.hidden = true; }, 2200); }
+
+/* ---------- Calculation ---------- */
+function paramsNow(){
+  var s = state.settings;
+  var fuelPerKm = s.mode==='perKm' ? num(s.rate) : (num(s.mileage)>0 ? num(s.price)/num(s.mileage) : 0);
+  return {type:s.type, fuelPerKm:fuelPerKm, wearPerKm:num(s.wear), fixedPerDay: num(s.workDays)>0 ? num(s.fixedMonthly)/num(s.workDays) : 0};
+}
+function calc(e, p){
+  p = p || e.p || paramsNow();
+  var veh = p.type==='vehicle';
+  var gross = 0; for(var k in e.apps){ gross += num(e.apps[k]); }
+  var km = veh ? num(e.km) : 0, hours = num(e.hours), jobs = num(e.jobs);
+  var fuelEst = km*p.fuelPerKm;
+  var fuel = veh ? ((e.fuelActual!==null && e.fuelActual!==undefined && e.fuelActual!=='') ? num(e.fuelActual) : fuelEst) : 0;
+  var wear = veh ? km*p.wearPerKm : 0;
+  var fixed = p.fixedPerDay, materials = num(e.materials), travel = num(e.travel), platform = num(e.platform), other = num(e.other);
+  var costs = fuel+wear+fixed+materials+travel+platform+other;
+  var net = gross - costs;
+  return {gross:gross, fuel:fuel, fuelEst:fuelEst, wear:wear, fixed:fixed, materials:materials, travel:travel, platform:platform, other:other, costs:costs, net:net,
+          hours:hours, km:km, jobs:jobs, perHour: hours>0 ? net/hours : null, perKm: km>0 ? net/km : null, perJob: jobs>0 ? net/jobs : null};
+}
+function costRows(r){
+  var rows = [];
+  if(r.fuel>0) rows.push([t('fuel'), r.fuel]);
+  if(r.wear>0) rows.push([t('wear'), r.wear]);
+  if(r.materials>0) rows.push([t('c_materials'), r.materials]);
+  if(r.travel>0) rows.push([t('c_travel'), r.travel]);
+  if(r.platform>0) rows.push([t('c_platform'), r.platform]);
+  if(r.fixed>0) rows.push([t('fixed'), r.fixed]);
+  if(r.other>0) rows.push([t('other'), r.other]);
+  return rows;
+}
+function rowsHtml(rows){ return rows.map(function(x){ return '<tr><td>'+esc(x[0])+'</td><td>'+neg(x[1])+'</td></tr>'; }).join(''); }
+
+var IC = {
+ today:'<path class="f" d="M3.2 5.6c3-.9 6.1-.7 8.8 1.1 2.7-1.8 5.8-2 8.8-1.1v12.6c-3-.8-6-.6-8.8 1.1-2.8-1.7-5.8-1.9-8.8-1.1z"/><path d="M12 6.8v12.4"/><path d="M6 9.6c1.4-.3 2.8-.2 4 .4M6 12.6c1.4-.3 2.8-.2 4 .4M14.2 10c1.2-.6 2.6-.7 3.9-.4"/>',
+ summary:'<path class="f" d="M4.5 3.4h15.2c.5 0 .8.3.8.8v15.7c0 .5-.3.8-.8.8H4.3c-.5 0-.8-.3-.8-.8V4.3c0-.5.3-.9 1-.9z"/><path d="M8 17v-4M12 17V8.5M16 17v-6.5"/>',
+ dues:'<circle class="f" cx="12" cy="6.8" r="3.6"/><path d="M11.2 6h1.8M11.2 7.7h1.8"/><path d="M2.8 14.6l3.2-1.2c1.5-.5 3 .1 4.4.1h3c1 0 1.7 1 .9 1.8-.5.5-1.2.6-1.8.6h-3.2"/><path d="M13.2 16.2l5.4-2.3c.9-.4 1.9.6 1.2 1.4l-5.7 4.9c-.8.7-1.9 1-2.9.7L6 19.6"/><path d="M2.8 14.2v6.2"/>',
+ pricing:'<path class="f" d="M3.4 12.3V4.6c0-.6.4-1 1-1h7.7c.3 0 .6.1.8.3l8 8.1c.4.4.4 1 0 1.4l-7 7c-.4.4-1 .4-1.4 0l-8.1-8c-.2-.2-.4-.5-.4-.8z"/><circle cx="8" cy="8.2" r="1.3"/>',
+ more:'<circle class="f" cx="5" cy="12" r="1.7"/><circle class="f" cx="12" cy="12.2" r="1.7"/><circle class="f" cx="19" cy="11.9" r="1.7"/>',
+ settings:'<path class="f" d="M10.4 3.2h3.2l.5 2.2 1.6.9 2.1-.8 1.6 2.8-1.6 1.6v1.8l1.6 1.6-1.6 2.8-2.1-.7-1.6.9-.5 2.2h-3.2l-.5-2.2-1.6-.9-2.1.7-1.6-2.8 1.6-1.6v-1.8L4.6 7.5l1.6-2.8 2.1.8 1.6-.9z"/><circle cx="12" cy="12" r="3"/>',
+ backup:'<path class="f" d="M7 17.8c-2.4.1-4.1-1.6-4.1-3.7 0-1.9 1.4-3.4 3.3-3.6.6-2.5 2.6-4 5.1-4 2.7 0 4.7 1.9 5 4.4 2 .1 3.6 1.6 3.6 3.5 0 2-1.6 3.4-3.5 3.4"/><path d="M12 20.6v-7M9.2 15.8l2.8-2.9 2.9 2.9"/>',
+ lock:'<rect class="f" x="4.8" y="10.6" width="14.4" height="10" rx="2.2"/><path d="M8 10.6V7.7c0-2.3 1.6-4 4-4s4 1.7 4 4v2.9"/><path d="M12 14.6v2.4"/>',
+ send:'<path class="f" d="M3.4 11.4l16.8-7.5c.7-.3 1.4.4 1.1 1.1l-7.4 16.9c-.3.7-1.3.6-1.5-.1l-1.9-6.9-6.9-1.9c-.7-.2-.8-1.2-.2-1.6z"/><path d="M11.8 13.1l4-4"/>',
+ fuel:'<path class="f" d="M5 20.4V5.3c0-.8.6-1.4 1.4-1.4h6.4c.8 0 1.4.6 1.4 1.4v15.1"/><path d="M3.8 20.6h11.6M6.8 8.6h5.6"/><path d="M14.2 9.4l2.6 1.9c.6.4.9 1 .9 1.7v4.2c0 .9 1.3 1.6 2.2 1 .5-.3.6-.8.6-1.3v-6.2l-2.6-3"/>',
+ electric:'<path d="M8.6 3.2v4.2M15.4 3.2v4.2"/><path class="f" d="M5.8 7.4h12.4v3.5c0 3.2-2.5 5.6-6.2 5.6s-6.2-2.4-6.2-5.6z"/><path d="M12 16.6v4.2"/>',
+ copy:'<rect class="f" x="8.6" y="8.4" width="11.6" height="12.2" rx="2"/><path d="M15.2 5.6V5c0-.9-.7-1.6-1.6-1.6H5.6C4.7 3.4 4 4.1 4 5v10c0 .9.7 1.6 1.6 1.6h1.4"/>',
+ scheme:'<path class="f" d="M3.6 9.4L12 4l8.4 5.4z"/><path d="M5.6 9.8v8M10 9.8v8M14 9.8v8M18.4 9.8v8M3.4 20.2h17.3"/>',
+ target:'<circle cx="12" cy="12" r="8.6"/><circle class="f" cx="12" cy="12.1" r="4.6"/><circle cx="12" cy="12" r="1"/>',
+ calendar:'<rect class="f" x="3.8" y="5.4" width="16.4" height="15" rx="2.2"/><path d="M3.8 10h16.4M8 3.4v4M16 3.2v4"/>',
+ add:'<path d="M12 4.8v14.4M4.8 12.1h14.4"/>',
+ ext:'<path d="M13.6 4.4h6v6M20 4.4L11.2 13"/><path d="M18 14v4.2c0 1-.8 1.8-1.8 1.8H5.8C4.8 20 4 19.2 4 18.2V7.8C4 6.8 4.8 6 5.8 6H10"/>',
+ back:'<path d="M20 12H4.6M10 6.4L4.4 12l5.6 5.6"/>',
+ del:'<path d="M20.4 6.2H9.2L3.4 12l5.8 5.8h11.2c.6 0 1-.4 1-1V7.2c0-.6-.4-1-1-1z"/><path d="M13 9.6l4.2 4.8M17.2 9.6L13 14.4"/>'
+};
+var WI = {
+ vehicle:'<circle cx="6" cy="17" r="2.8"/><circle cx="18.6" cy="17" r="2.8"/><path d="M8.8 17h6.9c0-3-.6-5.2-1.7-7.6L13 5.4h2.8M6 17l-1.5-3.2H3.2"/><path d="M14 9.4l-1.3 4.3H8"/>',
+ service:'<rect x="3.4" y="8.6" width="17.2" height="11.2" rx="2"/><path d="M8.6 8.6V6.4c0-.8.6-1.4 1.4-1.4h4c.8 0 1.4.6 1.4 1.4v2.2M3.4 13.4h17.2M10.6 13.4v1.9h2.8v-1.9"/>',
+ online:'<rect x="5" y="5.2" width="14" height="9.6" rx="1.4"/><path d="M2.8 18.6h18.4l-1.4-3.8H4.2z"/>',
+ other:'<path d="M3.6 4.6h16.8l1.3 4.6c0 1.3-1 2.2-2.2 2.2s-2.2-.9-2.2-2.2c0 1.3-1 2.2-2.2 2.2s-2.2-.9-2.2-2.2c0 1.3-1 2.2-2.2 2.2S8 10.5 8 9.2c0 1.3-1 2.2-2.2 2.2S3.6 10.5 3.6 9.2z"/><path d="M5.4 11.6v8.4h13.2v-8.4M10 20v-4.4h4V20"/>'
+};
+function icon(n, px){ return '<svg class="ic" viewBox="0 0 24 24" width="'+(px||24)+'" height="'+(px||24)+'" aria-hidden="true" focusable="false">'+IC[n]+'</svg>'; }
+function workIcon(n){ return '<i class="wi"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false" style="filter:url(#rough)">'+WI[n]+'</svg></i>'; }
+function fillIcons(){ document.querySelectorAll('[data-ic]').forEach(function(el){ if(!el.firstChild) el.innerHTML = icon(el.getAttribute('data-ic')); }); }
+var BRUSH = '<svg class="brush" viewBox="0 0 220 12" preserveAspectRatio="none" aria-hidden="true"><path d="M3 7.2C34 3.4 58 9.4 96 5.4s84 3.4 121-1.2" stroke-width="5"/><path d="M12 10c52-1.8 100 .4 168-2" stroke-width="2"/></svg>';
+var REDUCE = false; try{ REDUCE = window.matchMedia('(prefers-reduced-motion: reduce)').matches; }catch(e){}
+function moneyHtml(str){ return esc(str).replace(/₹/g, '<span class="cur">₹</span>'); }
+var _rbusy = false;
+function rupeeify(){
+  if(_rbusy) return; _rbusy = true;
+  try{
+    var w = document.createTreeWalker(document.body, NodeFilter.SHOW_TEXT, {acceptNode:function(n){
+      var p = n.parentNode; if(!p || /^(SCRIPT|STYLE|TEXTAREA|INPUT|OPTION|TITLE)$/.test(p.nodeName)) return NodeFilter.FILTER_REJECT;
+      if(p.classList && p.classList.contains('cur')) return NodeFilter.FILTER_REJECT;
+      return /₹(?=\d)/.test(n.nodeValue) ? NodeFilter.FILTER_ACCEPT : NodeFilter.FILTER_REJECT; }});
+    var nodes = [], n; while((n = w.nextNode())) nodes.push(n);
+    nodes.forEach(function(tn){
+      var parts = tn.nodeValue.split(/(₹(?=\d))/), f = document.createDocumentFragment();
+      parts.forEach(function(part){ if(part==='₹'){ var sp = document.createElement('span'); sp.className = 'cur'; sp.textContent = '₹'; f.appendChild(sp); } else if(part) f.appendChild(document.createTextNode(part)); });
+      tn.parentNode.replaceChild(f, tn);
+    });
+  } finally { _rbusy = false; }
+}
+var _rq = false;
+try{ new MutationObserver(function(){ if(_rq) return; _rq = true; requestAnimationFrame(function(){ _rq = false; rupeeify(); }); }).observe(document.body, {childList:true, subtree:true, characterData:true}); }catch(e){}
+var _bigPrev = {};
+function countUp(box, key){
+  var el = box && box.querySelector('.hbig'); if(!el) return;
+  var to = parseFloat(el.getAttribute('data-v')); if(!isFinite(to)) return;
+  var from = _bigPrev.hasOwnProperty(key) ? _bigPrev[key] : to; _bigPrev[key] = to;
+  if(from===to || REDUCE) return;
+  var t0 = performance.now();
+  (function step(now){ var k = Math.min(1, (now-t0)/400), e = 1-Math.pow(1-k, 3); el.innerHTML = moneyHtml(fmt(from+(to-from)*e)); if(k<1 && el.isConnected) requestAnimationFrame(step); })(t0);
+}
+var _segPrev = {};
+function segInit(v){
+  v.querySelectorAll('.seg').forEach(function(sg, si){
+    var bs = sg.querySelectorAll('button'), i = 0; bs.forEach(function(b, k){ if(b.getAttribute('aria-pressed')==='true') i = k; });
+    var key = v.id+si, prev = _segPrev.hasOwnProperty(key) ? _segPrev[key] : i; _segPrev[key] = i;
+    sg.style.setProperty('--n', bs.length); sg.style.setProperty('--i', prev);
+    if(prev!==i){ void sg.offsetWidth; requestAnimationFrame(function(){ sg.style.setProperty('--i', i); }); }
+  });
+}
+
+function heroBlock(label, net, hours, km, jobs, verdict, status, stamp, thump){
+  var main = hours>0 ? net/hours : net, top = hours>0 ? t('perHourTitle') : label;
+  var h = '<div class="htop"><div class="hlabel">'+esc(top)+'</div>'+(stamp?'<span class="stamp'+(thump?' thump':'')+'">'+icon('target')+esc(t('stampTarget'))+'</span>':'')+'</div>'+
+    '<div class="hbig" data-v="'+main+'">'+moneyHtml(fmt(main))+'</div>'+BRUSH;
+  if(verdict) h += '<p class="verdict"><i class="sd '+(status||'')+'"></i>'+esc(verdict)+'</p>';
+  var tiles = '';
+  if(hours>0) tiles += '<div class="tile"><b class="dbl">'+moneyHtml(fmt(net))+'</b><span>'+esc(label)+'</span></div>';
+  if(km>0) tiles += '<div class="tile"><b>'+moneyHtml('₹'+(Math.round(net/km*10)/10).toLocaleString('en-IN',{maximumFractionDigits:1}))+'</b><span>'+esc(t('perKm'))+'</span></div>';
+  if(jobs>0) tiles += '<div class="tile"><b>'+moneyHtml(fmt(net/jobs))+'</b><span>'+esc(t('perJob'))+'</span></div>';
+  return h+(tiles?'<div class="tiles">'+tiles+'</div>':'');
+}
+function heroRow(net, hours, km, jobs){
+  var h = '<div class="row"><div>'+(hours>0?fmt(net/hours):'-')+' <span>'+esc(t('perHour'))+'</span></div>';
+  if(km>0) h += '<div>₹'+(Math.round(net/km*10)/10)+' <span>'+esc(t('perKm'))+'</span></div>';
+  if(jobs>0) h += '<div>'+fmt(net/jobs)+' <span>'+esc(t('perJob'))+'</span></div>';
+  return h+'</div>';
+}
+
+/* ---------- i18n apply ---------- */
+function applyLang(){
+  document.documentElement.lang = state.lang;
+  var nodes = document.querySelectorAll('[data-i18n]');
+  for(var i=0;i<nodes.length;i++){ nodes[i].textContent = t(nodes[i].getAttribute('data-i18n')); }
+  var lb = document.querySelectorAll('.lang button');
+  for(var j=0;j<lb.length;j++){ lb[j].setAttribute('aria-pressed', lb[j].getAttribute('data-lang')===state.lang ? 'true':'false'); }
+  rebuildToday(); renderCurrent();
+}
+
+/* ---------- Onboarding ---------- */
+function renderOnboard(){
+  var box = $('onboard');
+  if(state.onboarded){ box.hidden = true; return; }
+  box.hidden = false;
+  box.innerHTML = '<h2>'+esc(t('onbTitle'))+'</h2><div class="choice">'+
+    [['vehicle','onbVehicle'],['service','onbService'],['online','onbOnline'],['other','onbOther']].map(function(x){ return '<button type="button" data-type="'+x[0]+'">'+workIcon(x[0])+'<span class="wtx"><span>'+esc(t(x[1]))+'</span><small>'+esc(t(x[1]+'S'))+'</small></span></button>'; }).join('')+
+    '</div><p class="hint">'+esc(t('onbNote'))+'</p>';
+  box.querySelectorAll('button').forEach(function(b){ b.addEventListener('click', function(){ setType(this.getAttribute('data-type'), true); state.onboarded = true; save(); resetToday(); }); });
+}
+function setType(type, force){
+  var s = state.settings; s.type = type;
+  if(type==='vehicle'){ var pr = PRESETS[s.vehicle||'bike']; s.mode = pr.mode; }
+  var hasData = Object.keys(state.entries).filter(function(k){ return !state.entries[k].example; }).length>0;
+  if(force || !hasData){ removeExamples(); s.sources = defaultSources(type); }
+  save(); updateBanner();
+}
+
+/* ---------- Today view ---------- */
+function money(id, label, hint){
+  return '<div><label for="'+id+'">'+esc(label)+'</label><div class="rs"><span>₹</span><input type="number" id="'+id+'" inputmode="decimal" min="0" step="1" placeholder="0"></div>'+(hint?'<p class="hint" id="'+id+'-hint"></p>':'')+'</div>';
+}
+function captureForm(){
+  var ids = ['d-hours','d-km','d-jobs','d-fuel','d-materials','d-travel','d-platform','d-other'], o = {};
+  ids.forEach(function(i){ if($(i)) o[i] = $(i).value; });
+  state.settings.sources.forEach(function(s){ var el = $('a-'+s.id); if(el) o['a-'+s.id] = el.value; var h = $('h-'+s.id); if(h) o['h-'+s.id] = h.value; });
+  return o;
+}
+function useAppHours(){ var ty = curType(); return (ty==='vehicle' || ty==='online') && state.settings.sources.length>=2; }
+function buildToday(){
+  var type = curType(), cfg = WORK[type], s = state.settings;
+  var html = '<div id="nudge"></div><button type="button" class="txt" id="copyLast">'+icon('copy',20)+esc(t('copyLast'))+'</button><div class="card ledger"><h2>'+esc(t('earningsToday'))+'</h2><div class="grid2">';
+  s.sources.forEach(function(x){ html += '<div><label class="srcl" id="lab-'+x.id+'" for="a-'+x.id+'" style="--c:'+srcColor(x.id)+'"><i></i>'+esc(x.name)+'</label><div class="rs"><span>₹</span><input type="number" id="a-'+x.id+'" inputmode="decimal" min="0" step="1" placeholder="0"></div></div>'; });
+  html += '</div></div><div class="card"><div class="grid2">';
+  cfg.cells.forEach(function(c){
+    if(c==='hours') html += '<div><label for="d-hours">'+esc(t('hours'))+'</label><div class="rs"><span>'+esc(t('unitHrs'))+'</span><input type="number" id="d-hours" inputmode="decimal" min="0" step="0.5" placeholder="0"></div></div>';
+    if(c==='km') html += '<div><label for="d-km">'+esc(t('km'))+'</label><div class="rs"><span>km</span><input type="number" id="d-km" inputmode="decimal" min="0" step="1" placeholder="0"></div></div>';
+    if(c==='jobs') html += '<div><label for="d-jobs">'+esc(t('jobs_'+type))+'</label><input type="number" id="d-jobs" inputmode="decimal" min="0" step="1" placeholder="0"></div>';
+  });
+  html += '</div><p class="hint">'+esc(t('hoursHint'))+'</p>';
+  if(useAppHours()){
+    html += '<details class="tip" data-auto="1" style="margin-top:12px"><summary>'+esc(t('appHoursTitle'))+'</summary><div><p class="hint" style="margin:0 0 10px">'+esc(t('appHoursHint'))+'</p><div class="grid2" style="margin-bottom:14px">';
+    s.sources.forEach(function(x){ html += '<div><label for="h-'+x.id+'">'+esc(x.name)+'</label><div class="rs"><span>'+esc(t('unitHrs'))+'</span><input type="number" id="h-'+x.id+'" inputmode="decimal" min="0" step="0.5" placeholder="0"></div></div>'; });
+    html += '</div></div></details>';
+  }
+  html += '<details class="tip" data-auto="1" style="margin-top:12px"><summary>'+esc(t('extraCosts'))+'</summary><div class="stack" style="padding-bottom:14px">';
+  cfg.costs.forEach(function(c){
+    if(c==='fuel') html += money('d-fuel', t('fuelActual'), true);
+    if(c==='materials') html += money('d-materials', t('f_materials'));
+    if(c==='travel') html += money('d-travel', t('f_travel'));
+    if(c==='platform') html += money('d-platform', t('f_platform'));
+    if(c==='other') html += money('d-other', t(cfg.otherKey));
+  });
+  html += '</div></details></div>';
+  $('todayForm').innerHTML = html;
+  $('todayForm').querySelectorAll('input').forEach(function(el){ el.addEventListener('input', updateToday); });
+  $('copyLast').addEventListener('click', copyLastDay);
+  renderNudge($('nudge'));
+}
+function syncDetails(){
+  document.querySelectorAll('#todayForm details[data-auto]').forEach(function(d){
+    var any = false; d.querySelectorAll('input').forEach(function(i){ if(i.value!=='' && num(i.value)>0) any = true; });
+    if(any) d.open = true;
+  });
+}
+function copyLastDay(){
+  var cur = $('d-date').value || todayStr();
+  var ds = Object.keys(state.entries).filter(function(k){ return k!==cur; }).sort();
+  if(!ds.length){ toast(t('noLast')); return; }
+  var d = ds[ds.length-1], e = state.entries[d];
+  state.settings.sources.forEach(function(x){ var a = $('a-'+x.id); if(a) a.value = e.apps && e.apps[x.id] ? e.apps[x.id] : ''; var h = $('h-'+x.id); if(h) h.value = e.appHours && e.appHours[x.id] ? e.appHours[x.id] : ''; });
+  function set(id, v){ if($(id)) $(id).value = v ? v : ''; }
+  set('d-hours', e.hours); set('d-km', e.km); set('d-jobs', e.jobs); set('d-materials', e.materials); set('d-travel', e.travel); set('d-platform', e.platform); set('d-other', e.other);
+  if($('d-fuel')) $('d-fuel').value = '';
+  syncDetails(); updateToday(); toast(t('copiedLast', {d: dayLabel(d)}));
+}
+function realEntryCount(){ return Object.keys(state.entries).filter(function(k){ return !state.entries[k].example; }).length; }
+function backupDue(){
+  if(realEntryCount()<5) return false;
+  if(!state.lastBackup) return true;
+  var days = Math.round((parse(todayStr()) - parse(state.lastBackup))/86400000);
+  return days>=14;
+}
+function backupCode(){ return btoa(unescape(encodeURIComponent(JSON.stringify(state)))); }
+function renderNudge(box){
+  if(!box) return;
+  if(!backupDue() || state.nudgeOff===todayStr()){ box.innerHTML = ''; return; }
+  box.innerHTML = '<div class="card nudge"><p class="hint" style="margin:0">'+esc(t('backupDue'))+'</p><div class="actions"><button type="button" class="btn small" id="nudgeBtn">'+icon('backup',20)+esc(t('backupNow'))+'</button><button type="button" class="txt" id="nudgeOff">'+esc(t('dismiss'))+'</button></div></div>';
+  $('nudgeBtn').addEventListener('click', function(){ state.lastBackup = todayStr(); save(); copyText(backupCode()); renderNudge(box); });
+  $('nudgeOff').addEventListener('click', function(){ state.nudgeOff = todayStr(); save(); renderNudge(box); });
+}
+function resetToday(){ buildToday(); fillToday(); renderOnboard(); }
+function rebuildToday(){
+  var tmp = captureForm(); buildToday();
+  var any = false; for(var k in tmp){ if(tmp[k]!=='' && $(k)){ $(k).value = tmp[k]; any = true; } }
+  if(!any) fillToday(); else { syncDetails(); updateToday(); }
+  $('delDay').hidden = !state.entries[$('d-date').value];
+  renderOnboard();
+}
+function readForm(){
+  var apps = {}; state.settings.sources.forEach(function(s){ apps[s.id] = num($('a-'+s.id).value); });
+  function v(id){ return $(id) ? $(id).value : ''; }
+  var f = v('d-fuel');
+  var appHours = {}; state.settings.sources.forEach(function(s){ var el = $('h-'+s.id); if(el && num(el.value)>0) appHours[s.id] = num(el.value); });
+  return {apps:apps, appHours:appHours, hours:num(v('d-hours')), km:num(v('d-km')), jobs:num(v('d-jobs')), fuelActual: f===''? null : num(f),
+          materials:num(v('d-materials')), travel:num(v('d-travel')), platform:num(v('d-platform')), other:num(v('d-other'))};
+}
+function fillToday(){
+  var d = $('d-date').value || todayStr(); $('d-date').value = d;
+  var e = state.entries[d];
+  state.settings.sources.forEach(function(s){ $('a-'+s.id).value = e && e.apps[s.id] ? e.apps[s.id] : ''; });
+  function set(id, val){ if($(id)) $(id).value = val ? val : ''; }
+  set('d-hours', e && e.hours); set('d-km', e && e.km); set('d-jobs', e && e.jobs);
+  if($('d-fuel')) $('d-fuel').value = e && e.fuelActual!==null && e.fuelActual!==undefined ? e.fuelActual : '';
+  set('d-materials', e && e.materials); set('d-travel', e && e.travel); set('d-platform', e && e.platform); set('d-other', e && e.other);
+  state.settings.sources.forEach(function(x){ var h = $('h-'+x.id); if(h) h.value = e && e.appHours && e.appHours[x.id] ? e.appHours[x.id] : ''; });
+  $('delDay').hidden = !e;
+  syncDetails(); updateToday();
+}
+var _stamped = false;
+function updateToday(){
+  var d = $('d-date').value || todayStr(); var saved = state.entries[d];
+  var entry = readForm(); var r = calc(entry, saved ? saved.p : paramsNow());
+  var fh = $('d-fuel-hint'); if(fh) fh.textContent = t('fuelEstimate', {x: fmt(r.fuelEst)});
+  var res = $('res'); var any = r.gross>0 || r.hours>0 || r.km>0;
+  res.className = 'hero' + (any && r.net<0 ? ' loss' : '');
+  state.settings.sources.forEach(function(x){ var lb = $('lab-'+x.id), ip = $('a-'+x.id); if(lb && ip) lb.classList.toggle('on', num(ip.value)>0); });
+  if(!any){ res.innerHTML = heroBlock(t('trueProfit'), 0, 0, 0, 0, t('vEnter'), ''); _stamped = false; countUp(res, 'res'); $('breakdown').hidden = true; return; }
+  var tg = num(state.settings.target), verdict;
+  if(r.net<0) verdict = t('vLoss'); else if(r.perHour===null) verdict = '';
+  else if(r.perHour >= tg) verdict = t('vGreat', {t:tg}); else if(r.perHour >= tg*0.7) verdict = t('vNear', {t:tg}); else verdict = t('vLow', {t:tg});
+  var met = r.net>0 && r.perHour!==null && r.perHour>=tg, status = r.net<0 ? 'bad' : (r.perHour===null ? '' : (r.perHour>=tg ? 'good' : (r.perHour>=tg*0.7 ? 'mid' : 'bad')));
+  res.innerHTML = heroBlock(t('trueProfit'), r.net, r.hours, r.km, r.jobs, verdict, status, met, met && !_stamped); _stamped = met; countUp(res, 'res');
+  var b = $('breakdown'); b.hidden = false;
+  b.innerHTML = '<h2>'+esc(t('breakdown'))+'</h2><table class="table"><tbody><tr><td>'+esc(t('earnings'))+'</td><td>'+fmt(r.gross)+'</td></tr>'+rowsHtml(costRows(r))+
+    '<tr class="tot"><td>'+esc(t('trueProfit'))+'</td><td>'+fmt(r.net)+'</td></tr></tbody></table>';
+  if(curType()==='vehicle'){
+    var pp = saved ? saved.p : paramsNow();
+    b.innerHTML += '<p class="hint">'+esc(t('assume', {f: (Math.round(pp.fuelPerKm*100)/100), w: (Math.round(pp.wearPerKm*100)/100)}))+' <a href="#" class="txt" style="min-height:0;display:inline" id="assumeGo">'+esc(t('assumeBtn'))+'</a></p>';
+    $('assumeGo').addEventListener('click', function(ev){ ev.preventDefault(); show('settings'); });
+  }
+}
+function hasExamples(){ for(var k in state.entries){ if(state.entries[k].example) return true; } return false; }
+function removeExamples(){ for(var k in state.entries){ if(state.entries[k].example) delete state.entries[k]; } }
+function updateBanner(){ $('banner').hidden = !hasExamples(); }
+function saveDay(){
+  var d = $('d-date').value || todayStr(); var f = readForm();
+  var any = false; for(var k in f.apps){ if(f.apps[k]>0) any = true; }
+  if(!any && !f.hours && !f.km){ toast(t('enterSomething')); return; }
+  if(!f.hours){ var sh = 0; for(var q in f.appHours){ sh += f.appHours[q]; } if(sh>0) f.hours = sh; }
+  var hadEx = hasExamples(); if(hadEx) removeExamples();
+  var prev = state.entries[d]; f.p = prev && prev.p ? prev.p : paramsNow();
+  state.entries[d] = f; state.onboarded = true; save(); updateBanner(); renderOnboard();
+  $('delDay').hidden = false; toast(hadEx ? t('examplesRemoved') : t('saved'));
+}
+function deleteDay(){ var d = $('d-date').value; if(state.entries[d]){ delete state.entries[d]; save(); fillToday(); updateBanner(); toast(t('deleted')); } }
+
+/* ---------- Summary ---------- */
+var period = 'last7';
+function entriesList(){ return Object.keys(state.entries).sort().map(function(d){ var e = state.entries[d]; return {date:d, e:e, r:calc(e)}; }); }
+function inPeriod(list){ if(period==='all') return list; var n = period==='last7' ? 7 : 30; var from = ymd(addDays(new Date(), -(n-1))); return list.filter(function(x){ return x.date >= from; }); }
+function percentile(arr, p){ var a = arr.slice().sort(function(x,y){return x-y;}); if(a.length===1) return a[0]; var idx = (a.length-1)*p, lo = Math.floor(idx), hi = Math.ceil(idx); return a[lo] + (a[hi]-a[lo])*(idx-lo); }
+function renderSummary(){
+  var v = $('v-summary'); var list = entriesList();
+  if(!list.length){
+    v.innerHTML = '<div class="card empty"><p>'+esc(t('noData'))+'</p><button type="button" class="btn" id="loadEx">'+esc(t('loadExample'))+'</button></div>';
+    $('loadEx').addEventListener('click', function(){ loadExample(); renderSummary(); }); return;
+  }
+  var sel = inPeriod(list);
+  var html = '<div class="seg" role="group">'+['last7','last30','all'].map(function(p){ return '<button type="button" data-p="'+p+'" aria-pressed="'+(period===p)+'">'+esc(t(p==='all'?'allTime':p))+'</button>'; }).join('')+'</div>';
+  if(!sel.length){ html += '<div class="card empty"><p>'+esc(t('noData'))+'</p></div>'; }
+  else {
+    var net=0, hours=0, km=0, jobs=0, best=sel[0], worst=sel[0], byApp={};
+    sel.forEach(function(x){ net+=x.r.net; hours+=x.r.hours; km+=x.r.km; jobs+=x.r.jobs; if(x.r.net>best.r.net) best=x; if(x.r.net<worst.r.net) worst=x; for(var a in x.e.apps){ byApp[a] = (byApp[a]||0)+num(x.e.apps[a]); } });
+    html += '<div class="hero'+(net<0?' loss':'')+'" id="sumHero">'+heroBlock(t('totalProfit'), net, hours, km, jobs)+'</div>';
+    html += '<div class="card"><div class="stats">'+
+      '<div class="stat"><div class="k">'+esc(t('daysWorked'))+'</div><div class="v">'+sel.length+'</div></div>'+
+      '<div class="stat"><div class="k">'+esc(t('avgDay'))+'</div><div class="v">'+fmt(net/sel.length)+'</div></div>'+
+      '<div class="stat"><div class="k">'+esc(t('bestDay'))+'</div><div class="v">'+fmt(best.r.net)+'</div><div class="k">'+esc(dayLabel(best.date))+'</div></div>'+
+      '<div class="stat"><div class="k">'+esc(t('worstDay'))+'</div><div class="v">'+fmt(worst.r.net)+'</div><div class="k">'+esc(dayLabel(worst.date))+'</div></div></div></div>';
+    var ids = Object.keys(byApp).filter(function(a){ return byApp[a]>0; }), tot = 0; ids.forEach(function(a){ tot += byApp[a]; });
+    if(tot>0){
+      html += '<div class="card"><h2>'+esc(t('bySource'))+'</h2><div class="bar" role="img" aria-label="'+esc(t('bySource'))+'">'+
+        ids.map(function(a){ return '<i style="width:'+(byApp[a]/tot*100)+'%;background:'+srcColor(a)+'"></i>'; }).join('')+'</div><div class="legend">'+
+        ids.map(function(a){ return '<span><b style="background:'+srcColor(a)+'"></b>'+esc(srcName(a))+' '+fmt(byApp[a])+'</span>'; }).join('')+'</div></div>';
+    }
+  }
+  html += '<div class="card"><h2>'+esc(t('last14'))+'</h2>'+chart14(list)+'</div>';
+  html += '<div id="nudge2"></div>';
+  html += compareCard(sel);
+  html += volatilityCard(list);
+  html += goalCard(list);
+  html += cushionCard();
+  html += '<button type="button" class="btn ghost block" id="openStmt">'+icon('calendar',20)+esc(t('openStatement'))+'</button>';
+  v.innerHTML = html;
+  v.querySelectorAll('[data-p]').forEach(function(b){ b.addEventListener('click', function(){ period = this.getAttribute('data-p'); renderSummary(); }); });
+  $('openStmt').addEventListener('click', function(){ show('statement'); });
+  bindGoal(); bindCushion(); renderNudge($('nudge2')); segInit(v); countUp($('sumHero'), 'sum');
+}
+function compareCard(sel){
+  if(!useAppHours()) return '';
+  var acc = {};
+  sel.forEach(function(x){
+    var ah = x.e.appHours || {}, sh = 0, k; for(k in ah){ sh += num(ah[k]); }
+    if(sh<=0) return;
+    for(k in ah){ var hh = num(ah[k]); if(hh<=0) continue; var o = acc[k] || (acc[k] = {earn:0, cost:0, hours:0}); o.earn += num(x.e.apps[k]); o.cost += x.r.costs*hh/sh; o.hours += hh; }
+  });
+  var ids = Object.keys(acc).filter(function(k){ return acc[k].hours>0; });
+  var h = '<div class="card"><h2>'+esc(t('cmpTitle'))+'</h2>';
+  if(ids.length<2) return h+'<p class="hint" style="margin:0">'+esc(t('cmpNeed'))+'</p></div>';
+  ids.sort(function(a,b){ return (acc[b].earn-acc[b].cost)/acc[b].hours - (acc[a].earn-acc[a].cost)/acc[a].hours; });
+  h += '<table class="table"><tbody>'+ids.map(function(k){ var o = acc[k]; return '<tr><td>'+esc(srcName(k))+' ('+(Math.round(o.hours*10)/10)+' h)</td><td>'+fmt((o.earn-o.cost)/o.hours)+' '+esc(t('perHour'))+'</td></tr>'; }).join('')+'</tbody></table>';
+  return h+'<p class="hint">'+esc(t('cmpNote'))+'</p></div>';
+}
+function cushionCard(){
+  var c = state.cushion || {savings:'', spend:''};
+  return '<div class="card"><h2>'+esc(t('cushionTitle'))+'</h2><div class="stack"><div><label for="cu-sav">'+esc(t('cushionSavings'))+'</label><div class="rs"><span>₹</span><input type="number" id="cu-sav" inputmode="decimal" min="0" step="100" placeholder="0" value="'+esc(String(c.savings))+'"></div></div>'+
+    '<div><label for="cu-sp">'+esc(t('cushionSpend'))+'</label><div class="rs"><span>₹</span><input type="number" id="cu-sp" inputmode="decimal" min="0" step="100" placeholder="0" value="'+esc(String(c.spend))+'"></div></div></div>'+
+    '<div class="stat" style="margin-top:12px"><div class="v" id="cu-out"></div></div><p class="hint">'+esc(t('cushionNote'))+'</p></div>';
+}
+function bindCushion(){
+  var a = $('cu-sav'), b = $('cu-sp'); if(!a) return;
+  function upd(){
+    state.cushion = {savings:a.value, spend:b.value}; save();
+    var sp = num(b.value), sv = num(a.value);
+    $('cu-out').textContent = sp>0 ? t('cushionWeeks', {w: (Math.round(sv/(sp/4.33)*10)/10)}) : '';
+  }
+  a.addEventListener('input', upd); b.addEventListener('input', upd); upd();
+}
+function chart14(list){
+  var map = {}; list.forEach(function(x){ map[x.date] = x.r.net; });
+  var days = []; for(var i=13;i>=0;i--){ days.push(ymd(addDays(new Date(), -i))); }
+  var vals = days.map(function(d){ return map.hasOwnProperty(d) ? map[d] : null; });
+  var present = vals.filter(function(x){ return x!==null; });
+  if(!present.length) return '<p class="hint">'+esc(t('noData'))+'</p>';
+  var maxV = Math.max.apply(null, present), minV = Math.min.apply(null, present);
+  var hi = Math.max(0, maxV), lo = Math.min(0, minV); if(hi===lo) hi = lo+1;
+  var W=336, top=22, bot=118, slot=W/14, bw=20;
+  function y(v){ return top + (hi-v)/(hi-lo)*(bot-top); }
+  var s = '<svg class="chart" viewBox="0 0 '+W+' 146" role="img" aria-label="'+esc(t('last14'))+'"><line class="c-line" x1="0" x2="'+W+'" y1="'+y(0)+'" y2="'+y(0)+'"/>';
+  vals.forEach(function(v, i){
+    var x = i*slot + (slot-bw)/2;
+    if(v!==null){
+      var y1 = y(Math.max(v,0)), y2 = y(Math.min(v,0)), h = Math.max(1.5, y2-y1);
+      var rr = Math.min(8, bw/2, h), X = x, Y = y1, H = h, B = bw;
+      if(v>=0) s += '<path class="c-pos" d="M'+X.toFixed(1)+' '+(Y+H).toFixed(1)+'V'+(Y+rr).toFixed(1)+'Q'+X.toFixed(1)+' '+Y.toFixed(1)+' '+(X+rr).toFixed(1)+' '+Y.toFixed(1)+'H'+(X+B-rr).toFixed(1)+'Q'+(X+B).toFixed(1)+' '+Y.toFixed(1)+' '+(X+B).toFixed(1)+' '+(Y+rr).toFixed(1)+'V'+(Y+H).toFixed(1)+'Z"/>';
+      else s += '<path class="c-neg" d="M'+X.toFixed(1)+' '+Y.toFixed(1)+'V'+(Y+H-rr).toFixed(1)+'Q'+X.toFixed(1)+' '+(Y+H).toFixed(1)+' '+(X+rr).toFixed(1)+' '+(Y+H).toFixed(1)+'H'+(X+B-rr).toFixed(1)+'Q'+(X+B).toFixed(1)+' '+(Y+H).toFixed(1)+' '+(X+B).toFixed(1)+' '+(Y+H-rr).toFixed(1)+'V'+Y.toFixed(1)+'Z"/>';
+      if(v===maxV && v>0) s += '<text class="c-ink" x="'+(x+bw/2).toFixed(1)+'" y="'+(y1-5).toFixed(1)+'" font-size="12" font-weight="600" text-anchor="middle">'+fmt(v)+'</text>';
+      if(v===minV && v<0) s += '<text class="c-ink" x="'+(x+bw/2).toFixed(1)+'" y="'+(y2+14).toFixed(1)+'" font-size="12" font-weight="600" text-anchor="middle">'+fmt(v)+'</text>';
+    }
+    s += '<text class="c-muted" x="'+(x+bw/2).toFixed(1)+'" y="140" font-size="12" text-anchor="middle">'+parse(days[i]).getDate()+'</text>';
+  });
+  return s+'</svg>';
+}
+function safeMonthly(list){
+  var weeks = {}; list.forEach(function(x){ var w = mondayOf(x.date); if(!weeks[w]) weeks[w] = {n:0, net:0}; weeks[w].n++; weeks[w].net += x.r.net; });
+  var nets = Object.keys(weeks).filter(function(w){ return weeks[w].n>=4; }).map(function(w){ return weeks[w].net; });
+  if(nets.length<3) return null;
+  return {nets:nets, monthly:Math.max(0, percentile(nets, 0.25)*4)};
+}
+function volatilityCard(list){
+  var sm = safeMonthly(list), h = '<div class="card"><h2>'+esc(t('safeBudget'))+'</h2>';
+  if(!sm) return h+'<p class="hint" style="margin:0">'+esc(t('needWeeks'))+'</p></div>';
+  return h+'<div class="stat"><div class="v">'+fmt(sm.monthly)+'</div></div><p class="hint">'+esc(t('weeklyRange', {a:fmt(Math.min.apply(null,sm.nets)), b:fmt(Math.max.apply(null,sm.nets))}))+'</p><p class="hint">'+esc(t('safeNote'))+'</p></div>';
+}
+function goalCard(list){
+  var g = state.goal, h = '<div class="card" id="goalCard"><h2>'+esc(t('goalTitle'))+'</h2>';
+  if(!g){
+    return h+'<div class="stack"><div><label for="g-name">'+esc(t('goalName'))+'</label><input type="text" id="g-name" maxlength="40"></div>'+
+      '<div><label for="g-target">'+esc(t('goalTarget'))+'</label><div class="rs"><span>₹</span><input type="number" id="g-target" inputmode="decimal" min="0" step="100" placeholder="0"></div></div>'+
+      '<button type="button" class="btn" id="g-set">'+icon('add',20)+esc(t('goalSet'))+'</button></div></div>';
+  }
+  var pct = Math.min(100, g.target>0 ? g.saved/g.target*100 : 0);
+  h += '<div class="who" style="font-weight:700">'+esc(g.name)+'</div><div class="prog" role="img" aria-label="'+Math.round(pct)+'%"><i style="width:'+pct+'%"></i><em class="ptag" style="left:'+Math.max(8,Math.min(92,pct))+'%">'+Math.round(pct)+'%</em></div><p class="hint" style="margin:0">'+esc(t('goalSaved', {a:fmt(g.saved), b:fmt(g.target)}))+'</p>';
+  if(g.saved>=g.target){ h += '<p class="verdict">'+esc(t('goalDone'))+'</p>'; }
+  else {
+    var sm = safeMonthly(list);
+    if(sm && sm.monthly>0){ h += '<p class="hint">'+esc(t('goalHint', {x:fmt(sm.monthly), n:Math.ceil((g.target-g.saved)/(sm.monthly*0.1))}))+'</p>'; }
+    h += '<div class="srcrow" style="margin-top:10px"><div class="rs" style="flex:1"><span>₹</span><input type="number" id="g-amt" inputmode="decimal" min="0" step="50" placeholder="0" aria-label="'+esc(t('goalAdd'))+'"></div><button type="button" class="btn small" id="g-add">'+icon('add',20)+esc(t('goalAdd'))+'</button></div>';
+  }
+  return h+'<button type="button" class="btn danger small" id="g-rm" style="margin-top:12px">'+esc(t('goalRemove'))+'</button></div>';
+}
+function bindGoal(){
+  var set = $('g-set'); if(set) set.addEventListener('click', function(){ var n = $('g-name').value.trim(), tg = num($('g-target').value); if(!n || !tg) return; state.goal = {name:n, target:tg, saved:0}; save(); renderSummary(); });
+  var add = $('g-add'); if(add) add.addEventListener('click', function(){ var a = num($('g-amt').value); if(!a) return; state.goal.saved += a; save(); renderSummary(); });
+  var rm = $('g-rm'); if(rm) rm.addEventListener('click', function(){ state.goal = null; save(); renderSummary(); });
+}
+function loadExample(){
+  var seed = 7; function rnd(){ seed = (seed*9301+49297)%233280; return seed/233280; }
+  var p = paramsNow(), type = curType(), srcs = state.settings.sources, i, d, wd;
+  for(i=34;i>=1;i--){
+    d = addDays(new Date(), -i); wd = d.getDay();
+    if(wd===0 && rnd()<0.6) continue; if(rnd()<0.12) continue;
+    var busy = (wd===5||wd===6||wd===0) ? 1.2 : 0.95, hours = Math.round((type==='vehicle' ? 7+rnd()*4 : 4+rnd()*4)*2)/2;
+    var scale = type==='vehicle' ? 1 : (type==='service' ? 1.6 : 1.4), apps = {}, gross = 0;
+    srcs.forEach(function(s, k){
+      var amt = 0;
+      if(k===0) amt = (450+rnd()*500)*busy*scale; else if(k===1) amt = (200+rnd()*400)*busy*scale; else if(k===2 && rnd()<0.5) amt = rnd()*300*scale;
+      amt = Math.round(amt/10)*10; apps[s.id] = amt; gross += amt;
+    });
+    var e = {apps:apps, hours:hours, km:0, jobs:Math.max(1, Math.round(gross/(type==='service'?450:600))), fuelActual:null, materials:0, travel:0, platform:0, other:0, p:p, example:true};
+    if(type==='vehicle'){ e.km = Math.round((70+rnd()*60)*(hours/9)); e.other = rnd()<0.3 ? 30 : 0; }
+    else if(type==='service'){ e.materials = Math.round(gross*0.18/10)*10; e.travel = rnd()<0.5 ? 60 : 0; }
+    else if(type==='online'){ e.platform = Math.round(gross*0.12/10)*10; e.other = 40; }
+    else { e.materials = Math.round(gross*0.2/10)*10; e.travel = rnd()<0.4 ? 50 : 0; }
+    state.entries[ymd(d)] = e;
+  }
+  save(); updateBanner();
+}
+
+/* ---------- Statement ---------- */
+var stmtMonth = '', stmtRange = '1';
+function monthKey(){ var d = new Date(); return d.getFullYear()+'-'+pad(d.getMonth()+1); }
+function monthsEnding(m, n){ var p = m.split('-'), out = []; for(var i=n-1;i>=0;i--){ var d = new Date(+p[0], +p[1]-1-i, 1); out.push(d.getFullYear()+'-'+pad(d.getMonth()+1)); } return out; }
+function statementData(){
+  var last = stmtMonth || monthKey(), ms = monthsEnding(last, stmtRange==='3' ? 3 : 1);
+  var list = entriesList().filter(function(x){ return ms.indexOf(x.date.slice(0,7))>=0; });
+  var o = {ms:ms, label: ms.length>1 ? ms[0]+' to '+ms[ms.length-1] : ms[0], last:last, list:list, gross:0, net:0, hours:0, byApp:{}, byMonth:{}, c:{fuel:0, wear:0, materials:0, travel:0, platform:0, fixed:0, other:0}};
+  ms.forEach(function(m){ o.byMonth[m] = {gross:0, net:0, days:0}; });
+  list.forEach(function(x){ var bm = o.byMonth[x.date.slice(0,7)]; bm.gross+=x.r.gross; bm.net+=x.r.net; bm.days++;
+    o.gross+=x.r.gross; o.net+=x.r.net; o.hours+=x.r.hours; for(var k in o.c){ o.c[k]+=x.r[k]; } for(var a in x.e.apps){ o.byApp[a] = (o.byApp[a]||0)+num(x.e.apps[a]); } });
+  return o;
+}
+function statementText(o){
+  var L = [t('stmtTitle')]; if(state.name) L.push(state.name); L.push(o.label, '');
+  Object.keys(o.byApp).forEach(function(a){ if(o.byApp[a]>0) L.push(srcName(a)+': '+fmt(o.byApp[a])); });
+  L.push(t('grossEarnings')+': '+fmt(o.gross)); costRows(o.c).forEach(function(r){ L.push(r[0]+': '+neg(r[1])); });
+  L.push(t('netProfit')+': '+fmt(o.net));
+  if(o.ms.length>1){ o.ms.forEach(function(m){ L.push(m+': '+fmt(o.byMonth[m].net)+' ('+o.byMonth[m].days+')'); }); L.push(t('avgMonth')+': '+fmt(o.net/o.ms.length)); }
+  L.push(t('daysWorked')+': '+o.list.length+', '+t('totalHours')+': '+(Math.round(o.hours*10)/10)); L.push('', t('stmtNote'));
+  return L.join('\n');
+}
+function renderStatement(){
+  var o = statementData(), v = $('v-statement');
+  var html = '<button type="button" class="txt" id="stmtBack">'+icon('back',20)+esc(t('back'))+'</button>'+
+    '<div class="seg" role="group"><button type="button" data-r="1" aria-pressed="'+(stmtRange==='1')+'">'+esc(t('stmtRange1'))+'</button><button type="button" data-r="3" aria-pressed="'+(stmtRange==='3')+'">'+esc(t('stmtRange3'))+'</button></div>'+
+    '<div class="card"><label for="s-month">'+esc(t('month'))+'</label><input type="month" id="s-month" value="'+o.last+'"></div>';
+  if(!o.list.length){ html += '<div class="card empty"><p>'+esc(t('noMonth'))+'</p></div>'; v.innerHTML = html; bindStmt(); segInit(v); return; }
+  html += '<div class="stmt"><h3>'+esc(t('stmtTitle'))+'</h3>'+(state.name?'<div><b>'+esc(state.name)+'</b></div>':'')+'<div class="hint" style="margin:0 0 10px">'+esc(o.label)+'</div><table class="table"><tbody>'+
+    Object.keys(o.byApp).filter(function(a){ return o.byApp[a]>0; }).map(function(a){ return '<tr><td>'+esc(srcName(a))+'</td><td>'+fmt(o.byApp[a])+'</td></tr>'; }).join('')+
+    '<tr class="tot"><td>'+esc(t('grossEarnings'))+'</td><td>'+fmt(o.gross)+'</td></tr>'+rowsHtml(costRows(o.c))+
+    '<tr class="tot"><td>'+esc(t('netProfit'))+'</td><td>'+fmt(o.net)+'</td></tr>'+
+    (o.ms.length>1 ? '<tr class="tot"><td>'+esc(t('avgMonth'))+'</td><td>'+fmt(o.net/o.ms.length)+'</td></tr>' : '')+
+    '<tr><td>'+esc(t('daysWorked'))+'</td><td>'+o.list.length+'</td></tr><tr><td>'+esc(t('totalHours'))+'</td><td>'+(Math.round(o.hours*10)/10)+'</td></tr>'+
+    '<tr><td>'+esc(t('avgDay'))+'</td><td>'+fmt(o.net/o.list.length)+'</td></tr></tbody></table><p class="note">'+esc(t('stmtNote'))+'</p></div>';
+  if(o.ms.length>1){
+    html += '<div class="card"><h2>'+esc(t('month'))+'</h2><table class="table"><tbody>'+o.ms.map(function(m){ var b = o.byMonth[m]; return '<tr><td>'+esc(m)+' ('+b.days+')</td><td>'+fmt(b.gross)+'</td><td>'+fmt(b.net)+'</td></tr>'; }).join('')+'</tbody></table></div>';
+  }
+  html += '<div class="card"><h2>'+esc(t('dayByDay'))+'</h2><div class="scroll"><table class="table"><tbody>'+
+    o.list.map(function(x){ return '<tr><td>'+esc(dayLabel(x.date))+'</td><td>'+fmt(x.r.gross)+'</td><td>'+fmt(x.r.net)+'</td></tr>'; }).join('')+'</tbody></table></div></div>';
+  html += '<div class="actions"><button type="button" class="btn" id="copyStmt">'+icon('copy',20)+esc(t('copyText'))+'</button><a class="btn wa" href="https://wa.me/?text='+encodeURIComponent(statementText(o))+'" target="_blank" rel="noopener">'+icon('send',20)+esc(t('whatsapp'))+'</a></div><p class="hint">'+esc(t('screenshotHint'))+'</p><p class="hint">'+esc(t('loanNote'))+'</p>';
+  v.innerHTML = html; bindStmt(); segInit(v); $('copyStmt').addEventListener('click', function(){ copyText(statementText(o)); });
+}
+function bindStmt(){
+  var m = $('s-month'); if(m) m.addEventListener('change', function(){ if(this.value){ stmtMonth = this.value; renderStatement(); } });
+  $('stmtBack').addEventListener('click', function(){ show('summary'); });
+  $('v-statement').querySelectorAll('[data-r]').forEach(function(b){ b.addEventListener('click', function(){ stmtRange = this.getAttribute('data-r'); renderStatement(); }); });
+}
+function copyText(txt){
+  function fallback(){ var ta = document.createElement('textarea'); ta.value = txt; ta.style.position='fixed'; ta.style.opacity='0'; document.body.appendChild(ta); ta.select(); var ok = false; try{ ok = document.execCommand('copy'); }catch(e){} document.body.removeChild(ta); toast(ok ? t('copied') : t('copyFailed')); }
+  try{ navigator.clipboard.writeText(txt).then(function(){ toast(t('copied')); }, fallback); }catch(e){ fallback(); }
+}
+
+/* ---------- Dues (money owed to you) ---------- */
+function renderDues(){
+  var v = $('v-dues'), today = todayStr();
+  var open = state.dues.filter(function(d){ return !d.paid; }).sort(function(a,b){ return (a.due||'9999')<(b.due||'9999') ? -1 : 1; });
+  var paid = state.dues.filter(function(d){ return d.paid; }).slice(-5).reverse();
+  var total = 0, overdue = 0; open.forEach(function(d){ total += d.amount; if(d.due && d.due < today) overdue++; });
+  var html = '<div class="card"><h2>'+esc(t('dues_title'))+'</h2><div class="stack">'+
+    '<div><label for="u-who">'+esc(t('dues_who'))+'</label><input type="text" id="u-who" maxlength="50" autocomplete="off"></div>'+
+    '<div class="grid2"><div><label for="u-amt">'+esc(t('dues_amount'))+'</label><div class="rs"><span>₹</span><input type="number" id="u-amt" inputmode="decimal" min="0" placeholder="0"></div></div>'+
+    '<div><label for="u-date">'+esc(t('dues_date'))+'</label><input type="date" id="u-date"></div></div>'+
+    '<div><label for="u-phone">'+esc(t('dues_phone'))+'</label><input type="text" id="u-phone" inputmode="tel" maxlength="15" autocomplete="off"></div>'+
+    '<div><label for="u-note">'+esc(t('dues_note'))+'</label><input type="text" id="u-note" maxlength="80" autocomplete="off"></div>'+
+    '<button type="button" class="btn" id="u-add">'+icon('add',20)+esc(t('dues_add'))+'</button></div></div>';
+  html += '<div class="hero'+(overdue?' loss':'')+'"><div class="small">'+esc(t('dues_outstanding'))+'</div><div class="big">'+fmt(total)+'</div>'+BRUSH+(overdue?'<div class="row"><div>'+esc(t('dues_overdueCount', {n:overdue}))+'</div></div>':'')+'</div>';
+  if(!open.length) html += '<div class="card empty"><p>'+esc(t('dues_empty'))+'</p></div>';
+  else html += '<div class="card list">';
+  open.forEach(function(d){
+    var late = d.due && d.due < today;
+    var phone = (d.phone||'').replace(/\D/g,''); if(phone.length===10) phone = '91'+phone;
+    var msg = t('dues_msg', {who:d.who, amt:fmt(d.amount)});
+    html += '<div class="due'+(late?' late':'')+'"><div class="top"><span class="who">'+esc(d.who)+'</span><span class="amt">'+fmt(d.amount)+'</span></div>'+
+      '<div class="meta">'+(d.due ? (late ? '<span class="stamp small">'+esc(t('dues_overdue'))+'</span><span class="hint" style="margin:0">'+esc(t('dues_due', {d:dayLabel(d.due)}))+'</span>' : '<span class="badge">'+esc(t('dues_due', {d:dayLabel(d.due)}))+'</span>') : '')+'</div>'+
+      (d.note ? '<div class="hint" style="margin:0">'+esc(d.note)+'</div>' : '')+
+      '<div class="actions"><button type="button" class="btn small" data-paid="'+d.id+'">'+esc(t('dues_markPaid'))+'</button>'+
+      '<a class="btn wa small" target="_blank" rel="noopener" href="https://wa.me/'+phone+'?text='+encodeURIComponent(msg)+'">'+icon('send',20)+esc(t('dues_remind'))+'</a>'+
+      '<button type="button" class="btn danger small" data-del="'+d.id+'">'+esc(t('remove'))+'</button></div></div>';
+  });
+  if(open.length) html += '</div>';
+  if(paid.length){
+    html += '<div class="card list"><h2>'+esc(t('dues_paid'))+'</h2>';
+    paid.forEach(function(d){ html += '<div class="due"><div class="top"><span class="who">'+esc(d.who)+'</span><span class="amt">'+fmt(d.amount)+'</span></div><div class="meta"><span class="stamp thump">'+esc(t('dues_paid'))+'</span></div><div class="actions"><button type="button" class="btn ghost small" data-undo="'+d.id+'">'+esc(t('dues_undo'))+'</button><button type="button" class="btn danger small" data-del="'+d.id+'">'+esc(t('remove'))+'</button></div></div>'; });
+    html += '</div>';
+  }
+  v.innerHTML = html;
+  function byId(id){ return state.dues.filter(function(d){ return d.id===id; })[0]; }
+  $('u-add').addEventListener('click', function(){
+    var who = $('u-who').value.trim(), amt = num($('u-amt').value);
+    if(!who || !amt){ toast(t('dues_needFields')); return; }
+    state.dues.push({id:'d'+Date.now().toString(36)+Math.floor(Math.random()*100), who:who, amount:amt, due:$('u-date').value||'', phone:$('u-phone').value.trim(), note:$('u-note').value.trim(), paid:false});
+    save(); toast(t('saved')); renderDues();
+  });
+  v.querySelectorAll('[data-paid]').forEach(function(b){ b.addEventListener('click', function(){ var d = byId(this.getAttribute('data-paid')); if(d){ d.paid = true; save(); renderDues(); } }); });
+  v.querySelectorAll('[data-undo]').forEach(function(b){ b.addEventListener('click', function(){ var d = byId(this.getAttribute('data-undo')); if(d){ d.paid = false; save(); renderDues(); } }); });
+  v.querySelectorAll('[data-del]').forEach(function(b){ b.addEventListener('click', function(){ var id = this.getAttribute('data-del'); state.dues = state.dues.filter(function(d){ return d.id!==id; }); save(); renderDues(); }); });
+}
+
+/* ---------- More ---------- */
+function renderMore(){
+  $('v-more').innerHTML = '<div class="card"><h2>'+esc(t('moreIntro'))+'</h2><div class="choice"><button type="button" id="m-learn">'+icon('scheme')+'<span class="wtx"><span>'+esc(t('learnTitle'))+'</span></span></button><button type="button" id="m-settings">'+icon('settings')+'<span class="wtx"><span>'+esc(t('navSettings'))+'</span></span></button></div></div>';
+  $('m-learn').addEventListener('click', function(){ show('learn'); });
+  $('m-settings').addEventListener('click', function(){ show('settings'); });
+  if(curType()==='vehicle') renderEv();
+  var a = document.createElement('div'); a.innerHTML = '<div class="card"><h2>'+esc(t('a2hsTitle'))+'</h2><p class="hint" style="margin:0">'+esc(t('a2hs'))+'</p></div>'; $('v-more').appendChild(a.firstChild);
+}
+var evVals = null;
+function renderEv(){
+  var s = state.settings;
+  if(!evVals) evVals = {km:'80', days:String(num(s.workDays)||26), mil:String(s.mode==='perLitre' ? s.mileage : PRESETS.bike.mileage), price:String(s.mode==='perLitre' ? s.price : PRESETS.bike.price), rate:String(PRESETS.ebike.rate)};
+  var h = '<div class="card"><h2>'+esc(t('evTitle'))+'</h2><div class="grid2">'+field('ev-km', t('evKmDay'), evVals.km, '5')+field('ev-days', t('evDaysM'), evVals.days, '1')+field('ev-mil', t('mileage'), evVals.mil, '1')+field('ev-price', t('fuelPrice'), evVals.price, '0.5')+field('ev-rate', t('evRate'), evVals.rate, '0.05')+'</div>'+
+    '<table class="table" style="margin-top:12px"><tbody><tr><td>'+icon('fuel',20)+' '+esc(t('evPet'))+'</td><td id="ev-p"></td></tr><tr><td>'+icon('electric',20)+' '+esc(t('evEle'))+'</td><td id="ev-e"></td></tr></tbody></table><p class="verdict" id="ev-v"></p><p class="hint">'+esc(t('evNote'))+'</p></div>';
+  var box = document.createElement('div'); box.innerHTML = h; $('v-more').appendChild(box.firstChild);
+  function upd(){
+    ['km','days','mil','price','rate'].forEach(function(k){ evVals[k] = $('ev-'+k).value; });
+    var dist = num(evVals.km)*num(evVals.days), mil = num(evVals.mil);
+    var pet = dist*((mil>0 ? num(evVals.price)/mil : 0)+PRESETS.bike.wear), ele = dist*(num(evVals.rate)+PRESETS.ebike.wear);
+    $('ev-p').textContent = fmt(pet); $('ev-e').textContent = fmt(ele);
+    $('ev-v').textContent = pet>=ele ? t('evSave', {x: fmt(pet-ele)}) : t('evLoss', {x: fmt(ele-pet)});
+  }
+  ['km','days','mil','price','rate'].forEach(function(k){ $('ev-'+k).addEventListener('input', upd); }); upd();
+}
+function backBtn(){ return '<button type="button" class="txt" data-back="1">'+icon('back',20)+esc(t('back'))+'</button>'; }
+function bindBack(v){ var b = v.querySelector('[data-back]'); if(b) b.addEventListener('click', function(){ show('more'); }); }
+function inFrame(){ try{ return window.self !== window.top; }catch(e){ return true; } }
+function csvDownload(){
+  var ids = []; Object.keys(state.entries).forEach(function(d){ for(var a in state.entries[d].apps){ if(ids.indexOf(a)<0) ids.push(a); } });
+  function q(x){ x = String(x); return /[",\n]/.test(x) ? '"'+x.replace(/"/g,'""')+'"' : x; }
+  var rows = [['Date'].concat(ids.map(srcName), ['Gross','Costs','Net profit','Hours','Km','Jobs']).map(q).join(',')];
+  Object.keys(state.entries).sort().forEach(function(d){ var e = state.entries[d], r = calc(e);
+    rows.push([d].concat(ids.map(function(a){ return num(e.apps[a]); }), [Math.round(r.gross), Math.round(r.costs), Math.round(r.net), r.hours, r.km, r.jobs]).map(q).join(',')); });
+  var blob = new Blob([rows.join('\n')], {type:'text/csv;charset=utf-8'}), a = document.createElement('a');
+  a.href = URL.createObjectURL(blob); a.download = 'take-home-tracker.csv'; document.body.appendChild(a); a.click(); document.body.removeChild(a);
+}
+
+/* ---------- Pricing ---------- */
+function prField(id, label, val, pre, step){
+  return '<div><label for="'+id+'">'+esc(label)+'</label><div class="'+(pre?'rs'+(pre==='%'?' right':''):'')+'">'+(pre?'<span>'+pre+'</span>':'')+'<input type="number" id="'+id+'" inputmode="decimal" min="0" step="'+(step||'any')+'" value="'+esc(val)+'" placeholder="0"></div></div>';
+}
+function renderPricing(){
+  var p = state.pricing, v = $('v-pricing');
+  v.innerHTML = '<div class="card"><h2>'+esc(t('pr_title'))+'</h2><p class="hint" style="margin-top:0">'+esc(t('pr_intro'))+'</p><div style="height:12px"></div><div class="grid2">'+
+    prField('p-materials', t('pr_materials'), p.materials, '₹')+prField('p-travel', t('pr_travel'), p.travel, '₹')+
+    prField('p-hours', t('pr_hours'), p.hours, '', '0.25')+prField('p-hourly', t('pr_hourly'), p.hourly, '₹')+
+    prField('p-fee', t('pr_fee'), p.fee, '%')+prField('p-margin', t('pr_margin'), p.margin, '%')+
+    prField('p-jobs', t('pr_jobsMonth'), p.jobsMonth, '', '1')+prField('p-current', t('pr_current'), p.current, '₹')+
+    '</div><p class="hint">'+esc(t('pr_note'))+'</p></div><div id="prOut" class="stack"></div>';
+  [['p-materials','materials'],['p-travel','travel'],['p-hours','hours'],['p-hourly','hourly'],['p-fee','fee'],['p-margin','margin'],['p-jobs','jobsMonth'],['p-current','current']].forEach(function(x){
+    $(x[0]).addEventListener('input', function(){ p[x[1]] = this.value; save(); updatePricing(); });
+  });
+  updatePricing();
+}
+function updatePricing(){
+  var p = state.pricing, out = $('prOut'); if(!out) return;
+  var mat = num(p.materials), trv = num(p.travel), hrs = num(p.hours), hourly = num(p.hourly) || num(state.settings.target), fee = num(p.fee), mar = num(p.margin), jobs = num(p.jobsMonth), cur = num(p.current), fixed = num(state.settings.fixedMonthly);
+  if(!hrs && !mat && !trv){ out.innerHTML = ''; return; }
+  if(fee+mar>=100){ out.innerHTML = '<div class="card"><p class="hint" style="margin:0">'+esc(t('pr_bad'))+'</p></div>'; return; }
+  var time = hrs*hourly, share = jobs>0 ? fixed/jobs : 0, base = mat+trv+time+share, minP = base/(1-(fee+mar)/100);
+  var feeMar = minP - base;
+  var html = '<div class="hero"><div class="small">'+esc(t('pr_minPrice'))+'</div><div class="big">'+fmt(minP)+'</div>'+BRUSH+'</div>';
+  html += '<div class="card"><h2>'+esc(t('pr_made'))+'</h2><table class="table"><tbody>'+
+    '<tr><td>'+esc(t('c_materials'))+'</td><td>'+fmt(mat)+'</td></tr><tr><td>'+esc(t('c_travel'))+'</td><td>'+fmt(trv)+'</td></tr>'+
+    '<tr><td>'+esc(t('pr_time'))+'</td><td>'+fmt(time)+'</td></tr><tr><td>'+esc(t('pr_fixedShare'))+'</td><td>'+fmt(share)+'</td></tr>'+
+    '<tr><td>'+esc(t('pr_feeMargin'))+'</td><td>'+fmt(feeMar)+'</td></tr><tr class="tot"><td>'+esc(t('pr_minPrice'))+'</td><td>'+fmt(minP)+'</td></tr></tbody></table></div>';
+  if(cur>0){
+    var keep = cur*(1-fee/100) - mat - trv, msgs = [];
+    html += '<div class="card"><p class="verdict" style="margin-top:0">'+esc(cur>=minP ? t('pr_above') : t('pr_below'))+'</p>';
+    if(keep<=0){ html += '<p class="hint">'+esc(t('pr_noMargin'))+'</p>'; }
+    else {
+      html += '<p class="hint">'+esc(t('pr_keep', {a:fmt(keep), b: hrs>0 ? fmt(keep/hrs) : '-'}))+'</p>';
+      if(fixed>0) html += '<p class="hint">'+esc(t('pr_breakeven', {n:Math.ceil(fixed/keep), f:fmt(fixed)}))+'</p>';
+    }
+    html += '</div>';
+  }
+  out.innerHTML = html;
+}
+
+/* ---------- Learn ---------- */
+function renderLearn(){
+  var GROUPS = [
+    ['grp1', ['tip1','tip3','tip4','n1','n5']],
+    ['grp2', ['tip2','tip5','tip6','n2','n3']],
+    ['grp3', ['g1','g3','g5','g6']],
+    ['grp4', ['tip8','n6','n7']]
+  ];
+  var html = backBtn()+'<div class="card"><h2>'+esc(t('learnTitle'))+'</h2><p class="hint" style="margin:0">'+esc(t('learnIntro'))+'</p></div>';
+  var START = {vehicle:['tip1','g1','g3','n1'], service:['tip3','n5','g5','g1'], online:['tip1','n2','g1','tip4'], other:['tip3','g5','g6','g1']};
+  var LINKS = {g1:'https://eshram.gov.in', g3:'https://pmjay.gov.in', g5:'https://www.mudra.org.in', g6:'https://pmsvanidhi.mohua.gov.in'};
+  GROUPS.unshift(['grpStart', START[curType()] || START.other]);
+  GROUPS.forEach(function(g){
+    html += '<div class="card list"><h2>'+(g[0]==='grp3'?icon('scheme',20):'')+esc(t(g[0]))+'</h2>';
+    g[1].forEach(function(k){ html += '<details class="tip"><summary>'+esc(t(k+'t'))+'</summary><p>'+esc(t(k))+'</p>'+(LINKS[k]?'<p><a href="'+LINKS[k]+'" target="_blank" rel="noopener">'+esc(t('official'))+icon('ext',16)+'</a></p>':'')+'</details>'; });
+    if(g[0]==='grp3') html += '<p class="hint">'+esc(t('checked'))+'</p>';
+    html += '</div>';
+  });
+  html += '<p class="hint">'+esc(t('learnNote'))+'</p>';
+  $('v-learn').innerHTML = html; bindBack($('v-learn'));
+}
+
+/* ---------- Settings ---------- */
+function field(id, label, val, step){ return '<div><label for="'+id+'">'+esc(label)+'</label><input type="number" id="'+id+'" inputmode="decimal" min="0" step="'+(step||'any')+'" value="'+val+'"></div>'; }
+function applyTheme(){ var m = state.theme||'auto', r = document.documentElement; if(m==='auto') r.removeAttribute('data-theme'); else r.setAttribute('data-theme', m); }
+function renderSettings(){
+  var s = state.settings, v = $('v-settings'), veh = s.type==='vehicle';
+  var html = backBtn()+'<div class="card"><label for="s-name">'+esc(t('name'))+'</label><input type="text" id="s-name" value="'+esc(state.name)+'" maxlength="60" autocomplete="off"></div>';
+  html += '<div class="card"><label for="s-type">'+esc(t('workType'))+'</label><select id="s-type">'+
+    [['vehicle','onbVehicle'],['service','onbService'],['online','onbOnline'],['other','onbOther']].map(function(x){ return '<option value="'+x[0]+'"'+(s.type===x[0]?' selected':'')+'>'+esc(t(x[1]))+'</option>'; }).join('')+'</select></div>';
+  html += '<div class="card"><h2>'+esc(t('sources'))+'</h2><div class="stack" id="srcList">'+
+    s.sources.map(function(x, i){ return '<div class="srcrow"><input type="text" data-i="'+i+'" value="'+esc(x.name)+'" maxlength="40" aria-label="'+esc(x.name)+'"><button type="button" class="btn danger small" data-rm="'+i+'">'+esc(t('remove'))+'</button></div>'; }).join('')+
+    '</div><div class="srcrow" style="margin-top:12px"><input type="text" id="s-new" placeholder="'+esc(t('srcPlaceholder'))+'" maxlength="40" aria-label="'+esc(t('addSource'))+'"><button type="button" class="btn small" id="addSrc">'+icon('add',20)+esc(t('addSource'))+'</button></div>'+
+    '<p class="hint">'+esc(t('quickAdd'))+'</p><div class="chips" style="margin-top:6px">'+QUICK.map(function(q){ return '<button type="button" data-q="'+esc(q)+'">+ '+esc(q)+'</button>'; }).join('')+'</div></div>';
+  html += '<div class="card"><div class="grid2">'+field('s-fixed', t('fixedMonthly'), s.fixedMonthly, '100')+field('s-days', t('workDays'), s.workDays, '1')+field('s-target', t('target'), s.target, '5')+'</div></div>';
+  if(veh){
+    html += '<div class="card"><h2>'+esc(t('vehicle'))+'</h2><select id="s-veh" aria-label="'+esc(t('vehicle'))+'">'+['bike','ebike','auto','cab'].map(function(k){ var nm = {bike:'pBike', ebike:'pEbike', auto:'pAuto', cab:'pCab'}[k]; return '<option value="'+k+'"'+(s.vehicle===k?' selected':'')+'>'+esc(t(nm))+'</option>'; }).join('')+'</select><div style="height:12px"></div><div class="grid2">'+
+      (s.mode==='perKm' ? field('s-rate', t('costPerKm'), s.rate, '0.05') : field('s-mileage', t('mileage'), s.mileage, '1')+field('s-price', t('fuelPrice'), s.price, '0.5'))+field('s-wear', t('wearPerKm'), s.wear, '0.1')+'</div></div>';
+  }
+  html += '<p class="hint">'+esc(t('priceNote'))+'</p>';
+  html += '<div class="card"><h2>'+icon('backup',20)+esc(t('backup'))+'</h2><p class="hint" style="margin-top:0">'+esc(t('backupNote'))+'</p><p class="hint">'+esc(t('backupWarn'))+'</p><div style="height:10px"></div><button type="button" class="btn ghost block" id="copyBackup">'+icon('copy',20)+esc(t('copyBackup'))+'</button>'+(inFrame()?'':'<div style="height:10px"></div><button type="button" class="btn ghost block" id="csvDl">'+esc(t('csvBtn'))+'</button>')+'<div style="height:12px"></div>'+
+    '<label for="s-code">'+esc(t('restore'))+'</label><textarea id="s-code" placeholder="'+esc(t('pasteCode'))+'"></textarea><div style="height:10px"></div><button type="button" class="btn ghost block" id="doRestore">'+esc(t('restore'))+'</button></div>';
+  html += '<div class="card"><h2>'+esc(t('themeTitle'))+'</h2><div class="seg" id="themeSeg">'+['auto','light','dark'].map(function(m){ return '<button type="button" data-th="'+m+'" aria-pressed="'+((state.theme||'auto')===m)+'">'+esc(t('theme'+m.charAt(0).toUpperCase()+m.slice(1)))+'</button>'; }).join('')+'</div></div>';
+  html += '<div class="card"><h2>'+icon('lock',20)+esc(t('pinTitle'))+'</h2><p class="hint" style="margin:0 0 10px">'+esc(t('pinNote'))+'</p>'+
+    (state.pin ? '<button type="button" class="btn ghost block" id="pinRm">'+esc(t('pinRemove'))+'</button>' : '<div class="srcrow"><input type="password" inputmode="numeric" maxlength="4" id="pin-new" placeholder="••••" aria-label="'+esc(t('pinSet'))+'"><button type="button" class="btn small" id="pinSetBtn">'+icon('lock',20)+esc(t('pinSet'))+'</button></div>')+'</div>';
+  html += '<div class="card"><h2>'+esc(t('feedback'))+'</h2><label for="s-fb">'+esc(t('feedbackQ'))+'</label><textarea id="s-fb"></textarea><div style="height:10px"></div><a class="btn wa block" id="fbSend" href="#" target="_blank" rel="noopener">'+icon('send',20)+esc(t('sendFeedback'))+'</a></div>';
+  html += '<button type="button" class="btn danger block" id="wipe">'+esc(t('clearAll'))+'</button>';
+  v.innerHTML = html; bindBack(v); segInit(v);
+
+  $('s-name').addEventListener('input', function(){ state.name = this.value; save(); });
+  $('s-type').addEventListener('change', function(){ setType(this.value, false); resetToday(); renderSettings(); });
+  v.querySelectorAll('#srcList input').forEach(function(el){ el.addEventListener('input', function(){ s.sources[+this.getAttribute('data-i')].name = this.value; save(); }); });
+  v.querySelectorAll('[data-rm]').forEach(function(b){ b.addEventListener('click', function(){ var i = +this.getAttribute('data-rm'); var x = s.sources[i]; state.oldNames[x.id] = x.name; s.sources.splice(i,1); save(); rebuildToday(); renderSettings(); }); });
+  function addSource(name){
+    name = (name||'').trim(); if(!name || s.sources.length>=10) return;
+    var id = 'c'+Date.now().toString(36)+Math.floor(Math.random()*100); s.sources.push({id:id, name:name}); save(); rebuildToday(); renderSettings();
+  }
+  $('addSrc').addEventListener('click', function(){ addSource($('s-new').value); });
+  v.querySelectorAll('[data-q]').forEach(function(b){ b.addEventListener('click', function(){ addSource(this.getAttribute('data-q')); }); });
+  var sv = $('s-veh'); if(sv) sv.addEventListener('change', function(){ var k = this.value, pr = PRESETS[k]; s.vehicle = k; s.mode = pr.mode; s.wear = pr.wear; if(pr.mode==='perKm'){ s.rate = pr.rate; } else { s.mileage = pr.mileage; s.price = pr.price; } save(); renderSettings(); });
+  [['s-rate','rate'],['s-mileage','mileage'],['s-price','price'],['s-wear','wear'],['s-fixed','fixedMonthly'],['s-days','workDays'],['s-target','target']].forEach(function(pair){ var el = $(pair[0]); if(el) el.addEventListener('input', function(){ s[pair[1]] = num(this.value); save(); }); });
+  $('copyBackup').addEventListener('click', function(){ state.lastBackup = todayStr(); save(); copyText(backupCode()); });
+  var cd = $('csvDl'); if(cd) cd.addEventListener('click', csvDownload);
+  v.querySelectorAll('[data-th]').forEach(function(b){ b.addEventListener('click', function(){ state.theme = this.getAttribute('data-th'); save(); applyTheme(); renderSettings(); }); });
+  var pr = $('pinRm'); if(pr) pr.addEventListener('click', function(){ state.pin = ''; save(); renderSettings(); });
+  var ps = $('pinSetBtn'); if(ps) ps.addEventListener('click', function(){ var p = $('pin-new').value; if(!/^\d{4}$/.test(p)){ toast(t('pinBad')); return; } state.pin = pinHash(p); save(); toast(t('pinSaved')); renderSettings(); });
+  $('doRestore').addEventListener('click', function(){
+    try{
+      var obj = JSON.parse(decodeURIComponent(escape(atob($('s-code').value.trim()))));
+      if(!obj || typeof obj!=='object' || !obj.entries || !obj.settings) throw new Error('bad');
+      state = Object.assign(defaults(), obj); state.settings = Object.assign(defaults().settings, obj.settings); state.pricing = Object.assign(defaults().pricing, obj.pricing||{}); if(!Array.isArray(state.dues)) state.dues = [];
+      if(!state.settings.sources || !state.settings.sources.length) state.settings.sources = defaultSources(state.settings.type);
+      save(); toast(t('restored')); applyLang(); renderSettings(); updateBanner();
+    }catch(e){ toast(t('badCode')); }
+  });
+  function fbLink(){ $('fbSend').href = 'https://wa.me/'+FEEDBACK_NUMBER+'?text='+encodeURIComponent('Take-Home Tracker feedback:\n'+$('s-fb').value); }
+  fbLink(); $('s-fb').addEventListener('input', fbLink);
+  var armed = false, wipe = $('wipe');
+  wipe.addEventListener('click', function(){
+    if(!armed){ armed = true; wipe.textContent = t('sure'); setTimeout(function(){ armed = false; wipe.textContent = t('clearAll'); }, 4000); return; }
+    var lang = state.lang; state = defaults(); state.lang = lang; state.settings.sources = defaultSources(state.settings.type); save(); toast(t('cleared')); updateBanner(); resetToday(); renderSettings();
+  });
+}
+
+/* ---------- Navigation ---------- */
+var current = 'today';
+function show(view){
+  current = view;
+  ['today','summary','statement','dues','pricing','more','learn','settings'].forEach(function(k){ $('v-'+k).hidden = (k!==view); });
+  var tabView = view==='statement' ? 'summary' : ((view==='learn' || view==='settings') ? 'more' : view);
+  document.querySelectorAll('nav.tabs button').forEach(function(b){ if(b.getAttribute('data-view')===tabView) b.setAttribute('aria-current','page'); else b.removeAttribute('aria-current'); });
+  renderCurrent(); window.scrollTo(0,0);
+}
+function renderCurrent(){
+  if(current==='summary') renderSummary(); else if(current==='statement') renderStatement(); else if(current==='pricing') renderPricing();
+  else if(current==='learn') renderLearn(); else if(current==='settings') renderSettings(); else if(current==='dues') renderDues(); else if(current==='more') renderMore();
+}
+
+/* ---------- Wire up ---------- */
+$('d-date').value = todayStr();
+$('d-date').addEventListener('change', fillToday);
+$('saveDay').addEventListener('click', saveDay);
+$('delDay').addEventListener('click', deleteDay);
+$('clearExample').addEventListener('click', function(){ removeExamples(); save(); updateBanner(); renderCurrent(); fillToday(); toast(t('examplesRemoved')); });
+document.querySelectorAll('.lang button').forEach(function(b){ b.addEventListener('click', function(){ state.lang = this.getAttribute('data-lang'); save(); applyLang(); }); });
+document.querySelectorAll('nav.tabs button').forEach(function(b){ b.addEventListener('click', function(){ show(this.getAttribute('data-view')); }); });
+
+function pinHash(p){ var h = 5381, x = 'tht'+p; for(var i=0;i<x.length;i++){ h = ((h<<5)+h+x.charCodeAt(i))|0; } return String(h); }
+function showLock(){
+  if(!state.pin) return;
+  var o = document.createElement('div'); o.id = 'lock'; o.className = 'lock'; o.setAttribute('role','dialog'); o.setAttribute('aria-label', t('pinEnter'));
+  var keys = ''; ['1','2','3','4','5','6','7','8','9','','0','x'].forEach(function(k){
+    if(k==='') keys += '<button type="button" class="nokey" tabindex="-1" aria-hidden="true"></button>';
+    else if(k==='x') keys += '<button type="button" data-k="x" aria-label="'+esc(t('back'))+'">'+icon('del',28)+'</button>';
+    else keys += '<button type="button" data-k="'+k+'">'+k+'</button>';
+  });
+  o.innerHTML = '<div class="lockin"><h2>'+icon('lock',24)+esc(t('pinEnter'))+'</h2><div class="dots" id="lock-dots" aria-hidden="true"><i></i><i></i><i></i><i></i></div><p class="hint" id="lock-err" role="alert" style="min-height:24px;color:var(--loss-text)"></p><div class="pad">'+keys+'</div><p class="hint">'+esc(t('pinForgot'))+'</p></div>';
+  document.body.appendChild(o);
+  var buf = '';
+  function draw(){ o.querySelectorAll('#lock-dots i').forEach(function(d, i){ d.classList.toggle('on', i<buf.length); }); }
+  function press(k){
+    if(k==='x') buf = buf.slice(0,-1); else if(buf.length<4) buf += k;
+    $('lock-err').textContent = ''; draw();
+    if(buf.length===4){
+      if(pinHash(buf)===state.pin){ document.removeEventListener('keydown', onKey); o.remove(); }
+      else { $('lock-err').textContent = t('pinWrong'); var dd = $('lock-dots'); dd.classList.remove('shake'); void dd.offsetWidth; dd.classList.add('shake'); buf = ''; setTimeout(draw, 250); }
+    }
+  }
+  function onKey(e){ if(/^\d$/.test(e.key)) press(e.key); else if(e.key==='Backspace') press('x'); }
+  document.addEventListener('keydown', onKey);
+  o.querySelectorAll('[data-k]').forEach(function(b){ b.addEventListener('click', function(){ press(this.getAttribute('data-k')); }); });
+}
+applyTheme(); fillIcons(); buildToday(); applyLang(); updateBanner(); showLock(); rupeeify();
+})();
+</script>
+<script>if('serviceWorker' in navigator&&location.protocol.indexOf('http')===0){navigator.serviceWorker.register('sw.js').catch(function(){});}</script></body></html>
